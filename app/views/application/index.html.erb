@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Construction Calculator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .calculator {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 500px;
+      width: 100%;
+    }
+    h1 {
+      color: #667eea;
+      margin-bottom: 30px;
+      text-align: center;
+      font-size: 28px;
+    }
+    .input-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      color: #333;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+    }
+    .result {
+      margin-top: 25px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      display: none;
+    }
+    .result.show {
+      display: block;
+    }
+    .result h2 {
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+    .result-item {
+      padding: 10px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .result-item:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h1>🏗️ Construction Calculator</h1>
+    
+    <div class="input-group">
+      <label for="calcType">Calculation Type:</label>
+      <select id="calcType">
+        <option value="area">Area (sq ft/sq m)</option>
+        <option value="concrete">Concrete Volume</option>
+        <option value="paint">Paint Required</option>
+        <option value="tiles">Tiles Required</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label for="length">Length:</label>
+      <input type="number" id="length" placeholder="Enter length" step="0.01"> <%# herb:disable html-input-require-autocomplete %>
+    </div>
+
+    <div class="input-group">
+      <label for="width">Width:</label>
+      <input type="number" id="width" placeholder="Enter width" step="0.01"> <%# herb:disable html-input-require-autocomplete %>
+    </div>
+
+    <div class="input-group" id="heightGroup" style="display:none;">
+      <label for="height">Height/Depth:</label>
+      <input type="number" id="height" placeholder="Enter height/depth" step="0.01"> <%# herb:disable html-input-require-autocomplete %>
+    </div>
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div class="result" id="result">
+      <h2>Results:</h2>
+      <div id="resultContent"></div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('calcType').addEventListener('change', function() {
+      const heightGroup = document.getElementById('heightGroup');
+      heightGroup.style.display = (this.value === 'concrete') ? 'block' : 'none';
+    });
+
+    function calculate() {
+      const type = document.getElementById('calcType').value;
+      const length = parseFloat(document.getElementById('length').value);
+      const width = parseFloat(document.getElementById('width').value);
+      const height = parseFloat(document.getElementById('height').value);
+      
+      if (!length || !width || (type === 'concrete' && !height)) {
+        alert('Please fill all required fields');
+        return;
+      }
+
+      let resultHTML = '';
+      const area = length * width;
+
+      switch(type) {
+        case 'area':
+          resultHTML = `<div class="result-item"><strong>Area:</strong> ${area.toFixed(2)} sq units</div>`;
+          break;
+        case 'concrete':
+          const volume = area * height;
+          resultHTML = `<div class="result-item"><strong>Volume:</strong> ${volume.toFixed(2)} cubic units</div>
+                       <div class="result-item"><strong>Bags (60lb):</strong> ${Math.ceil(volume * 2)} bags</div>`;
+          break;
+        case 'paint':
+          const gallons = Math.ceil(area / 350);
+          resultHTML = `<div class="result-item"><strong>Paint needed:</strong> ${gallons} gallon(s)</div>
+                       <div class="result-item"><strong>Coverage:</strong> ${area.toFixed(2)} sq units</div>`;
+          break;
+        case 'tiles':
+          const tiles = Math.ceil(area * 1.1);
+          resultHTML = `<div class="result-item"><strong>Tiles needed:</strong> ${tiles} tiles (with 10% waste)</div>
+                       <div class="result-item"><strong>Area:</strong> ${area.toFixed(2)} sq units</div>`;
+          break;
+      }
+
+      document.getElementById('resultContent').innerHTML = resultHTML;
+      document.getElementById('result').classList.add('show');
+    }
+  </script>
+</body>
+</html>
