@@ -14,7 +14,7 @@ module Line
             setter = "#{key}="
             http.public_send(setter, value) if http.respond_to?(setter)
           end
-
+           
           http.start do |connection|
             connection.request(request)
           end
