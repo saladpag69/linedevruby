@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   get "/aboutus.json", to: "application#about"
+  get "/aboutus", to: "application#about"
+  get "/login",to:"application#login"
   # routes.rb
   post "/callback", to: "line_bot#callback"
 
@@ -16,5 +18,5 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  root "line_bot#callback"
+  root "application#about"
 end
