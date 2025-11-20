@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   get "/aboutus.json", to: "application#about"
   get "/aboutus", to: "application#about"
+  get "/login",to:"application#login"
   # routes.rb
   post "/callback", to: "line_bot#callback"
 

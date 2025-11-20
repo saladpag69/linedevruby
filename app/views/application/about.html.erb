@@ -129,7 +129,7 @@
       <%= form_with url: aboutus_path, method: :get, local: true do %>
         <%= text_field_tag :q, @query, placeholder: "ค้นหาสินค้า / บาร์โค้ด", class: "search-input" %>
 
-        <%# herb:disable html-input-require-autocomplete, herb-disable-comment-unnecessary %>
+        
         <button type="submit" class="search-button">ค้นหา</button>
       <% end %>
     </div>
@@ -144,9 +144,9 @@
       <% image_url = product.productimage.presence || image_pool.sample %>
 
       <article class="product-card">
-        <img src="<%= image_url %>" alt="<%= product.productname %>">
+        <img src="<%= image_url %>" alt="<%= product.productname %>"> <%# herb:disable erb-prefer-image-tag-helper %>
 
-        <%# herb:disable erb-prefer-image-tag-helper %>
+        
 
         <div class="product-body">
           <div class="product-name"><%= product.productname %></div>

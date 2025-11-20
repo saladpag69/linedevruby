@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
   # Changes to the importmap will invalidate the etag for HTML responses
   def index
   end
+  def login
+  end
   def about
     @query = params[:q].to_s.strip
     @products = ActiveProduct.search(@query)
