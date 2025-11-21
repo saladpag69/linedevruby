@@ -1,4 +1,6 @@
 # app/controllers/line_bot_controller.rb
+# U176f407b7ae6cbaeb9bc9ba33ebbc067 == Line สยาม
+# U2afea61f31f814f059793c5395c03171 == Line Zayam
 require "openssl"
 require "cgi"
 
@@ -43,20 +45,41 @@ class LineBotController < ApplicationController
     end
 
     events.each do |event|
+
       case event
       when Line::Bot::V2::Webhook::MessageEvent
         case event.message
         when Line::Bot::V2::Webhook::TextMessageContent
           user_text = event.message.text.to_s
-          products = ActiveProduct.search(user_text)
+          user_id = event.source&.user_id || "unknown"
+          reply_token = event.reply_token
+          extracted    = MessageProductExtractor.new(user_text).call
+          response_text = extracted[:response]
 
-          messages = if user_text.strip.empty?
+          products = if response_text.present?
+                       ActiveProduct.none
+                     elsif extracted[:barcode].present?
+                       ActiveProduct.where(barcodeid: extracted[:barcode])
+                     elsif extracted[:keyword].present?
+                       ActiveProduct.search(extracted[:keyword])
+                     else
+                       ActiveProduct.none
+                     end
+
+          messages = if response_text.present?
+                       [
+                         Line::Bot::V2::MessagingApi::TextMessage.new(
+                           text: response_text
+                         )
+                       ]
+                     elsif user_text.strip.empty?
                        [
                          Line::Bot::V2::MessagingApi::TextMessage.new(
                            text: "พิมพ์ชื่อสินค้าหรือบาร์โค้ดเพื่อค้นหาได้เลยครับ"
                          )
                        ]
                      elsif products.empty?
+                       notify_admin_no_product(user_id: user_id, query: user_text)
                        [
                          Line::Bot::V2::MessagingApi::TextMessage.new(
                            text: "ไม่พบสินค้า \"#{user_text}\" ในระบบ"
@@ -69,7 +92,8 @@ class LineBotController < ApplicationController
                            alt_text: "ผลการค้นหา #{user_text}",
                            contents: {
                              type: "carousel",
-                             contents: bubbles
+                             contents: bubbles,
+
                            }
                          )
                        ]
@@ -81,6 +105,7 @@ class LineBotController < ApplicationController
           )
 
           client.reply_message(reply_message_request: reply_req)
+
         end
 
       when Line::Bot::V2::Webhook::FollowEvent
@@ -113,7 +138,22 @@ class LineBotController < ApplicationController
     render plain: "OK"
   end
 
+
   private
+
+  def notify_admin_no_product(user_id:, query:)
+    admin_id = ENV["LINE_CHANNEL_ID"]
+    return if admin_id.blank?
+
+    message = [
+      { type: "text", text: "ไม่พบสินค้า \"#{query}\"" },
+      { type: "text", text: "user_id: #{user_id.presence || 'unknown'}" }
+    ]
+
+    LinePushJob.perform_later(admin_id, message)
+  rescue StandardError => e
+    Rails.logger.error("notify_admin_no_product failed: #{e.message}")
+  end
 
   FALLBACK_PRODUCT_IMAGE = "https://images.unsplash.com/photo-1448630360428-65456885c650"
 
@@ -140,6 +180,8 @@ class LineBotController < ApplicationController
           type: "box",
           layout: "vertical",
           contents: [
+
+
             {
               type: "text",
               text: product.productname.to_s,

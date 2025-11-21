@@ -60,5 +60,29 @@
             product.barcodeid.to_s.downcase.include?(needle)
         end
       end
+      
+      def search_by_barcode(barcode)
+        products = all
+        needle = barcode.to_s.strip.downcase
+        return products if needle.blank?
+
+        products.select do |product|
+          product.barcodeid.to_s.downcase.include?(needle)
+        end
+      end
+      
+      def search_by_name(name)
+        products = all
+        needle = name.to_s.strip.downcase
+        return products if needle.blank?
+
+        products.select do |product|
+          product.productname.to_s.downcase.include?(needle)
+        end
+      end
+      
+      def none
+        []
+      end
     end
   end
