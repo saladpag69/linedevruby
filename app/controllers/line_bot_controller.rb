@@ -47,11 +47,28 @@ class LineBotController < ApplicationController
     events.each do |event|
 
       case event
+
       when Line::Bot::V2::Webhook::MessageEvent
         case event.message
+
+
         when Line::Bot::V2::Webhook::TextMessageContent
           user_text = event.message.text.to_s
           user_id = event.source&.user_id || "unknown"
+          group_id = event.source&.group_id || "unknown"
+          
+          if group_id == "C825174a05b34cfec346b837944651495"
+            reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
+              reply_token: event.reply_token,
+              messages: [
+                Line::Bot::V2::MessagingApi::TextMessage.new(
+                  text: "ไม่สามารถตอบคำถามผู้ค้าได้"
+                )
+              ]
+            
+            )
+            # Handle the message for the specific user
+              else
           reply_token = event.reply_token
           extracted    = MessageProductExtractor.new(user_text).call
           response_text = extracted[:response]
@@ -99,13 +116,15 @@ class LineBotController < ApplicationController
                        ]
                      end
 
-          reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
-            reply_token: event.reply_token,
-            messages: messages
-          )
 
+          
+            # Handle the message for another specific user
+            reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
+              reply_token: event.reply_token,
+              messages: messages
+            )
+          end
           client.reply_message(reply_message_request: reply_req)
-
         end
 
       when Line::Bot::V2::Webhook::FollowEvent
@@ -142,15 +161,9 @@ class LineBotController < ApplicationController
   private
 
   def notify_admin_no_product(user_id:, query:)
-    admin_id = ENV["LINE_CHANNEL_ID"]
-    return if admin_id.blank?
+    message = "สอบถาม \"#{query}\""
+    SupplierLineNotifier.new(message: message).call
 
-    message = [
-      { type: "text", text: "ไม่พบสินค้า \"#{query}\"" },
-      { type: "text", text: "user_id: #{user_id.presence || 'unknown'}" }
-    ]
-
-    LinePushJob.perform_later(admin_id, message)
   rescue StandardError => e
     Rails.logger.error("notify_admin_no_product failed: #{e.message}")
   end
@@ -254,4 +267,6 @@ class LineBotController < ApplicationController
       }
     end
   end
+
+
 end
