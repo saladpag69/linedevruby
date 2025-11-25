@@ -2,7 +2,7 @@
 service: ai_note
 
 # Name of the container image (use your-user/app-name on external registries).
-image: ai_note
+image: registry.digitalocean.com/siamcosmo
 
 # Deploy to these servers.
 servers:
@@ -27,7 +27,7 @@ servers:
 # Where you keep your container images.
 registry:
   # Alternatives: hub.docker.com / registry.digitalocean.com / ghcr.io / ...
-  server: localhost:5555
+  server: registry.digitalocean.com/siamcosmo
 
   # Needed for authenticated registries.
   # username: your-user

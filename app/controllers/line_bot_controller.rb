@@ -142,15 +142,24 @@ class LineBotController < ApplicationController
   private
 
   def notify_admin_no_product(user_id:, query:)
-    admin_id = ENV["LINE_CHANNEL_ID"]
+    admin_id = "C825174a05b34cfec346b837944651495"
     return if admin_id.blank?
 
+    # LinePushJob.perform_later(
+    #   admin_id,
+    #   [
+    #     { type: "text", text: "push message ไม่พบสินค้า \"#{query}\"" },
+    #     { type: "text", text: "user_id: #{user_id.presence || 'unknown'}" }
+    #   ]
     message = [
-      { type: "text", text: "ไม่พบสินค้า \"#{query}\"" },
-      { type: "text", text: "user_id: #{user_id.presence || 'unknown'}" }
+      {
+        type: "text",
+        text: "user_id :#{user_id.presence || 'unknown'} ต้องการสินค้า \"#{query}\""
+      }
     ]
+    
+      ::LinePushJob.perform_later(admin_id, message)
 
-    LinePushJob.perform_later(admin_id, message)
   rescue StandardError => e
     Rails.logger.error("notify_admin_no_product failed: #{e.message}")
   end
