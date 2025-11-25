@@ -131,23 +131,22 @@
   <div class="product-header">
     <h1>Active Products</h1>
     <p>เลือกสินค้าที่พร้อมจำหน่าย ดีไซน์สวย ทันสมัย บ้านสยาม</p>
-
-    <div class="search-bar">
-      <div class="search-actions">
-        <%= form_with url: aboutus_path, method: :get, local: true do %>
-          <%= text_field_tag :q, @query, placeholder: "ค้นหาสินค้า / บาร์โค้ด", class: "search-input" %>
-
-          <button type="submit" class="search-button">ค้นหา</button>
-        <% end %>
-
+    <%= form_with url: aboutus_path, method: :get, local: true do %>
+      <%= text_field_tag :q, @query, placeholder: "ค้นหาสินค้า / บาร์โค้ด", class: "search-input" %>     
+    <button
+      id="supplier-line-button"
+      class="cta-button"
+      type="button"
+      data-endpoint="<%= supplier_line_path %>"
+    >
         
-
-        <%= form_with url: aboutus_path, method: :get, local: true do %>
-          <%= hidden_field_tag :test_push, "1" %>
-
-          <button type="submit" class="search-button">ทดสอบ LINE push</button>
-        <% end %>
-      </div>
+      send to supplier line
+    </button>
+    <% end %>
+    <div class="search-bar">
+      <%= form_with url: aboutus_path, method: :get, local: true do %>
+        <%= text_field_tag :q, @query, placeholder: "ค้นหาสินค้า / บาร์โค้ด", class: "search-input" %>        <button type="submit" class="search-button">ค้นหา</button>
+      <% end %>
     </div>
   </div>
 
@@ -161,16 +160,13 @@
 
       <article class="product-card">
         <img src="<%= image_url %>" alt="<%= product.productname %>"> <%# herb:disable erb-prefer-image-tag-helper %>
-
         <div class="product-body">
           <div class="product-name"><%= product.productname %></div>
           <div class="product-meta">หมวดหมู่: <%= product.category %></div>
-
           <div class="product-meta">
             สต็อก: <%= product.productstock %> ชิ้น
           </div>
         </div>
-
         <div class="product-footer">
           <div>
             <small>ราคา</small>
@@ -187,4 +183,50 @@
       </article>
     <% end %>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const supplierButton = document.getElementById("supplier-line-button");
+      if (!supplierButton) return;
+
+      const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+      const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
+      const searchInput = document.querySelector(".search-input");
+      const buttonLabel = supplierButton.textContent;
+
+      supplierButton.addEventListener("click", async function() {
+        if (supplierButton.disabled) return;
+
+        supplierButton.disabled = true;
+        supplierButton.textContent = "กำลังส่ง...";
+
+        try {
+          const response = await fetch(supplierButton.dataset.endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-Token": csrfToken,
+              "Accept": "application/json"
+            },
+            body: JSON.stringify({ query: searchInput ? searchInput.value : "" })
+          });
+
+          let payload = {};
+          try {
+            payload = await response.json();
+          } catch (error) {
+            payload = {};
+          }
+
+          const message = payload.message || (response.ok ? "ส่งข้อความเรียบร้อยแล้ว" : "ส่งข้อความไม่สำเร็จ");
+          alert(message);
+        } catch (error) {
+          alert("ส่งข้อความไม่สำเร็จ โปรดลองอีกครั้ง");
+        } finally {
+          supplierButton.disabled = false;
+          supplierButton.textContent = buttonLabel;
+        }
+      });
+    });
+  </script>
 </div>
