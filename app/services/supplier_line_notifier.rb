@@ -1,6 +1,7 @@
 require "openssl"
 
 class SupplierLineNotifier
+   # ต้องย้ายไป ENV
   SUPPLIER_LINE_ID = "C825174a05b34cfec346b837944651495"
 
   def initialize(message:, client: default_client)

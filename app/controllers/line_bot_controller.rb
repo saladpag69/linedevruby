@@ -20,6 +20,7 @@ class LineBotController < ApplicationController
     end
 
     @client ||= Line::Bot::V2::MessagingApi::ApiClient.new(
+      
       channel_access_token: "5rc4Avbnsgnm7U1F/Ok1yFkvl1+nVF70b4SYaG1WBAP2yV9B7YiYM8TPvJUfv7/W7TLFr6i3xHUUdNGm7H0vJZXS/gelZkRduXqpCqbN42E5l8Wu4M+wInc4yg+qxuhiYpBpwVUY8gdqwYwxUHjIpQdB04t89/1O/w1cDnyilFU=",
       http_options: {
         verify_mode: OpenSSL::SSL::VERIFY_PEER,
@@ -55,7 +56,12 @@ class LineBotController < ApplicationController
         when Line::Bot::V2::Webhook::TextMessageContent
           user_text = event.message.text.to_s
           user_id = event.source&.user_id || "unknown"
-          group_id = event.source&.group_id || "unknown"
+          source = event.source
+          group_id = if source.is_a?(Line::Bot::V2::Webhook::GroupSource)
+                       source.group_id
+                     elsif source.is_a?(Line::Bot::V2::Webhook::RoomSource)
+                       source.room_id
+                     end
           
           if group_id == "C825174a05b34cfec346b837944651495"
             reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
@@ -96,7 +102,7 @@ class LineBotController < ApplicationController
                          )
                        ]
                      elsif products.empty?
-                       notify_admin_no_product(user_id: user_id, query: user_text)
+                       notify_admin_no_product(user_id: user_id,group_id: group_id, query: user_text)
                        [
                          Line::Bot::V2::MessagingApi::TextMessage.new(
                            text: "ไม่พบสินค้า \"#{user_text}\" ในระบบ"
@@ -119,6 +125,7 @@ class LineBotController < ApplicationController
 
           
             # Handle the message for another specific user
+            
             reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
               reply_token: event.reply_token,
               messages: messages
@@ -160,8 +167,8 @@ class LineBotController < ApplicationController
 
   private
 
-  def notify_admin_no_product(user_id:, query:)
-    message = "สอบถาม \"#{query}\""
+  def notify_admin_no_product(user_id:,group_id:, query:)
+    message = "ผู้ใช้:#{user_id} กลุ่ม:#{group_id} สอบถาม \"#{query}\""
     SupplierLineNotifier.new(message: message).call
 
   rescue StandardError => e
