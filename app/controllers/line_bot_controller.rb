@@ -77,8 +77,14 @@ class LineBotController < ApplicationController
               else
           reply_token = event.reply_token
           extracted    = MessageProductExtractor.new(user_text).call
-          response_text = extracted[:response]
+          
 
+          # Add a new line here
+          
+          response_text = extracted[:response]
+          
+          # Rails.logger.info("Response text: #{response_text}")
+          
           products = if response_text.present?
                        ActiveProduct.none
                      elsif extracted[:barcode].present?

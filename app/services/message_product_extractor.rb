@@ -55,7 +55,6 @@ class MessageProductExtractor
 
     cleaned = normalize_text(@text)
     return { barcode: cleaned } if barcode?(cleaned)
-
     { keyword: cleaned }
   end
 
