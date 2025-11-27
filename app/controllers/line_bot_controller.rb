@@ -3,10 +3,11 @@
 # U2afea61f31f814f059793c5395c03171 == Line Zayam
 require "openssl"
 require "cgi"
+require "bundler/setup"
+require "openai"
 
 class LineBotController < ApplicationController
   skip_before_action :verify_authenticity_token
-
   def client
     verify_callback = lambda do |preverify_ok, store_context|
       next true if preverify_ok
@@ -20,7 +21,7 @@ class LineBotController < ApplicationController
     end
 
     @client ||= Line::Bot::V2::MessagingApi::ApiClient.new(
-      
+
       channel_access_token: "5rc4Avbnsgnm7U1F/Ok1yFkvl1+nVF70b4SYaG1WBAP2yV9B7YiYM8TPvJUfv7/W7TLFr6i3xHUUdNGm7H0vJZXS/gelZkRduXqpCqbN42E5l8Wu4M+wInc4yg+qxuhiYpBpwVUY8gdqwYwxUHjIpQdB04t89/1O/w1cDnyilFU=",
       http_options: {
         verify_mode: OpenSSL::SSL::VERIFY_PEER,
@@ -62,7 +63,7 @@ class LineBotController < ApplicationController
                      elsif source.is_a?(Line::Bot::V2::Webhook::RoomSource)
                        source.room_id
                      end
-          
+
           if group_id == "C825174a05b34cfec346b837944651495"
             reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
               reply_token: event.reply_token,
@@ -71,19 +72,43 @@ class LineBotController < ApplicationController
                   text: "ไม่สามารถตอบคำถามผู้ค้าได้"
                 )
               ]
-            
+
             )
             # Handle the message for the specific user
               else
           reply_token = event.reply_token
-          extracted    = MessageProductExtractor.new(user_text).call
-          
 
-          # Add a new line here
+
+          # prompt = build_prompt(user_text)
+          # openai = OpenAI::Client.new(
+          #   api_key: "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"
+          # )
+          # response = openai.chat.completions.create(
+          #   model: :"gpt-4.1-mini",
+          #   messages: [
+          #     { role: "system", content: "ตอบเป็นสั้นๆ 1 บรรทัด" },
+          #     { role: "user", content: user_text }
+          #   ]
+          # )
           
-          response_text = extracted[:response]
+          # content = response.choices.first.message[:content]
+
+          # Rails.logger.debug("📌📌📌📌📌📌📌📌: #{content}")
+          nlu_result = Nlu::Orchestrator.call(text: user_text, customer: user_id)
+          #nlu_content = nlu_result.choices.first.message[:content]
+          # nlu_taxt   = Nlu::IntentRouter.call(nlu: nlu_result, customer: user_id)
+          test_message =                        [
+            Line::Bot::V2::MessagingApi::TextMessage.new(
+              text: nlu_result
+            )
+          ] 
+          # extracted    = MessageProductExtractor.new(user_text).call
+          # response_text = extracted[:response]
           
-          # Rails.logger.info("Response text: #{response_text}")
+          parsed = JSON.parse(content) # แปลงเป็น hash
+          response = parsed.dig("intent")
+          response_text = 
+          
           
           products = if response_text.present?
                        ActiveProduct.none
@@ -95,6 +120,7 @@ class LineBotController < ApplicationController
                        ActiveProduct.none
                      end
 
+         
           messages = if response_text.present?
                        [
                          Line::Bot::V2::MessagingApi::TextMessage.new(
@@ -115,6 +141,7 @@ class LineBotController < ApplicationController
                          )
                        ]
                      else
+
                        bubbles = build_product_bubbles(products.first(5))
                        [
                          Line::Bot::V2::MessagingApi::FlexMessage.new(
@@ -123,18 +150,19 @@ class LineBotController < ApplicationController
                              type: "carousel",
                              contents: bubbles,
 
+
                            }
                          )
                        ]
                      end
 
 
-          
+
             # Handle the message for another specific user
             
             reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
               reply_token: event.reply_token,
-              messages: messages
+              messages: messages +test_message
             )
           end
           client.reply_message(reply_message_request: reply_req)
@@ -172,6 +200,14 @@ class LineBotController < ApplicationController
 
 
   private
+
+  # def create
+  #    nlu = Nlu::Orchestrator.call(text: params[:text], customer: current_customer)
+
+  #    response = IntentRouter.call(nlu: nlu, customer: current_customer)
+
+  #    render json: { reply: response }
+  #  end
 
   def notify_admin_no_product(user_id:,group_id:, query:)
     message = "ผู้ใช้:#{user_id} กลุ่ม:#{group_id} สอบถาม \"#{query}\""
@@ -281,5 +317,29 @@ class LineBotController < ApplicationController
     end
   end
 
+  def build_prompt(text)
+    <<~PROMPT
+      คุณเป็นตัวช่วยเข้าใจข้อความจากลูกค้าเกี่ยวกับ "วงส้วม" และสินค้าในร้านวัสดุก่อสร้าง
 
+      วิเคราะห์ประโยคต่อไปนี้และตอบเป็น JSON เท่านั้น ห้ามมีข้อความอื่นนอกจาก JSON
+
+      intent ต้องเป็นหนึ่งใน:
+      - ASK_PRICE          (ถามราคา)
+      - ASK_ORDER_STATUS   (ถามสถานะของที่สั่ง)
+      - ASK_PRODUCT_SPEC   (ถามสเปค เช่น สูงเท่าไหร่)
+      - ASK_SHIPPING_COST  (ถามค่าส่ง, เงื่อนไขส่งฟรี)
+      - UNKNOWN            (ถ้าตัดสินใจไม่ได้)
+
+      entities ให้ใส่ได้ เช่น:
+      - product: ชื่อสินค้า เช่น "วงส้วม"
+      - size: ขนาดเช่น 80 (ตัวเลข)
+      - quantity: จำนวนวง เช่น 40 (ตัวเลข)
+
+      ตัวอย่าง JSON:
+      {"intent":"ASK_PRICE","entities":{"product":"วงส้วม","size":80}}
+
+      ประโยค:
+      "#{text}"
+    PROMPT
+  end
 end

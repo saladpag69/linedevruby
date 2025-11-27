@@ -10,23 +10,23 @@ class MessageProductExtractor
   REQUEST_WORDS = %w[
     ขอ ขอหน่อย ช่วย ช่วยหา หา หาให้ อยาก อยากได้ ต้องการ มี มีไหม สั่ง ส่งให้
   ].freeze
-  
+
   TALK_WITH_BOT_WORDS = %w[
     คุยกับบอท คุยกับ คุย คุยกับ คุยกับบอท
   ].freeze
-  
+
   SCHEDULE_WORDS = %w[
     กำหนด กำหนดเวลา กำหนดวัน กำหนดเวลาให้ กำหนดวันให้ จองคิว
   ].freeze
-  
+
   CHECK_SCHEDULE_WORDS = %w[
     ตามสินค้า ตรวจสอบ ตรวจสอบเวลา ตรวจสอบวัน ตรวจสอบเวลาให้ ตรวจสอบวันให้ ตรวจสอบคิว
   ].freeze
-  
+
   OPEN_WEBSITE_WORDS = %w[
     เปิดเว็บไซต์ เปิดเว็บ เปิดเว็บไซต์ให้ เปิดเว็บให้ เปิดหน้าเว็บ
   ].freeze
-  
+
   CHECK_PRICE_WORDS = %w[
     ราคา ราคาสินค้า ราคาของสินค้า ราคาสินค้าให้ ราคาของสินค้าให้
   ].freeze
@@ -47,8 +47,12 @@ class MessageProductExtractor
     @text = text.to_s
   end
 
+
+
   def call
-    
+
+
+
     if (response_key = detect_response(@text))
       return { response: RESPONSE_TEXT.fetch(response_key) }
     end
@@ -90,4 +94,6 @@ class MessageProductExtractor
   def barcode?(text)
     BARCODE_REGEX.match?(text)
   end
+
+
 end
