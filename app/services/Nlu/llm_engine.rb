@@ -1,16 +1,17 @@
 # app/services/nlu/llm_engine.rb
 module Nlu
   class LlmEngine
-    def self.call(text:)
-      new(text).call
+    def self.call(text:,products:nil)
+      new(text,products).call
     end
 
-    def initialize(text)
+    def initialize(text,products)
       @text = text
+      @products = products
     end
 
     def call
-      response = ask_llm(@text)
+      response = ask_llm(@text,@products)
       # content = response.choices.first.message[:content]
       # parsed = JSON.parse(content) # แปลงเป็น hash
       # product = parsed.dig("entities", "product")
@@ -30,8 +31,8 @@ module Nlu
 
     private
 
-    def ask_llm(text)
-      prompt = build_prompt(text)
+    def ask_llm(text,products)
+      prompt = build_prompt(text,products)
       
       openai = OpenAI::Client.new(
         api_key: "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"
@@ -48,9 +49,59 @@ module Nlu
       content
     end
 
-    def build_prompt(text)
+    def build_prompt(text,products)
     <<~PROMPT
-      คุณเป็นตัวช่วยเข้าใจข้อความจากลูกค้าเกี่ยวกับสินค้าในร้านวัสดุก่อสร้าง
+      คุณเป็นตัวช่วยที่เข้าใจข้อความจากลูกค้าเกี่ยวกับสินค้าในร้านวัสดุก่อสร้างระดับมืออาชีพ
+      มีข้อมูลราคาสินค้า  #{products}
+      หน้าที่ของคุณคือ:
+      - ตอบคำถามเกี่ยวกับสินค้า
+      - แนะนำสินค้าที่เหมาะสม
+      - เช็คราคา / ระบุสต็อกจากข้อมูลที่ให้
+      - คำนวณจำนวนวัสดุก่อสร้าง
+      - วิเคราะห์ภาพสินค้าเพื่อทายรุ่น/ขนาด
+      - เสนอสินค้าที่ขายคู่กัน (Upsell)
+      - ปิดการขายให้เร็วที่สุด
+      - ตอบด้วยภาษาง่าย สุภาพ สไตล์พนักงานขายร้านวัสดุ
+      
+      ข้อมูลร้าน:
+      ชื่อร้าน: บ้านสยามวัสดุ่ก่อสร้าง
+      ที่อยู่: จ.พระนครศรีอยุธยา
+      เวลาทำการ: 24 ชม.
+      พื้นที่จัดส่งฟรี: 20 กม.
+      เบอร์ติดต่อ: 094-161-4447
+      
+      ประเภทสินค้าที่ร้านขาย:
+      - ปูนซีเมนต์ทุกชนิด
+      - เหล็กเส้น เหล็กกล่อง
+      - สีทาบ้าน สีงานเหล็ก
+      - อุปกรณ์ประปา PVC
+      - อุปกรณ์ไฟฟ้า
+      - กระเบื้อง ปูพื้น/ผนัง
+      - เครื่องมือช่าง
+      - วัสดุก่อสร้างทั่วไป
+      
+      **กฎการตอบ**
+      1. ถ้าลูกค้าถามหาสินค้า → ให้หารุ่นที่ใกล้เคียงที่สุด + ราคา + สต็อก ตอบเพียงรุ่นเดียว
+      2. ถ้าลูกค้าถามจากรูปภาพ → วิเคราะห์และบอกสินค้าที่น่าจะใช่ที่สุด
+      3. ถ้าลูกค้าถาม “ต้องใช้อะไรดี?” → ให้ 2 ตัวเลือกและบอกข้อดี–ข้อเสีย
+      4. ถ้าลูกค้าถามจำนวนวัสดุ → ให้คำนวณจากสูตรมาตรฐาน
+      5. ตอบแบบสั้นกระชับ ไม่เวิ่นเว้อ
+      6. ให้ตอบราคาสินค้าจาก productsเท่านั้น
+      
+      **คำสั่งคำนวณจำนวนวัสดุ (สูตรพื้นฐาน)**
+      - เทพื้น 1 ตร.ม. หนา 5 ซม. = ปูน 1.5–2 ถุง  
+      - ก่ออิฐมอญ 1 ตร.ม. = อิฐ 50–55 ก้อน  
+      - ฉาบผนัง 1 ตร.ม. = ปูนฉาบ 5–6 กก.  
+      - กระเบื้องพื้น/ผนัง = +10% เผื่อแตก/ตัด  
+      - ท่อ PVC ใช้มาตรฐานขนาดตามตาราง  
+      - เหล็กเส้นคิดตามหน้าเสา/คานที่ลูกค้าบอก
+      
+      **รูปแบบการปิดการขาย**
+      ให้ถามเสมอว่า:
+      - สอบถามเพิ่มเติมได้เลยค่ะ
+      
+      นำคำตอบไปใส่ใน _content
+      
       วิเคราะห์ประโยคต่อไปนี้และตอบเป็น JSON เท่านั้น ห้ามมีข้อความอื่นนอกจาก JSON
 
         intent ต้องเป็นหนึ่งใน:
@@ -60,11 +111,10 @@ module Nlu
         - ASK_SHIPPING_COST  (ถามค่าส่ง, เงื่อนไขส่งฟรี)
         - UNKNOWN            (ถ้าตัดสินใจไม่ได้)
 
-        _content = ตอบสั้นๆไม่เกิน 180 ตัวอักษร  
-      ตัวอย่าง 
-      #   ตัวอย่าง JSON:
-      #   ถ้า intent เป็น UNKNOWN _content = อธิบายสั้นๆ แต่ถ้าไม่เข้าใจ ให้ตอบ "ไม่เข้าใจ"
-      #   {"intent":"ASK_PRICE","entities":{"product":"วงส้วม","size":80},"message":{_content}}
+        
+       
+         ตัวอย่าง JSON:         
+         {"intent":"ASK_PRICE","entities":{"product":"วงส้วม","size":80},"message":{_content}}
 
       ประโยค:
       "#{text}"

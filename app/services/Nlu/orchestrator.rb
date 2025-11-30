@@ -3,13 +3,14 @@ require 'openai'
 
 module Nlu
   class Orchestrator
-    def self.call(text:, customer: nil)
-      new(text, customer).call
+    def self.call(text:, customer: nil,products: nil)
+      new(text, customer,products).call
     end
 
-    def initialize(text, customer)
+    def initialize(text, customer,products)
       @text = text.to_s.strip
       @customer = customer
+      @products = products
     end
 
     def call
@@ -22,7 +23,7 @@ module Nlu
 
       
       merged = merge_keyword_and_nlp(kw_result, nlp_result)
-      Rails.logger.debug("🏆🏆🏆🏆🏆🏆 kw_result + nlp_result :#{merged}")      
+      # Rails.logger.debug("🏆🏆🏆🏆🏆🏆 kw_result + nlp_result :#{merged}")      
       
       # 2) ตัดสินใจว่าจะเรียก LLM ไหม
       # if need_llm?(merged)
@@ -30,8 +31,8 @@ module Nlu
       #   merged = merge_with_llm(merged, llm_result)
       # end
       
-      llm_result = LlmEngine.call(text: @text)
-      Rails.logger.debug("🏆🏆🏆🏆🏆🏆 llm_result :#{llm_result}")      
+      llm_result = LlmEngine.call(text: @text,products: @products)
+      # Rails.logger.debug("🏆🏆🏆🏆🏆🏆 llm_result :#{llm_result}")      
       # merged = merge_with_llm(merged, llm_result)
       # Rails.logger.debug("🏆🏆🏆🏆🏆🏆 llm_result :#{merged}")      
       llm_result # => { intent: "...", confidence: 0.92, entities: {...} }

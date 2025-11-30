@@ -78,37 +78,9 @@ class LineBotController < ApplicationController
               else
           reply_token = event.reply_token
 
-
-          # prompt = build_prompt(user_text)
-          # openai = OpenAI::Client.new(
-          #   api_key: "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"
-          # )
-          # response = openai.chat.completions.create(
-          #   model: :"gpt-4.1-mini",
-          #   messages: [
-          #     { role: "system", content: "ตอบเป็นสั้นๆ 1 บรรทัด" },
-          #     { role: "user", content: user_text }
-          #   ]
-          # )
-          
-          # content = response.choices.first.message[:content]
-
-          # Rails.logger.debug("📌📌📌📌📌📌📌📌: #{content}")
-          nlu_result = Nlu::Orchestrator.call(text: user_text, customer: user_id)
-          #nlu_content = nlu_result.choices.first.message[:content]
-          # nlu_taxt   = Nlu::IntentRouter.call(nlu: nlu_result, customer: user_id)
-          test_message =                        [
-            Line::Bot::V2::MessagingApi::TextMessage.new(
-              text: nlu_result
-            )
-          ] 
-          # extracted    = MessageProductExtractor.new(user_text).call
-          # response_text = extracted[:response]
-          
-          parsed = JSON.parse(content) # แปลงเป็น hash
-          response = parsed.dig("intent")
-          response_text = 
-          
+           
+          extracted    = MessageProductExtractor.new(user_text).call
+          response_text = extracted[:response]        
           
           products = if response_text.present?
                        ActiveProduct.none
@@ -119,8 +91,19 @@ class LineBotController < ApplicationController
                      else
                        ActiveProduct.none
                      end
-
+                               
+                     nlu_result = Nlu::Orchestrator.call(text: user_text, customer: user_id,products:products)          
+                     llm_message = nlu_result
+                     test_parsed = JSON.parse(llm_message) # แปลงเป็น hash
+                     test_response = test_parsed.dig("message")
+                     test_message =                        [
+                       Line::Bot::V2::MessagingApi::TextMessage.new(
+                         text: test_response
+                       )
+                     ]
          
+                     
+                     
           messages = if response_text.present?
                        [
                          Line::Bot::V2::MessagingApi::TextMessage.new(
@@ -317,29 +300,4 @@ class LineBotController < ApplicationController
     end
   end
 
-  def build_prompt(text)
-    <<~PROMPT
-      คุณเป็นตัวช่วยเข้าใจข้อความจากลูกค้าเกี่ยวกับ "วงส้วม" และสินค้าในร้านวัสดุก่อสร้าง
-
-      วิเคราะห์ประโยคต่อไปนี้และตอบเป็น JSON เท่านั้น ห้ามมีข้อความอื่นนอกจาก JSON
-
-      intent ต้องเป็นหนึ่งใน:
-      - ASK_PRICE          (ถามราคา)
-      - ASK_ORDER_STATUS   (ถามสถานะของที่สั่ง)
-      - ASK_PRODUCT_SPEC   (ถามสเปค เช่น สูงเท่าไหร่)
-      - ASK_SHIPPING_COST  (ถามค่าส่ง, เงื่อนไขส่งฟรี)
-      - UNKNOWN            (ถ้าตัดสินใจไม่ได้)
-
-      entities ให้ใส่ได้ เช่น:
-      - product: ชื่อสินค้า เช่น "วงส้วม"
-      - size: ขนาดเช่น 80 (ตัวเลข)
-      - quantity: จำนวนวง เช่น 40 (ตัวเลข)
-
-      ตัวอย่าง JSON:
-      {"intent":"ASK_PRICE","entities":{"product":"วงส้วม","size":80}}
-
-      ประโยค:
-      "#{text}"
-    PROMPT
-  end
 end
