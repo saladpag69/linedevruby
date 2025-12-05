@@ -1,21 +1,21 @@
 # app/services/nlu/llm_engine.rb
 module Nlu
   class LlmEngine
-    def self.call(text:,products:nil)
-      new(text,products).call
+    def self.call(text:)
+      new(text).call
     end
 
-    def initialize(text,products)
+    def initialize(text)
       @text = text
-      @products = products
+      
     end
 
     def call
-      response = ask_llm(@text,@products)
+      response = ask_llm(@text)
       # content = response.choices.first.message[:content]
       # parsed = JSON.parse(content) # แปลงเป็น hash
       # product = parsed.dig("entities", "product")
-      Rails.logger.debug("🧟‍♀️🧟‍♀️🧟‍♀️🧟‍♀️🧟‍♀️"+response)
+      # Rails.logger.debug("🧟‍♀️🧟‍♀️🧟‍♀️🧟‍♀️🧟‍♀️"+response)
       # {
       #   intent: json["intent"] || "UNKNOWN",
       #   confidence: json["confidence"] || 0.8, # จะให้ fix 0.8 ไว้ก็ได้
@@ -31,11 +31,11 @@ module Nlu
 
     private
 
-    def ask_llm(text,products)
-      prompt = build_prompt(text,products)
+    def ask_llm(text)
+      prompt = build_prompt(text)
       
       openai = OpenAI::Client.new(
-        api_key: "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"
+        api_key: "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"
       )
       response = openai.chat.completions.create(
         model: :"gpt-4.1-mini",
@@ -49,10 +49,10 @@ module Nlu
       content
     end
 
-    def build_prompt(text,products)
+    def build_prompt(text)
     <<~PROMPT
       คุณเป็นตัวช่วยที่เข้าใจข้อความจากลูกค้าเกี่ยวกับสินค้าในร้านวัสดุก่อสร้างระดับมืออาชีพ
-      มีข้อมูลราคาสินค้า  #{products}
+      มีข้อมูลราคาสินค้า 
       หน้าที่ของคุณคือ:
       - ตอบคำถามเกี่ยวกับสินค้า
       - แนะนำสินค้าที่เหมาะสม

@@ -92,7 +92,7 @@ class LineBotController < ApplicationController
                        ActiveProduct.none
                      end
                                
-                     nlu_result = Nlu::Orchestrator.call(text: user_text, customer: user_id,products:products)          
+                     nlu_result = Nlu::Orchestrator.call(text: user_text, customer: user_id)          
                      llm_message = nlu_result
                      test_parsed = JSON.parse(llm_message) # แปลงเป็น hash
                      test_response = test_parsed.dig("message")
@@ -145,7 +145,7 @@ class LineBotController < ApplicationController
             
             reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
               reply_token: event.reply_token,
-              messages: messages +test_message
+              messages: messages + test_message
             )
           end
           client.reply_message(reply_message_request: reply_req)
