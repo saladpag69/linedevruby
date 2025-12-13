@@ -1,17 +1,21 @@
 # app/services/nlu/llm_engine.rb
 module Nlu
   class LlmEngine
-    def self.call(text:)
-      new(text).call
+    def self.call(text:,products:)
+      new(text,products).call
     end
 
-    def initialize(text)
+    def initialize(text,products)
       @text = text
+      @products = products
       
     end
+    
+    def llmSearchProduct
+    end 
 
     def call
-      response = ask_llm(@text)
+      response = ask_llm(@text,@products)
       # content = response.choices.first.message[:content]
       # parsed = JSON.parse(content) # แปลงเป็น hash
       # product = parsed.dig("entities", "product")
@@ -23,6 +27,7 @@ module Nlu
       #   # message: json["message"] || "AI กำลังปรับปรุง"
       # }
       response
+      
     
     rescue error => e
       Rails.logger.error("LLM error: #{e.message}")
@@ -31,8 +36,17 @@ module Nlu
 
     private
 
-    def ask_llm(text)
-      prompt = build_prompt(text)
+    def ask_llm(text,products)
+      
+        if products.blank? 
+          items = []
+        else
+          items = products.first(5).map do |p|
+            { id: p._id, name: p.productname, price: p.productsale6, stock: p.productstock.present? }
+          end
+        end
+       
+      prompt = build_prompt(text,items)
       
       openai = OpenAI::Client.new(
         api_key: "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"
@@ -46,13 +60,13 @@ module Nlu
       )
       content = response.choices.first.message[:content]
       
-      content
+      
     end
 
-    def build_prompt(text)
+    def build_prompt(text,items)
     <<~PROMPT
       คุณเป็นตัวช่วยที่เข้าใจข้อความจากลูกค้าเกี่ยวกับสินค้าในร้านวัสดุก่อสร้างระดับมืออาชีพ
-      มีข้อมูลราคาสินค้า 
+      
       หน้าที่ของคุณคือ:
       - ตอบคำถามเกี่ยวกับสินค้า
       - แนะนำสินค้าที่เหมาะสม
@@ -81,12 +95,13 @@ module Nlu
       - วัสดุก่อสร้างทั่วไป
       
       **กฎการตอบ**
-      1. ถ้าลูกค้าถามหาสินค้า → ให้หารุ่นที่ใกล้เคียงที่สุด + ราคา + สต็อก ตอบเพียงรุ่นเดียว
+      1. ถ้าลูกค้าถามหาสินค้า →  ข้อมูลสินค้าที่หาเจอ (สูงสุด 5 รายการ):
+       #{items.to_json}
       2. ถ้าลูกค้าถามจากรูปภาพ → วิเคราะห์และบอกสินค้าที่น่าจะใช่ที่สุด
       3. ถ้าลูกค้าถาม “ต้องใช้อะไรดี?” → ให้ 2 ตัวเลือกและบอกข้อดี–ข้อเสีย
       4. ถ้าลูกค้าถามจำนวนวัสดุ → ให้คำนวณจากสูตรมาตรฐาน
       5. ตอบแบบสั้นกระชับ ไม่เวิ่นเว้อ
-      6. ให้ตอบราคาสินค้าจาก productsเท่านั้น
+      6. 
       
       **คำสั่งคำนวณจำนวนวัสดุ (สูตรพื้นฐาน)**
       - เทพื้น 1 ตร.ม. หนา 5 ซม. = ปูน 1.5–2 ถุง  

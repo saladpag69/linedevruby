@@ -88,19 +88,21 @@ class LineBotController < ApplicationController
                        ActiveProduct.where(barcodeid: extracted[:barcode])
                      elsif extracted[:keyword].present?
                        ActiveProduct.search(extracted[:keyword])
+                       
                      else
                        ActiveProduct.none
                      end
                                
-                     nlu_result = Nlu::Orchestrator.call(text: user_text, customer: user_id)          
+                     nlu_result = Nlu::Orchestrator.call(text: user_text, customer: user_id,products:products)          
                      llm_message = nlu_result
                      test_parsed = JSON.parse(llm_message) # แปลงเป็น hash
                      test_response = test_parsed.dig("message")
                      test_message =                        [
                        Line::Bot::V2::MessagingApi::TextMessage.new(
+                        
                          text: test_response
                        )
-                     ]
+                     ]          
          
                      
                      
@@ -125,7 +127,7 @@ class LineBotController < ApplicationController
                        ]
                      else
 
-                       bubbles = build_product_bubbles(products.first(5))
+                       bubbles = build_product_bubbles(products)
                        [
                          Line::Bot::V2::MessagingApi::FlexMessage.new(
                            alt_text: "ผลการค้นหา #{user_text}",
@@ -203,7 +205,7 @@ class LineBotController < ApplicationController
   FALLBACK_PRODUCT_IMAGE = "https://images.unsplash.com/photo-1448630360428-65456885c650"
 
   def build_product_bubbles(products)
-    products.map do |product|
+    products.first(5).map do |product|
       price_primary = product.productsale1.to_s
       price_secondary = product.productsale2.to_s
       image_url = product.productimage.presence || FALLBACK_PRODUCT_IMAGE
