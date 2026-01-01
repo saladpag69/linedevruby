@@ -32,7 +32,7 @@ class LineBotController < ApplicationController
 
   def parser
     @parser ||= Line::Bot::V2::WebhookParser.new(
-      channel_secret: "2f93e390fa625b298c1278286de6f167"
+      channel_secret: Rails.application.credentials.LINE_CHANNEL_SECRET
     )
   end
 
@@ -64,7 +64,7 @@ class LineBotController < ApplicationController
                        source.room_id
                      end
 
-          if group_id == "C825174a05b34cfec346b837944651495"
+          if group_id == Rails.application.credentials.SUPPLY_CHANNEL_ID
             reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
               reply_token: event.reply_token,
               messages: [
