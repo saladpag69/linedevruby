@@ -32,7 +32,7 @@ class LineBotController < ApplicationController
 
   def parser
     @parser ||= Line::Bot::V2::WebhookParser.new(
-      channel_secret: Rails.application.credentials.LINE_CHANNEL_SECRET
+      channel_secret: "2f93e390fa625b298c1278286de6f167"
     )
   end
 
@@ -64,7 +64,7 @@ class LineBotController < ApplicationController
                        source.room_id
                      end
 
-          if group_id == Rails.application.credentials.SUPPLY_CHANNEL_ID
+          if group_id == "C825174a05b34cfec346b837944651495"
             reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
               reply_token: event.reply_token,
               messages: [
@@ -78,34 +78,34 @@ class LineBotController < ApplicationController
               else
           reply_token = event.reply_token
 
-           
+
           extracted    = MessageProductExtractor.new(user_text).call
-          response_text = extracted[:response]        
-          
+          response_text = extracted[:response]
+
           products = if response_text.present?
                        ActiveProduct.none
                      elsif extracted[:barcode].present?
                        ActiveProduct.where(barcodeid: extracted[:barcode])
                      elsif extracted[:keyword].present?
                        ActiveProduct.search(extracted[:keyword])
-                       
+
                      else
                        ActiveProduct.none
                      end
-                               
-                     nlu_result = Nlu::Orchestrator.call(text: user_text, customer: user_id,products:products)          
+
+                     nlu_result = Nlu::Orchestrator.call(text: user_text, customer: user_id,products:products)
                      llm_message = nlu_result
                      test_parsed = JSON.parse(llm_message) # แปลงเป็น hash
                      test_response = test_parsed.dig("message")
                      test_message =                        [
                        Line::Bot::V2::MessagingApi::TextMessage.new(
-                        
+
                          text: test_response
                        )
-                     ]          
-         
-                     
-                     
+                     ]
+
+
+
           messages = if response_text.present?
                        [
                          Line::Bot::V2::MessagingApi::TextMessage.new(
@@ -144,7 +144,7 @@ class LineBotController < ApplicationController
 
 
             # Handle the message for another specific user
-            
+
             reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
               reply_token: event.reply_token,
               messages: messages + test_message

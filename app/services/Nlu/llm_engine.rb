@@ -48,8 +48,9 @@ module Nlu
 
       prompt = build_prompt(text,items)
 
+      # Rails.application.credentials.OPENAI_API_KEY
       openai = OpenAI::Client.new(
-        api_key: Rails.application.credentials.OPENAI_API_KEY
+        api_key: "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"
       )
       response = openai.chat.completions.create(
         model: :"gpt-4.1-mini",
