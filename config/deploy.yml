@@ -1,13 +1,13 @@
 # Name of your application. Used to uniquely configure containers.
-service: ai_note
+service: siamcosmo
 
 # Name of the container image (use your-user/app-name on external registries).
-image: registry.digitalocean.com/siamcosmo
+image: zayam/siamcosmo
 
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.0.1
+    - 68.183.234.44
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -20,9 +20,9 @@ servers:
 #
 # Don't use this when deploying to multiple web servers (then you have to terminate SSL at your load balancer).
 #
-# proxy:
-#   ssl: true
-#   host: app.example.com
+proxy:
+  ssl: true
+  host: siamcosmo.com
 
 # Where you keep your container images.
 registry:
@@ -30,11 +30,11 @@ registry:
   server: registry.digitalocean.com/siamcosmo
 
   # Needed for authenticated registries.
-  # username: your-user
+  username: zayam
 
   # Always use an access token rather than real password when possible.
-  # password:
-  #   - KAMAL_REGISTRY_PASSWORD
+  password:
+    - KAMAL_REGISTRY_PASSWORD
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 env:
@@ -53,7 +53,7 @@ env:
 
     # Match this to any external database server to configure Active Record correctly
     # Use ai_note-db for a db accessory server on same machine via local kamal docker network.
-    # DB_HOST: 192.168.0.2
+    DB_HOST: DB_HOST
 
     # Log everything from Rails
     # RAILS_LOG_LEVEL: debug
@@ -69,13 +69,13 @@ aliases:
 # Use a persistent storage volume for sqlite database files and local Active Storage files.
 # Recommended to change this to a mounted volume path that is backed up off server.
 volumes:
-  - "ai_note_storage:/rails/storage"
+  # - "ai_note_storage:/rails/storage"
+  - "volume-sgp1-01:/rails/storage"
 
 # Bridge fingerprinted assets, like JS and CSS, between versions to avoid
 # hitting 404 on in-flight requests. Combines all files from new and old
 # version inside the asset_path.
 asset_path: /rails/public/assets
-
 
 # Configure the image builder.
 builder:
@@ -90,7 +90,6 @@ builder:
   # secrets:
   #   - GITHUB_TOKEN
   #   - RAILS_MASTER_KEY
-
 # Use a different ssh user than root
 # ssh:
 #   user: app
