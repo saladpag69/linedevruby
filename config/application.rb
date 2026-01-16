@@ -16,7 +16,9 @@ module AiNote
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
     # Example apps are not part of the Rails app runtime.
-    config.autoloaders.main.ignore(Rails.root.join("app/example"))
+    config.before_eager_load do
+      Rails.autoloaders.main.ignore(Rails.root.join("app/example"))
+    end
 
     # Configuration for the application, engines, and railties goes here.
     #
