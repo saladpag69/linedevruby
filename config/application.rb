@@ -15,6 +15,8 @@ module AiNote
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
+    # Example apps are not part of the Rails app runtime.
+    config.paths["app"].exclude << "app/example"
 
     # Configuration for the application, engines, and railties goes here.
     #
