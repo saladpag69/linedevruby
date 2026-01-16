@@ -145,10 +145,19 @@ class LineBotController < ApplicationController
 
             # Handle the message for another specific user
 
+            reply_messages = messages + test_message
+
             reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
               reply_token: event.reply_token,
-              messages: messages + test_message
+              messages: reply_messages
             )
+          end
+          reply_messages ||= reply_req.messages
+          append_chat_message(role: "user", text: user_text)
+          reply_messages.each do |message|
+            next unless message.respond_to?(:text)
+
+            append_chat_message(role: "ai", text: message.text)
           end
           client.reply_message(reply_message_request: reply_req)
         end

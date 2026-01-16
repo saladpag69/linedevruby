@@ -5,6 +5,9 @@ require "json"
 require "securerandom"
 
 class ApplicationController < ActionController::Base
+  CHAT_MESSAGES_CACHE_KEY = "chat:ai_messages"
+  CHAT_MESSAGES_MAX = 30
+
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
@@ -18,6 +21,7 @@ class ApplicationController < ActionController::Base
     trigger_supply_push if params[:supply_push].present?
     trigger_test_push if params[:test_push].present?
     @products = ActiveProduct.search(@query)
+    @chat_messages = read_chat_messages
   rescue => e
     Rails.logger.error("Active product API failed: #{e.message}")
     @products = []
@@ -45,4 +49,18 @@ class ApplicationController < ActionController::Base
   rescue StandardError => e
     Rails.logger.error("trigger_test_push failed: #{e.message}")
   end
+
+  def read_chat_messages
+    Rails.cache.read(CHAT_MESSAGES_CACHE_KEY) || []
+  end
+
+  def append_chat_message(role:, text:)
+    return if text.blank?
+
+    messages = read_chat_messages
+    messages << { "role" => role.to_s, "text" => text.to_s, "at" => Time.current.to_i }
+    Rails.cache.write(CHAT_MESSAGES_CACHE_KEY, messages.last(CHAT_MESSAGES_MAX))
+  end
+
+  private :read_chat_messages, :append_chat_message
 end

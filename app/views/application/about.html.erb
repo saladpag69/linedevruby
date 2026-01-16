@@ -125,6 +125,79 @@
   .cta-button:hover {
     opacity: 0.85;
   }
+
+  .ai.chat.message {
+    margin: 2.5rem auto 2rem;
+    max-width: 760px;
+    padding: 1.5rem 1.75rem;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #fff7ed 0%, #eef7ff 45%, #f7f0ff 100%);
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai.chat.message::before {
+    content: "ผู้ช่วย AI";
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0f172a;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+  }
+
+  .ai.chat.message::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(34, 197, 94, 0.12), transparent 45%),
+      radial-gradient(circle at 85% 0%, rgba(14, 165, 233, 0.15), transparent 45%),
+      radial-gradient(circle at 80% 85%, rgba(251, 146, 60, 0.12), transparent 50%);
+    pointer-events: none;
+  }
+
+  .ai.chat.message .message-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+  }
+
+  .ai.chat.message .message-content p {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    border-radius: 18px;
+    max-width: 80%;
+    background: rgba(255, 255, 255, 0.9);
+    color: #0f172a;
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+    line-height: 1.5;
+  }
+
+  .ai.chat.message .message-content .chat-line.user {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #0ea5e9, #22c55e);
+    color: #ffffff;
+  }
+
+  .ai.chat.message .message-content .chat-line.ai {
+    align-self: flex-start;
+  }
+
+  .ai.chat.message .message-content .chat-line.error {
+    align-self: flex-start;
+    background: #fee2e2;
+    color: #b91c1c;
+  }
 </style>
 
 <div class="product-page">
@@ -137,7 +210,7 @@
         <%= text_field_tag :q, @query, placeholder: "ค้นหาสินค้า / บาร์โค้ด", class: "search-input" %>        <button type="submit" class="search-button">ค้นหา</button> &nbsp;
 
 
-        <!--<button
+        <button
           id="supplier-line-button"
           class="cta-button"
           type="button"
@@ -145,9 +218,21 @@
         >
 
           send to supplier line
-        </button>-->
+        </button>
       <% end %>
     </div>
+  </div>
+
+  <div class="ai chat message">
+      <div class="message-content">
+        <p>สวัสดีคุณลูกค้า</p>
+        <p>คุณสามารถสอบถามข้อมูลสินค้าหรือสั่งซื้อได้ที่นี่</p>
+        <% if @chat_messages.present? %>
+          <% @chat_messages.each do |message| %>
+            <p class="chat-line <%= message["role"] %>"><%= message["text"] %></p>
+          <% end %>
+        <% end %>
+      </div>
   </div>
 
   <% image_pool = [
@@ -184,6 +269,7 @@
     <% end %>
   </div>
 
+
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const supplierButton = document.getElementById("supplier-line-button");
@@ -192,7 +278,16 @@
       const csrfMeta = document.querySelector('meta[name="csrf-token"]');
       const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
       const searchInput = document.querySelector(".search-input");
+      const chatContent = document.querySelector(".ai.chat.message .message-content");
       const buttonLabel = supplierButton.textContent;
+
+      const appendChatLine = (text, role) => {
+        if (!chatContent || !text) return;
+        const line = document.createElement("p");
+        line.className = `chat-line ${role}`;
+        line.textContent = text;
+        chatContent.appendChild(line);
+      };
 
       supplierButton.addEventListener("click", async function() {
         if (supplierButton.disabled) return;
@@ -201,6 +296,11 @@
         supplierButton.textContent = "กำลังส่ง...";
 
         try {
+          const query = searchInput ? searchInput.value.trim() : "";
+          if (query) {
+            appendChatLine(query, "user");
+          }
+
           const response = await fetch(supplierButton.dataset.endpoint, {
             method: "POST",
             headers: {
@@ -208,7 +308,7 @@
               "X-CSRF-Token": csrfToken,
               "Accept": "application/json"
             },
-            body: JSON.stringify({ query: searchInput ? searchInput.value : "" })
+            body: JSON.stringify({ query: query })
           });
 
           let payload = {};
@@ -218,10 +318,10 @@
             payload = {};
           }
 
-          const message = payload.message || (response.ok ? "ส่งข้อความเรียบร้อยแล้ว" : "ส่งข้อความไม่สำเร็จ");
-          alert(message);
+          const responseText = payload.reply || payload.response || payload.message || (response.ok ? "ส่งข้อความเรียบร้อยแล้ว" : "ส่งข้อความไม่สำเร็จ");
+          appendChatLine(responseText, "ai");
         } catch (error) {
-          alert("ส่งข้อความไม่สำเร็จ โปรดลองอีกครั้ง");
+          appendChatLine(`ส่งข้อความไม่สำเร็จ โปรดลองอีกครั้ง ${error}`, "error");
         } finally {
           supplierButton.disabled = false;
           supplierButton.textContent = buttonLabel;
