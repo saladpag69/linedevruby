@@ -7,7 +7,7 @@ image: zayam/siamcosmo
 # Deploy to these servers.
 servers:
   web:
-    - 159.89.202.72
+    - siamcosmo.com
 ssh:
   user: root
   keys: ["~/.ssh/id_ed25519"]

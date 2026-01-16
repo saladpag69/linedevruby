@@ -50,7 +50,7 @@ module Nlu
 
       # Rails.application.credentials.OPENAI_API_KEY
       openai = OpenAI::Client.new(
-        api_key: "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"
+        api_key: "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"
       )
       response = openai.chat.completions.create(
         model: :"gpt-4.1-mini",

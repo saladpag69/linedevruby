@@ -131,18 +131,21 @@
   <div class="product-header">
     <h1>Active Products</h1>
     <p>เลือกสินค้าที่พร้อมจำหน่าย ดีไซน์สวย ทันสมัย บ้านสยาม</p>
-    
+
     <div class="search-bar">
       <%= form_with url: aboutus_path, method: :get, local: true do %>
-        <%= text_field_tag :q, @query, placeholder: "ค้นหาสินค้า / บาร์โค้ด", class: "search-input" %>        <button type="submit" class="search-button">ค้นหา</button> &nbsp;  <button
+        <%= text_field_tag :q, @query, placeholder: "ค้นหาสินค้า / บาร์โค้ด", class: "search-input" %>        <button type="submit" class="search-button">ค้นหา</button> &nbsp;
+
+
+        <!--<button
           id="supplier-line-button"
           class="cta-button"
           type="button"
           data-endpoint="<%= supplier_line_path %>"
         >
-            
+
           send to supplier line
-        </button>
+        </button>-->
       <% end %>
     </div>
   </div>

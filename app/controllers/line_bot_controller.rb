@@ -1,6 +1,6 @@
 # app/controllers/line_bot_controller.rb
 # U176f407b7ae6cbaeb9bc9ba33ebbc067 == Line สยาม
-# U2afea61f31f814f059793c5395c03171 == Line Zayam
+#  == Line Zayam
 require "openssl"
 require "cgi"
 require "bundler/setup"
