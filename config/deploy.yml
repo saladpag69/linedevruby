@@ -7,7 +7,10 @@ image: zayam/siamcosmo
 # Deploy to these servers.
 servers:
   web:
-    - 68.183.234.44
+    - 159.89.202.72
+ssh:
+  user: root
+  keys: ["~/.ssh/id_ed25519"]
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -23,11 +26,18 @@ servers:
 proxy:
   ssl: true
   host: siamcosmo.com
+  healthcheck:
+    path: /up
+    interval: 2
+    timeout: 5
+
+# Give slow boots (first deploy, migrations, asset warmups) more time.
+deploy_timeout: 120
 
 # Where you keep your container images.
 registry:
-  # Alternatives: hub.docker.com / registry.digitalocean.com / ghcr.io / ...
-  server: registry.digitalocean.com/siamcosmo
+  # Alternatives: registry-1.docker.io / registry.digitalocean.com / ghcr.io / ...
+  server: registry-1.docker.io
 
   # Needed for authenticated registries.
   username: zayam
@@ -43,7 +53,7 @@ env:
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
-    SOLID_QUEUE_IN_PUMA: true
+    SOLID_QUEUE_IN_PUMA: false
 
     # Set number of processes dedicated to Solid Queue (default: 1)
     # JOB_CONCURRENCY: 3
@@ -82,7 +92,7 @@ builder:
   arch: amd64
 
   # # Build image via remote server (useful for faster amd64 builds on arm64 computers)
-  # remote: ssh://docker@docker-builder-server
+  # remote: ssh://root@159.89.202.72
   #
   # # Pass arguments and secrets to the Docker build process
   # args:

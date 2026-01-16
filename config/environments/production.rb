@@ -2,7 +2,9 @@ require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.perform_deliveries = false
+  config.action_mailer.delivery_method = :test
   # Code is not reloaded between requests.
   config.enable_reloading = false
 
@@ -80,10 +82,12 @@ Rails.application.configure do
 
   # Enable DNS rebinding protection and allow the deployed domains.
   config.hosts = [
+    "siamcosmo.com",
+    /.*\.siamcosmo\.com/, # permit www or other subdomains
     "siamcosmo.uk",
     /.*\.siamcosmo\.uk/ # permit www or other subdomains
   ]
   #
   # Skip DNS rebinding protection for the default health check endpoint.
-  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
