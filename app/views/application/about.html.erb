@@ -217,7 +217,15 @@
           data-endpoint="<%= supplier_line_path %>"
         >
 
-          send to supplier line
+          Ai Chat
+        </button>
+
+        <button
+        id="clear-ai-chat"
+        class="cta-button"
+        type="button"
+        >
+            เคลียร์แชท
         </button>
       <% end %>
     </div>
@@ -273,13 +281,19 @@
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const supplierButton = document.getElementById("supplier-line-button");
-      if (!supplierButton) return;
+//      if (!supplierButton) return;
+      const clearButton = document.getElementById("clear-ai-chat");
 
       const csrfMeta = document.querySelector('meta[name="csrf-token"]');
       const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : "";
       const searchInput = document.querySelector(".search-input");
-      const chatContent = document.querySelector(".ai.chat.message .message-content");
-      const buttonLabel = supplierButton.textContent;
+      // const chatContent = document.querySelector(".ai.chat.message .message-content");
+      // const buttonLabel = supplierButton.textContent;
+      const chatContent = document.querySelector(".ai-chat-message .message-content") || document.querySelector(".ai.chat.message .message-content");
+      if (!chatContent) return;
+      const initialChatContent = chatContent.innerHTML;
+      const buttonLabel = supplierButton ? supplierButton.textContent : "";
+
 
       const appendChatLine = (text, role) => {
         if (!chatContent || !text) return;
@@ -288,6 +302,15 @@
         line.textContent = text;
         chatContent.appendChild(line);
       };
+
+      if (clearButton) {
+        clearButton.addEventListener("click", function() {
+          chatContent.innerHTML = initialChatContent;
+        });
+      }
+
+      if (!supplierButton) return;
+
 
       supplierButton.addEventListener("click", async function() {
         if (supplierButton.disabled) return;

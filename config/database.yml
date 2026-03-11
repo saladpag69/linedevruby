@@ -26,16 +26,16 @@ test:
 production:
   primary:
     <<: *default
-    database: storage/production.sqlite3
+    url: <%= ENV.fetch("DATABASE_URL", nil) || "sqlite3:///data/production.sqlite3" %>
   cache:
     <<: *default
-    database: storage/production_cache.sqlite3
     migrations_paths: db/cache_migrate
+    url: <%= "#{ENV.fetch("DATABASE_URL", nil) || "sqlite3:///data/production.sqlite3"}?pool=5" %>
   queue:
     <<: *default
-    database: storage/production_queue.sqlite3
     migrations_paths: db/queue_migrate
+    url: <%= "#{ENV.fetch("DATABASE_URL", nil) || "sqlite3:///data/production.sqlite3"}?pool=5" %>
   cable:
     <<: *default
-    database: storage/production_cable.sqlite3
     migrations_paths: db/cable_migrate
+    url: <%= "#{ENV.fetch("DATABASE_URL", nil) || "sqlite3:///data/production.sqlite3"}?pool=5" %>

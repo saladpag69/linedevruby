@@ -22,7 +22,7 @@ class LineBotController < ApplicationController
 
     @client ||= Line::Bot::V2::MessagingApi::ApiClient.new(
 
-      channel_access_token: "5rc4Avbnsgnm7U1F/Ok1yFkvl1+nVF70b4SYaG1WBAP2yV9B7YiYM8TPvJUfv7/W7TLFr6i3xHUUdNGm7H0vJZXS/gelZkRduXqpCqbN42E5l8Wu4M+wInc4yg+qxuhiYpBpwVUY8gdqwYwxUHjIpQdB04t89/1O/w1cDnyilFU=",
+      channel_access_token: Rails.application.credentials.line[:channel_access_token],
       http_options: {
         verify_mode: OpenSSL::SSL::VERIFY_PEER,
         verify_callback: verify_callback
@@ -32,7 +32,7 @@ class LineBotController < ApplicationController
 
   def parser
     @parser ||= Line::Bot::V2::WebhookParser.new(
-      channel_secret: "2f93e390fa625b298c1278286de6f167"
+      channel_secret: Rails.application.credentials.line[:channel_secret]
     )
   end
 
@@ -47,7 +47,6 @@ class LineBotController < ApplicationController
     end
 
     events.each do |event|
-
       case event
 
       when Line::Bot::V2::Webhook::MessageEvent
@@ -60,9 +59,9 @@ class LineBotController < ApplicationController
           source = event.source
           group_id = if source.is_a?(Line::Bot::V2::Webhook::GroupSource)
                        source.group_id
-                     elsif source.is_a?(Line::Bot::V2::Webhook::RoomSource)
+          elsif source.is_a?(Line::Bot::V2::Webhook::RoomSource)
                        source.room_id
-                     end
+          end
 
           if group_id == "C825174a05b34cfec346b837944651495"
             reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
@@ -74,8 +73,8 @@ class LineBotController < ApplicationController
               ]
 
             )
-            # Handle the message for the specific user
-              else
+          # Handle the message for the specific user
+          else
           reply_token = event.reply_token
 
 
@@ -84,16 +83,16 @@ class LineBotController < ApplicationController
 
           products = if response_text.present?
                        ActiveProduct.none
-                     elsif extracted[:barcode].present?
+          elsif extracted[:barcode].present?
                        ActiveProduct.where(barcodeid: extracted[:barcode])
-                     elsif extracted[:keyword].present?
+          elsif extracted[:keyword].present?
                        ActiveProduct.search(extracted[:keyword])
 
-                     else
+          else
                        ActiveProduct.none
-                     end
+          end
 
-                     nlu_result = Nlu::Orchestrator.call(text: user_text, customer: user_id,products:products)
+                     nlu_result = Nlu::Orchestrator.call(text: user_text, customer: user_id, products: products)
                      llm_message = nlu_result
                      test_parsed = JSON.parse(llm_message) # แปลงเป็น hash
                      test_response = test_parsed.dig("message")
@@ -112,20 +111,20 @@ class LineBotController < ApplicationController
                            text: response_text
                          )
                        ]
-                     elsif user_text.strip.empty?
+          elsif user_text.strip.empty?
                        [
                          Line::Bot::V2::MessagingApi::TextMessage.new(
                            text: "พิมพ์ชื่อสินค้าหรือบาร์โค้ดเพื่อค้นหาได้เลยครับ"
                          )
                        ]
-                     elsif products.empty?
-                       notify_admin_no_product(user_id: user_id,group_id: group_id, query: user_text)
+          elsif products.empty?
+                       notify_admin_no_product(user_id: user_id, group_id: group_id, query: user_text)
                        [
                          Line::Bot::V2::MessagingApi::TextMessage.new(
                            text: "ไม่พบสินค้า \"#{user_text}\" ในระบบ"
                          )
                        ]
-                     else
+          else
 
                        bubbles = build_product_bubbles(products)
                        [
@@ -133,13 +132,13 @@ class LineBotController < ApplicationController
                            alt_text: "ผลการค้นหา #{user_text}",
                            contents: {
                              type: "carousel",
-                             contents: bubbles,
+                             contents: bubbles
 
 
                            }
                          )
                        ]
-                     end
+          end
 
 
 
@@ -203,7 +202,7 @@ class LineBotController < ApplicationController
   #    render json: { reply: response }
   #  end
 
-  def notify_admin_no_product(user_id:,group_id:, query:)
+  def notify_admin_no_product(user_id:, group_id:, query:)
     message = "ผู้ใช้:#{user_id} กลุ่ม:#{group_id} สอบถาม \"#{query}\""
     SupplierLineNotifier.new(message: message).call
 
@@ -310,5 +309,4 @@ class LineBotController < ApplicationController
       }
     end
   end
-
 end

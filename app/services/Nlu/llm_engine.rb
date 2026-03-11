@@ -1,21 +1,20 @@
 # app/services/nlu/llm_engine.rb
 module Nlu
   class LlmEngine
-    def self.call(text:,products:)
-      new(text,products).call
+    def self.call(text:, products:)
+      new(text, products).call
     end
 
-    def initialize(text,products)
+    def initialize(text, products)
       @text = text
       @products = products
-
     end
 
     def llmSearchProduct
     end
 
     def call
-      response = ask_llm(@text,@products)
+      response = ask_llm(@text, @products)
       # content = response.choices.first.message[:content]
       # parsed = JSON.parse(content) # แปลงเป็น hash
       # product = parsed.dig("entities", "product")
@@ -29,15 +28,14 @@ module Nlu
       response
 
 
-    rescue error => e
+    rescue StandardError => e
       Rails.logger.error("LLM error: #{e.message}")
       { intent: "UNKNOWN", confidence: 0.0, entities: {} }
     end
 
     private
 
-    def ask_llm(text,products)
-
+    def ask_llm(text, products)
         if products.blank?
           items = []
         else
@@ -46,11 +44,11 @@ module Nlu
           end
         end
 
-      prompt = build_prompt(text,items)
+      prompt = build_prompt(text, items)
 
       # Rails.application.credentials.OPENAI_API_KEY
       openai = OpenAI::Client.new(
-        api_key: "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"
+        api_key: Rails.application.credentials.openai[:api_key]
       )
       response = openai.chat.completions.create(
         model: :"gpt-4.1-mini",
@@ -60,11 +58,9 @@ module Nlu
         ]
       )
       content = response.choices.first.message[:content]
-
-
     end
 
-    def build_prompt(text,items)
+    def build_prompt(text, items)
     <<~PROMPT
       คุณเป็นตัวช่วยที่เข้าใจข้อความจากลูกค้าเกี่ยวกับสินค้าในร้านวัสดุก่อสร้างระดับมืออาชีพ
 

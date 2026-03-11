@@ -23,6 +23,7 @@
   </head>
 
   <body>
+      <%= render partial: "cart/cart" if @render_cart %>
     <%= yield %>
   </body>
 </html>
