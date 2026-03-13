@@ -247,10 +247,10 @@
     "https://images.unsplash.com/photo-1448630360428-65456885c650"  # หมวกนิรภัย/ไซต์งาน
   ] %>
 
+  
   <div class="product-grid">
     <% @products.each do |product| %>
       <% image_url = product.productimage.presence || image_pool.sample %>
-
       <article class="product-card">
         <img src="<%= image_url %>" alt="<%= product.productname %>"> <%# herb:disable erb-prefer-image-tag-helper %>
         <div class="product-body">

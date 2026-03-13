@@ -3,6 +3,7 @@
 #  == Line Zayam
 require "openssl"
 require "cgi"
+require "ostruct"
 require "bundler/setup"
 require "openai"
 
@@ -56,6 +57,9 @@ class LineBotController < ApplicationController
         when Line::Bot::V2::Webhook::TextMessageContent
           user_text = event.message.text.to_s
           user_id = event.source&.user_id || "unknown"
+
+          Rails.logger.info "🔍 Text user_id: #{user_id}, text: #{user_text}"
+
           source = event.source
           group_id = if source.is_a?(Line::Bot::V2::Webhook::GroupSource)
                        source.group_id
@@ -81,16 +85,16 @@ class LineBotController < ApplicationController
           extracted    = MessageProductExtractor.new(user_text).call
           response_text = extracted[:response]
 
-          products = if response_text.present?
-                       ActiveProduct.none
-          elsif extracted[:barcode].present?
-                       ActiveProduct.where(barcodeid: extracted[:barcode])
-          elsif extracted[:keyword].present?
-                       ActiveProduct.search(extracted[:keyword])
+           products = if response_text.present?
+                        ActiveProduct.none
+           elsif extracted[:barcode].present?
+                        ActiveProduct.where(barcodeid: extracted[:barcode])
+           elsif extracted[:keyword].present?
+                        ActiveProduct.search(extracted[:keyword], unit: extracted[:unit])
 
-          else
-                       ActiveProduct.none
-          end
+           else
+                        ActiveProduct.none
+           end
 
                      nlu_result = Nlu::Orchestrator.call(text: user_text, customer: user_id, products: products)
                      llm_message = nlu_result
@@ -105,26 +109,45 @@ class LineBotController < ApplicationController
 
 
 
-          messages = if response_text.present?
-                       [
-                         Line::Bot::V2::MessagingApi::TextMessage.new(
-                           text: response_text
-                         )
-                       ]
-          elsif user_text.strip.empty?
-                       [
-                         Line::Bot::V2::MessagingApi::TextMessage.new(
-                           text: "พิมพ์ชื่อสินค้าหรือบาร์โค้ดเพื่อค้นหาได้เลยครับ"
-                         )
-                       ]
-          elsif products.empty?
-                       notify_admin_no_product(user_id: user_id, group_id: group_id, query: user_text)
-                       [
-                         Line::Bot::V2::MessagingApi::TextMessage.new(
-                           text: "ไม่พบสินค้า \"#{user_text}\" ในระบบ"
-                         )
-                       ]
-          else
+           messages = if response_text.present?
+                        [
+                          Line::Bot::V2::MessagingApi::TextMessage.new(
+                            text: response_text
+                          )
+                        ]
+           elsif extracted[:intent] == :view_cart
+                        build_cart_message(user_id)
+           elsif extracted[:intent] == :clear_cart
+                        CartService.clear_cart(user_id)
+                        [
+                          Line::Bot::V2::MessagingApi::TextMessage.new(
+                            text: "ล้างตะกร้าเรียบร้อยแล้วครับ 🗑️"
+                          )
+                        ]
+           elsif user_text.strip.empty?
+                        [
+                          Line::Bot::V2::MessagingApi::TextMessage.new(
+                            text: "พิมพ์ชื่อสินค้าหรือบาร์โค้ดเพื่อค้นหาได้เลยครับ"
+                          )
+                        ]
+           elsif products.empty?
+                        notify_admin_no_product(user_id: user_id, group_id: group_id, query: user_text)
+                        [
+                          Line::Bot::V2::MessagingApi::TextMessage.new(
+                            text: "ไม่พบสินค้า \"#{extracted[:keyword]}\" ในระบบ"
+                          )
+                        ]
+           elsif extracted[:intent] == :stock || extracted[:intent] == "ASK_STOCK"
+                        product = products.first
+                        stock = product.productstock.to_i
+                        unit_display = extracted[:unit] || product.productunit || "ชิ้น"
+                        stock_text = stock.positive? ? "#{stock} #{unit_display}" : "หมด"
+                        [
+                          Line::Bot::V2::MessagingApi::TextMessage.new(
+                            text: "#{product.productname} เหลือ #{stock_text}"
+                          )
+                        ]
+           else
 
                        bubbles = build_product_bubbles(products)
                        [
@@ -138,19 +161,20 @@ class LineBotController < ApplicationController
                            }
                          )
                        ]
-          end
+           end
 
 
 
             # Handle the message for another specific user
 
-            reply_messages = messages + test_message
+            reply_messages = messages
 
             reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
               reply_token: event.reply_token,
               messages: reply_messages
             )
           end
+
           reply_messages ||= reply_req.messages
           append_chat_message(role: "user", text: user_text)
           reply_messages.each do |message|
@@ -176,11 +200,56 @@ class LineBotController < ApplicationController
 
       when Line::Bot::V2::Webhook::PostbackEvent
         data = event.postback.data
+        user_id = event.source&.user_id || "unknown"
+
+        Rails.logger.info "🔍 Postback user_id: #{user_id}, data: #{data}"
+
+        params = CGI.parse(data)
+        action = params["action"]&.first
+
+        if action == "add_cart"
+          product = OpenStruct.new(
+            barcodeid: params["sku"]&.first,
+            productname: params["name"]&.first,
+            productsale1: params["price"]&.first,
+            productunit: params["unit"]&.first
+          )
+
+          Rails.logger.info "🔍 add_cart - user_id: #{user_id}, sku: #{product.barcodeid}, name: #{product.productname}"
+
+          item = CartService.add_item(user_id, product)
+
+          # Verify cart after add
+          summary = CartService.cart_summary(user_id)
+          Rails.logger.info "🔍 Cart after add - items: #{summary[:items].map { |i| "#{i.product_name}(#{i.sku})" }.join(', ')}"
+
+          reply_text = "เพิ่มลงตะกร้าแล้ว 🛒 #{item.product_name} x#{item.quantity}\nพิมพ์ ดูตะกร้า หรือ เพิ่มสินค้าต่อได้เลยครับ"
+        elsif action == "view_cart"
+          reply_messages = build_cart_message(user_id)
+          reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
+            reply_token: event.reply_token,
+            messages: reply_messages
+          )
+          client.reply_message(reply_message_request: reply_req)
+          return
+        elsif action == "process_order"
+          summary = CartService.cart_summary(user_id)
+          if summary.nil? || summary[:items].empty?
+            reply_text = "ตะกร้าของคุณว่างเปล่าครับ 🛒\nพิมพ์ชื่อสินค้าเพื่อค้นหาได้เลยครับ"
+          else
+            reply_text = "รายการสั่งซื้อของคุณ:\n#{summary[:items].map { |i| "• #{i.product_name} x#{i.quantity} = ฿#{(i.price.to_f * i.quantity).round}" }.join("\n")}\n\nราคารวม: ฿#{summary[:total].round} บาท\n\nกรุณาโอนเงินและส่งหลักฐานการโอนเงินครับ"
+          end
+        elsif action == "clear_cart"
+          CartService.clear_cart(user_id)
+          reply_text = "ล้างตะกร้าเรียบร้อยแล้วครับ 🗑️"
+        else
+          reply_text = "ได้รับ postback: #{data}"
+        end
 
         reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
           reply_token: event.reply_token,
           messages: [
-            Line::Bot::V2::MessagingApi::TextMessage.new(text: "ได้รับ postback: #{data}")
+            Line::Bot::V2::MessagingApi::TextMessage.new(text: reply_text)
           ]
         )
 
@@ -302,11 +371,111 @@ class LineBotController < ApplicationController
                 label: "เปิดดูสินค้า",
                 uri: "#{request.base_url}/aboutus?q=#{CGI.escape(product.productname.to_s)}"
               }
+            },
+            {
+              type: "button",
+              style: "primary",
+              height: "sm",
+              action: {
+                type: "postback",
+                label: "สั่งซื้อ",
+                data: "action=add_cart&sku=#{product.barcodeid}&name=#{CGI.escape(product.productname.to_s)}&price=#{product.productsale1}&unit=#{product.productunit}"
+              }
             }
           ],
           flex: 0
         }
       }
     end
+  end
+
+  def build_cart_message(user_id)
+    Rails.logger.info "🔍 build_cart_message called with user_id: #{user_id}"
+
+    summary = CartService.cart_summary(user_id)
+
+    Rails.logger.info "🔍 Cart summary: #{summary.inspect}"
+
+    if summary.nil? || summary[:items].empty?
+      return [
+        Line::Bot::V2::MessagingApi::TextMessage.new(
+          text: "ตะกร้าของคุณว่างเปล่าครับ 🛒\nพิมพ์ชื่อสินค้าเพื่อค้นหาได้เลยครับ"
+        )
+      ]
+    end
+
+    bubbles = summary[:items].first(5).map do |item|
+      {
+        type: "bubble",
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: item.product_name,
+              weight: "bold",
+              size: "lg",
+              wrap: true
+            },
+            {
+              type: "text",
+              text: "#{item.quantity} #{item.unit} x ฿#{item.price} = ฿#{(item.price.to_f * item.quantity).round}",
+              size: "md",
+              color: "#666666"
+            }
+          ]
+        }
+      }
+    end
+
+    total_text = "ราคารวม: ฿#{summary[:total].round} บาท (#{summary[:item_count]} รายการ)"
+
+    quick_reply = {
+      items: [
+        {
+          type: "action",
+          action: {
+            type: "postback",
+            label: "สั่งซื้อ",
+            text: "สั่งซื้อ",
+            data: "action=process_order"
+          }
+        },
+        {
+          type: "action",
+          action: {
+            type: "postback",
+            label: "ดูตะกร้า",
+            text: "ดูตะกร้า",
+            data: "action=view_cart"
+          }
+        },
+        {
+          type: "action",
+          action: {
+            type: "postback",
+            label: "ล้างตะกร้า",
+            text: "ล้างตะกร้า",
+            data: "action=clear_cart"
+          }
+        }
+      ]
+    }
+
+    [
+      Line::Bot::V2::MessagingApi::TextMessage.new(text: "🛒 ตะกร้าของคุณ\n\n#{summary[:items].map { |i| "• #{i.product_name} x#{i.quantity} = ฿#{(i.price.to_f * i.quantity).round}" }.join("\n")}\n\n#{total_text}"),
+      Line::Bot::V2::MessagingApi::FlexMessage.new(
+        alt_text: "ตะกร้าสินค้า",
+        contents: {
+          type: "carousel",
+          contents: bubbles
+        }
+      ),
+      Line::Bot::V2::MessagingApi::TextMessage.new(
+        text: "กรุณาเลือกดำเนินการ",
+        quickReply: quick_reply
+      )
+    ]
   end
 end

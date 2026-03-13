@@ -1,47 +1,31 @@
 # app/services/nlu/orchestrator.rb
-require 'openai'
+require "openai"
 
 module Nlu
   class Orchestrator
-    def self.call(text:, customer: nil,products: nil)
-      new(text, customer,products).call
+    def self.call(text:, customer: nil, products: nil)
+      new(text, customer, products).call
     end
 
     def initialize(text, customer, products)
       @text = text.to_s.strip
       @customer = customer
       @products = products
-
     end
 
     def call
-      # 1) keyword + nlp
-      kw_result  = KeywordEngine.call(text: @text)
-
-
-
+      kw_result = KeywordEngine.call(text: @text)
       nlp_result = NlpEngine.call(text: @text)
-
-
       merged = merge_keyword_and_nlp(kw_result, nlp_result)
-      # Rails.logger.debug("🏆🏆🏆🏆🏆🏆 kw_result + nlp_result :#{merged}")
 
-      # 2) ตัดสินใจว่าจะเรียก LLM ไหม
-      # if need_llm?(merged)
-      #   llm_result = LlmEngine.call(text: @text)
-      #   merged = merge_with_llm(merged, llm_result)
-      # end
-      #
-
-
-
-      llm_result = LlmEngine.call(text: @text, products: @products)
-      # Rails.logger.debug("🏆🏆🏆🏆🏆🏆 llm_result :#{llm_result}")
-
-      parsed_llm = parse_llm_result(llm_result)
-      return llm_result if parsed_llm.nil?
-
-      JSON.generate(merge_with_llm(merged, parsed_llm))
+      if need_llm?(merged)
+        llm_result = LlmEngine.call(text: @text, products: @products)
+        parsed_llm = parse_llm_result(llm_result)
+        return llm_result if parsed_llm.nil?
+        JSON.generate(merge_with_llm(merged, parsed_llm))
+      else
+        JSON.generate(merged)
+      end
     end
 
     private

@@ -73,7 +73,7 @@ Rails.application.configure do
   # Allow requests from ngrok for LINE Bot development
   config.hosts << "9aacaddd1c1f.ngrok-free.app"
   config.hosts << "8a143034c5c9.ngrok-free.app"
-  config.hosts << /[a-z0-9]+\.ngrok-free\.app/
+  config.hosts << /[a-z0-9-]+\.ngrok-free\.app/
   config.hosts << "siamcosmo.uk"
   config.hosts << /.*\.siamcosmo\.uk/
 
