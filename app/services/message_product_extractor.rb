@@ -82,7 +82,7 @@ class MessageProductExtractor
   private
 
   def extract_unit(text)
-    units = %w[ถุง ใบ ลัง กล่อง หน่วย]
+    units = %w[ถุง ใบ ลัง กล่อง หน่วย ก้อน เส้น ตัว เครื่อง อัน ชิ้น กระป๋อง ถัง ขวด แกลลอน]
     lowered = text.downcase
 
     found_unit = units.find { |u| lowered.include?(u) }
