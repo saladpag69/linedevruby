@@ -8,6 +8,8 @@ Rails.application.configure do
   # Code is not reloaded between requests.
   config.enable_reloading = false
 
+  config.secret_key_base = ENV.fetch("SECRET_KEY_BASE")
+
   # Eager load code on boot for better performance and memory savings (ignored by Rake tasks).
   config.eager_load = true
 
@@ -85,7 +87,9 @@ Rails.application.configure do
     "siamcosmo.com",
     /.*\.siamcosmo\.com/, # permit www or other subdomains
     "siamcosmo.uk",
-    /.*\.siamcosmo\.uk/ # permit www or other subdomains
+    /.*\.siamcosmo\.uk/, # permit www or other subdomains
+    /.*\.railway\.app/,   # Railway deployment
+    /.*\.up\.railway\.app/ # Railway deployment
   ]
   #
   # Skip DNS rebinding protection for the default health check endpoint.

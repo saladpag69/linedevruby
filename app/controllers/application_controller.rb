@@ -7,25 +7,25 @@ require "securerandom"
 class ApplicationController < ActionController::Base
   CHAT_MESSAGES_CACHE_KEY = "chat:ai_messages"
   CHAT_MESSAGES_MAX = 30
-  
+
   before_action :set_render_cart
 
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
-  
+
   def set_render_cart
     @render_cart = true
   end
-  
+
   def initialize_cart
     @cart ||= Cart.find_by(id: session[:cart_id])
-    
+
     if @cart.nil?
       @cart = Cart.create
-      session[:cart_id] = @cart.id 
+      session[:cart_id] = @cart.id
     end
-  end  
+  end
   # Changes to the importmap will invalidate the etag for HTML responses
   def index
   end

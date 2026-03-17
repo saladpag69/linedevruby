@@ -48,7 +48,7 @@ module Nlu
 
       # Rails.application.credentials.OPENAI_API_KEY
       openai = OpenAI::Client.new(
-        api_key: Rails.application.credentials.openai[:api_key]
+        api_key: OPENAI_API_KEY
       )
       response = openai.chat.completions.create(
         model: :"gpt-4.1-mini",

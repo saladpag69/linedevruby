@@ -7,22 +7,22 @@ class SupplierLinesController < ApplicationController
 
     products = if message.present?
                  ActiveProduct.none
-               elsif extracted[:barcode].present?
+    elsif extracted[:barcode].present?
                  ActiveProduct.where(barcodeid: extracted[:barcode])
-               elsif extracted[:keyword].present?
+    elsif extracted[:keyword].present?
                  ActiveProduct.search(extracted[:keyword])
-               else
+    else
                  ActiveProduct.none
-               end
+    end
 
-               nlu_result = Nlu::Orchestrator.call(text: supplier_message, customer: "userid", products:nil)
-    # parsed_result = parse_llm_result(nlu_result)
-    # response_text = extract_llm_message(parsed_result) || nlu_result.to_s
+               nlu_result = Nlu::Orchestrator.call(text: supplier_message, customer: "userid", products: nil)
+              # parsed_result = parse_llm_result(nlu_result)
+              # response_text = extract_llm_message(parsed_result) || nlu_result.to_s
               llm_message = nlu_result
               test_parsed = JSON.parse(llm_message) # แปลงเป็น hash
               test_response = test_parsed.dig("message")
-              
-              
+
+
     render json: { message: test_response }, status: :ok
   rescue StandardError => e
     Rails.logger.error("Failed to push supplier line message: #{e.message}")

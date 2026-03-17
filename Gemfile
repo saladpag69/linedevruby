@@ -17,7 +17,7 @@ gem "turbo-rails"
 gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
-gem 'line-bot-api'
+gem "line-bot-api"
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 
@@ -71,3 +71,6 @@ group :test do
 end
 
 gem "dockerfile-rails", ">= 1.7", group: :development
+
+# PostgreSQL for production (Railway)
+gem "pg", group: :production

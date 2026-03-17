@@ -14,23 +14,22 @@ Rails.application.routes.draw do
 
   get "/aboutus.json", to: "application#about"
   get "/aboutus", to: "application#about"
-  get "/login",to:"application#login"
+  get "/login", to: "application#login"
   # routes.rb
   post "/callback", to: "line_bot#callback"
   post "/supplier_line", to: "supplier_lines#create", as: :supplier_line
-  resource :cart, only: [:show] do
+  resource :cart, only: [ :show ] do
     post :add, on: :collection
     post :remove, on: :collection
     post :clear, on: :collection
   end
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+ # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
+ # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
+ # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+ # Defines the root path route ("/")
+ # root "posts#index"
 
  root "application#about"
-
 end

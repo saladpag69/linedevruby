@@ -72,4 +72,4 @@
       item_count: cart.cart_items.sum(&:quantity)
     }
   end
-end
+ end

@@ -18,7 +18,7 @@ class LinePushJob < ApplicationJob
 
     def line_client
       @line_client ||= Line::Bot::V2::MessagingApi::ApiClient.new(
-        channel_access_token: ENV.fetch("LINE_CHANNEL_ACCESS_TOKEN"),
+        channel_access_token: LINE_CHANNEL_ACCESS_TOKEN,
         # http_options: { verify_mode: OpenSSL::SSL::VERIFY_NONE } # <-- dev only
       )
     end
