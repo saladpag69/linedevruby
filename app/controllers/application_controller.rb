@@ -26,7 +26,6 @@ class ApplicationController < ActionController::Base
       session[:cart_id] = @cart.id
     end
   end
-  # Changes to the importmap will invalidate the etag for HTML responses
   def index
   end
   def login
@@ -42,8 +41,6 @@ class ApplicationController < ActionController::Base
     @products = []
     @query = ""
   end
-
-  stale_when_importmap_changes
 
   private
 
@@ -76,6 +73,6 @@ class ApplicationController < ActionController::Base
     messages << { "role" => role.to_s, "text" => text.to_s, "at" => Time.current.to_i }
     Rails.cache.write(CHAT_MESSAGES_CACHE_KEY, messages.last(CHAT_MESSAGES_MAX))
   end
-
+  
   private :read_chat_messages, :append_chat_message
 end
