@@ -60,7 +60,7 @@ ENV SKIP_ASSET_PRECOMPILATION=true
 
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-# RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+
 
 
 # Final stage for app image
