@@ -56,7 +56,7 @@ RUN chmod +x bin/* && \
     sed -i 's/ruby\.exe$/ruby/' bin/*
 
 # Precompile assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
+# RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
 
 
 
