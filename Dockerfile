@@ -16,7 +16,7 @@ WORKDIR /rails
 
 # Install base packages
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 libffi-dev && \
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 libffi-dev libpq-dev && \
     ln -s /usr/lib/$(uname -m)-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
@@ -53,7 +53,8 @@ RUN bundle exec bootsnap precompile -j 1 app/ lib/
 # Adjust binfiles to be executable on Linux
 RUN chmod +x bin/* && \
     sed -i "s/\r$//g" bin/* && \
-    sed -i 's/ruby\.exe$/ruby/' bin/*
+    sed -i 's/ruby\.exe$/ruby/' bin/* && \
+    chmod +x bin/docker-entrypoint
 
 # Precompile assets for production without requiring secret RAILS_MASTER_KEY
 # RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
@@ -72,11 +73,12 @@ USER 1000:1000
 COPY --chown=rails:rails --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --chown=rails:rails --from=build /rails /rails
 
+# Copy master key for credentials decryption (in production, use RAILS_MASTER_KEY env var instead)
+COPY --chown=rails:rails config/master.key /rails/config/master.key
+
 # Entrypoint prepares the database.
-ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+ENTRYPOINT ["bin/docker-entrypoint"]
 
 # Start server via Thruster by default, this can be overwritten at runtime
-# EXPOSE 80
-# CMD ["./bin/thrust", "./bin/rails", "server"]
 EXPOSE 80
-CMD ["./bin/rails", "server"]
+CMD ["bin/rails", "server"]

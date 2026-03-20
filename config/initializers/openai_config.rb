@@ -1,1 +1,1 @@
-OPENAI_API_KEY = ENV["OPENAI_API_KEY"] || Rails.application.credentials.openai&.dig(:api_key)
+OPENAI_API_KEY = ENV.fetch("OPENAI_API_KEY", nil)

@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "openai", "~> 0.36.1"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.1.1"
+gem "rails", "8.1.2"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use sqlite3 as the database for Active Record
@@ -25,9 +25,10 @@ gem "line-bot-api"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
-gem "solid_cache"
-gem "solid_queue"
-gem "solid_cable"
+# Disabled for Docker deployment - uncomment if using single server with multi-db
+# gem "solid_cache"
+# gem "solid_queue"
+# gem "solid_cable"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
@@ -72,5 +73,4 @@ end
 
 gem "dockerfile-rails", ">= 1.7", group: :development
 
-# PostgreSQL for production (Railway)
-gem "pg", group: :production
+# PostgreSQL for production (Railway) - installed via apt in Dockerfile

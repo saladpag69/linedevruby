@@ -11,7 +11,7 @@
 /.env*
 
 # Ignore all default key files.
-/config/master.key
+# /config/master.key  # Uncomment this line for production builds
 /config/credentials/*.key
 
 # Ignore all logfiles and tempfiles.
