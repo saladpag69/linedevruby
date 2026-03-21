@@ -74,7 +74,7 @@ COPY --chown=rails:rails --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --chown=rails:rails --from=build /rails /rails
 
 # Copy master key for credentials decryption (in production, use RAILS_MASTER_KEY env var instead)
-COPY --chown=rails:rails config/master.key /rails/config/master.key
+# COPY --chown=rails:rails config/master.key /rails/config/master.key
 
 # Entrypoint prepares the database.
 ENTRYPOINT ["bin/docker-entrypoint"]
