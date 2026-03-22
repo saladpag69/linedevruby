@@ -47,6 +47,13 @@ class LineBotController < ApplicationController
       render plain: "Bad Request", status: 400 and return
     end
 
+    # LINE Platform sends webhook verification requests with an empty events
+    # array. Per LINE docs, the server must respond with HTTP 200 in all cases.
+    if events.empty?
+      Rails.logger.info "LINE webhook received with empty events array (verification or no-op ping)"
+      render plain: "OK", status: 200 and return
+    end
+
     events.each do |event|
       case event
 
@@ -257,7 +264,9 @@ class LineBotController < ApplicationController
       end
     end
 
-    render plain: "OK"
+    # Always respond with HTTP 200 to acknowledge receipt of the webhook,
+    # as required by the LINE Platform specification.
+    render plain: "OK", status: 200
   end
 
 
