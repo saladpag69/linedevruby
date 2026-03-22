@@ -248,6 +248,16 @@
   ] %>
 
   
+  <% if @error.present? %>
+    <div style="text-align:center; padding:2rem; background:#fee2e2; border-radius:1rem; color:#b91c1c; margin-bottom:1.5rem;">
+      ⚠️ ไม่สามารถโหลดข้อมูลสินค้าได้ กรุณาลองใหม่อีกครั้ง
+    </div>
+  <% elsif @products.empty? && @query.present? %>
+    <div style="text-align:center; padding:2rem; color:#6b7280; margin-bottom:1.5rem;">
+      ไม่พบสินค้าที่ค้นหา "<%= @query %>"
+    </div>
+  <% end %>
+
   <div class="product-grid">
     <% @products.each do |product| %>
       <% image_url = product.productimage.presence || image_pool.sample %>

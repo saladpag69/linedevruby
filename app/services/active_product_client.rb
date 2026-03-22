@@ -9,7 +9,7 @@ class ActiveProductClient
     http = Net::HTTP.new(ENDPOINT.host, ENDPOINT.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    response = http.get(ENDPOINT.path)
+    response = http.get(ENDPOINT.path, { "X-API-Key" => ENV.fetch("PRODUCT_API_KEY") })
     raise "API error #{response.code}" unless response.is_a?(Net::HTTPSuccess)
     JSON.parse(response.body)
   end

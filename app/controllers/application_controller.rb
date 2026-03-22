@@ -39,6 +39,7 @@ class ApplicationController < ActionController::Base
   rescue => e
     Rails.logger.error("Active product API failed: #{e.message}")
     @products = []
+    @error = e.message
     @query = ""
   end
 
