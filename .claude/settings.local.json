@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sk \"https://backendbaansiam2025-production.up.railway.app/api/v1/product/load/activeproduct\")",
+      "Bash(grep -r \"token\\\\|TOKEN\\\\|api_key\\\\|API_KEY\" /Users/saladpag/ruby/linedevruby/config/application.rb /Users/saladpag/ruby/linedevruby/.env*)",
+      "Bash(grep -r \"PRODUCT\\\\|product_api\\\\|BACKEND\\\\|backend\" /Users/saladpag/ruby/linedevruby/.env*)"
+    ]
+  }
+}
