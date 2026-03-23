@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   get "/aboutus", to: "application#about"
   get "/login", to: "application#login"
   # routes.rb
-  post "/callback", to: "line_bot#callback"
+  post "/webhook/line", to: "line_bot#callback"
   post "/supplier_line", to: "supplier_lines#create", as: :supplier_line
   resource :cart, only: [ :show ] do
     post :add, on: :collection
