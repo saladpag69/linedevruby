@@ -61,6 +61,16 @@
             product.barcodeid.to_s.downcase.include?(needle)
         end
 
+        if matched.empty?
+          stripped = needle.gsub(/\d+/, "").squeeze(" ").strip
+          if stripped.present? && stripped != needle
+            matched = products.select do |product|
+              product.productname.to_s.downcase.include?(stripped) ||
+                product.barcodeid.to_s.downcase.include?(stripped)
+            end
+          end
+        end
+
         return matched if matched.empty?
 
         if unit.present?

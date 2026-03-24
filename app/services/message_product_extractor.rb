@@ -32,7 +32,7 @@ class MessageProductExtractor
   ].freeze
 
   STOCK_WORDS = %w[
-    มีไหม เหลือกี่ สต็อก เหลือไหม คงเหลือ มีป่วย
+    มีไหม เหลือกี่ สต็อก สต๊อก เหลือไหม คงเหลือ มีป่วย
   ].freeze
 
   CART_WORDS = %w[
@@ -99,7 +99,7 @@ class MessageProductExtractor
       result.gsub(word, " ")
     end
 
-    filtered.gsub(/[^[:alnum:]\s]/, " ").squeeze(" ").strip
+    filtered.gsub(/[^[:alnum:]\s\/]/, " ").squeeze(" ").strip
   end
 
   def detect_response(text)
