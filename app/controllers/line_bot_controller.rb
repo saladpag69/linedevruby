@@ -23,8 +23,8 @@ class LineBotController < ApplicationController
 
     @client ||= Line::Bot::V2::MessagingApi::ApiClient.new(
 
-      # channel_access_token: Rails.application.credentials.line[:channel_access_token],
-      channel_access_token: ENV["LINE_ACCESS_TOKEN"],
+      channel_access_token: Rails.application.credentials.line[:channel_access_token],
+      # channel_access_token: ENV["LINE_ACCESS_TOKEN"],
       http_options: {
         verify_mode: OpenSSL::SSL::VERIFY_PEER,
         verify_callback: verify_callback
@@ -34,8 +34,8 @@ class LineBotController < ApplicationController
 
   def parser
     @parser ||= Line::Bot::V2::WebhookParser.new(
-      # channel_secret: Rails.application.credentials.line[:channel_secret]
-      channel_secret: ENV["LINE_CHANNEL_SECRET"]
+      channel_secret: Rails.application.credentials.line[:channel_secret]
+      # channel_secret: ENV["LINE_CHANNEL_SECRET"]
     )
   end
 
