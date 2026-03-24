@@ -96,16 +96,16 @@ class LineBotController < ApplicationController
                         ActiveProduct.none
            end
 
-                     # nlu_result = Nlu::Orchestrator.call(text: user_text, customer: user_id, products: products)
-                     # llm_message = nlu_result
-                     # test_parsed = JSON.parse(llm_message) # แปลงเป็น hash
-                     # test_response = test_parsed.dig("message")
-                     # test_message =                        [
-                     #   Line::Bot::V2::MessagingApi::TextMessage.new(
+                     nlu_result = Nlu::Orchestrator.call(text: user_text, customer: user_id, products: products)
+                     llm_message = nlu_result
+                     test_parsed = JSON.parse(llm_message) # แปลงเป็น hash
+                     test_response = test_parsed.dig("message")
+                     test_message =                        [
+                       Line::Bot::V2::MessagingApi::TextMessage.new(
 
-                     #     text: test_response
-                     #   )
-                     # ]
+                         text: test_response
+                       )
+                     ]
 
 
 
