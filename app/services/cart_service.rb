@@ -47,11 +47,9 @@
   end
 
   def self.clear_cart(line_user_id)
-    cart = Cart.active.find_by(line_user_id: line_user_id)
-    return unless cart
-
-    cart.cart_items.destroy_all
-    cart.destroy
+    carts = Cart.where(line_user_id: line_user_id)
+    carts.each { |cart| cart.cart_items.destroy_all }
+    carts.destroy_all
   end
 
   def self.total_price(line_user_id)

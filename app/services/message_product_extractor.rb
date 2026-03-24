@@ -24,7 +24,7 @@ class MessageProductExtractor
   ].freeze
 
   OPEN_WEBSITE_WORDS = %w[
-    เปิดเว็บไซต์ เปิดเว็บ เปิดเว็บไซต์ให้ เปิดเว็บให้ เปิดหน้าเว็บ
+    เปิดเว็บไซต์ เปิดเว็บ เปิดเว็บไซต์ให้ เปิดเว็บให้ เปิดหน้าเว็บ เว็บ
   ].freeze
 
   CHECK_PRICE_WORDS = %w[
@@ -32,7 +32,7 @@ class MessageProductExtractor
   ].freeze
 
   STOCK_WORDS = %w[
-    มีไหม เหลือกี่ สต็อก สต๊อก เหลือไหม คงเหลือ มีป่วย
+    มีไหม เหลือกี่ สต็อก สต๊อก เหลือไหม คงเหลือ เช็คจำนวน
   ].freeze
 
   CART_WORDS = %w[
@@ -50,7 +50,7 @@ class MessageProductExtractor
     request: "ช่วยพิมพ์ชื่อสินค้าให้หน่อยครับ จะได้ค้นหาให้ถูกต้อง",
     schedule: "แอดมินกำลังตรวจสอบคิวจัดส่งให้ครับ ",
     check_schedule: "กรุณาพิมพ์หมายเลขบิลส่งสินค้า",
-    open_website: "คุณสามารถเปิดเว็บไซต์ได้เลยครับ",
+    open_website: "คุณสามารถเปิดเว็บไซต์ได้เลยครับ https://linedevruby-production.up.railway.app",
     check_price: "กรุณาพิมพ์ชื่อสินค้าที่ต้องการตรวจสอบราคา",
     stock: "บอกชื่อสินค้าที่ต้องการทราบสต็อกได้เลยครับ"
   }.freeze
