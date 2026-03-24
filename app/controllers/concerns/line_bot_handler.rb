@@ -49,16 +49,20 @@ module LineBotHandler
 
     if action == "view_cart" || action == "add_cart"
       messages = if action == "add_cart"
-                   sku     = params["sku"]&.first
-                   product = sku.present? ? ActiveProduct.all.find { |p| p._id.to_s == sku } : nil
-                   if product.nil?
-                     [ LineMessageBuilder.text("ไม่พบสินค้า sku: #{sku} ในระบบครับ") ]
+                   if CartService.processing?(user_id)
+                     [ LineMessageBuilder.text("กำลังดำเนินการออเดอร์อยู่ครับ ไม่สามารถเพิ่มสินค้าได้ 🔄") ]
                    else
-                     Rails.logger.info "🔍 add_cart - user_id: #{user_id}, sku: #{sku}, name: #{product.productname}"
-                     item = CartService.add_item(user_id, product)
-                     Rails.logger.info "🔍 Cart after add - item: #{item.product_name}(#{item.sku})"
-                     [ LineMessageBuilder.text("เพิ่ม #{item.product_name} x#{item.quantity} ลงตะกร้าแล้ว 🛒") ] +
-                       LineMessageBuilder.cart_message(user_id)
+                     sku     = params["sku"]&.first
+                     product = sku.present? ? ActiveProduct.all.find { |p| p._id.to_s == sku } : nil
+                     if product.nil?
+                       [ LineMessageBuilder.text("ไม่พบสินค้า sku: #{sku} ในระบบครับ") ]
+                     else
+                       Rails.logger.info "🔍 add_cart - user_id: #{user_id}, sku: #{sku}, name: #{product.productname}"
+                       item = CartService.add_item(user_id, product)
+                       Rails.logger.info "🔍 Cart after add - item: #{item.product_name}(#{item.sku})"
+                       [ LineMessageBuilder.text("เพิ่ม #{item.product_name} x#{item.quantity} ลงตะกร้าแล้ว 🛒") ] +
+                         LineMessageBuilder.cart_message(user_id)
+                     end
                    end
                  else
                    LineMessageBuilder.cart_message(user_id)
@@ -74,14 +78,18 @@ module LineBotHandler
 
     reply_text = case action
                  when "process_order"
-                   summary = CartService.cart_summary(user_id)
-                   if summary.nil? || summary[:items].empty?
-                     "ตะกร้าของคุณว่างเปล่าครับ 🛒\nพิมพ์ชื่อสินค้าเพื่อค้นหาได้เลยครับ"
-
+                   if CartService.processing?(user_id)
+                     "กำลังดำเนินการออเดอร์อยู่ครับ กรุณารอสักครู่ 🔄"
                    else
-                     order_text = "รายการสั่งซื้อของคุณ:\n#{summary[:items].map { |i| "• #{i.product_name} x#{i.quantity} = ฿#{(i.price.to_f * i.quantity).round}" }.join("\n")}\n\nราคารวม: ฿#{summary[:total].round} บาท\n\nกรุณาโอนเงินและส่งหลักฐานการโอนเงินครับ"
-                     CartService.clear_cart(user_id)
-                     order_text
+                     summary = CartService.cart_summary(user_id)
+                     if summary.nil? || summary[:items].empty?
+                       "ตะกร้าของคุณว่างเปล่าครับ 🛒\nพิมพ์ชื่อสินค้าเพื่อค้นหาได้เลยครับ"
+                     else
+                       CartService.mark_processing!(user_id)
+                       order_text = "รายการสั่งซื้อของคุณ:\n#{summary[:items].map { |i| "• #{i.product_name} x#{i.quantity} = ฿#{(i.price.to_f * i.quantity).round}" }.join("\n")}\n\nราคารวม: ฿#{summary[:total].round} บาท\n\nกรุณาโอนเงินและส่งหลักฐานการโอนเงินครับ"
+                       CartService.clear_cart(user_id)
+                       order_text
+                     end
                    end
                  when "clear_cart"
                    CartService.clear_cart(user_id)

@@ -46,6 +46,15 @@
     cart
   end
 
+  def self.mark_processing!(line_user_id)
+    cart = Cart.active.find_by(line_user_id: line_user_id)
+    cart&.update!(status: "processing")
+  end
+
+  def self.processing?(line_user_id)
+    Cart.where(line_user_id: line_user_id, status: "processing").exists?
+  end
+
   def self.clear_cart(line_user_id)
     carts = Cart.where(line_user_id: line_user_id)
     carts.each { |cart| cart.cart_items.destroy_all }
