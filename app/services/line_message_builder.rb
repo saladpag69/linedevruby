@@ -13,7 +13,7 @@ class LineMessageBuilder
     }
   end
 
-  def self.text(message)
+  Postbackdef self.text(message)
     Line::Bot::V2::MessagingApi::TextMessage.new(
       text: message,
       quickReply: default_quick_reply

@@ -4,7 +4,7 @@
   def self.add_item(line_user_id, product)
     cart = get_or_create_cart(line_user_id)
 
-    existing_item = cart.cart_items.find_by(sku: product.barcodeid)
+    existing_item = cart.cart_items.find_by(sku: product._id.to_s)
 
     if existing_item
       existing_item.increment!(:quantity)
@@ -12,7 +12,7 @@
     else
       cart.cart_items.create!(
         product_name: product.productname,
-        sku: product.barcodeid,
+        sku: product._id.to_s,
         price: product.productsale1,
         quantity: 1,
         unit: product.productunit
@@ -21,7 +21,7 @@
   end
 
   def self.get_cart(line_user_id)
-    cart = Cart.active.find_by(line_user_id: line_user_id)
+    cart = Cart.active.order(created_at: :desc).find_by(line_user_id: line_user_id)
     return nil unless cart
 
     if cart.expired?
@@ -34,20 +34,21 @@
   end
 
   def self.get_or_create_cart(line_user_id)
-    cart = Cart.active.find_by(line_user_id: line_user_id)
+    carts = Cart.active.where(line_user_id: line_user_id).order(created_at: :desc)
 
-    unless cart
-      cart = Cart.create!(
-        line_user_id: line_user_id,
-        expires_at: EXPIRE_HOURS.hours.from_now
-      )
+    if carts.count > 1
+      # destroy stale duplicate carts, keep the newest
+      carts.offset(1).each { |c| c.cart_items.destroy_all; c.destroy }
     end
 
-    cart
+    carts.first || Cart.create!(
+      line_user_id: line_user_id,
+      expires_at: EXPIRE_HOURS.hours.from_now
+    )
   end
 
   def self.mark_processing!(line_user_id)
-    cart = Cart.active.find_by(line_user_id: line_user_id)
+    cart = Cart.active.order(created_at: :desc).find_by(line_user_id: line_user_id)
     cart&.update!(status: "processing")
   end
 

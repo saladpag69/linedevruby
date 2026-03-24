@@ -114,7 +114,7 @@ module LineBotHandler
     products = if response_text.present?
                  ActiveProduct.none
                elsif extracted[:barcode].present?
-                 ActiveProduct.where(barcodeid: extracted[:barcode])
+                 ActiveProduct.all.select { |p| p.barcodeid.to_s == extracted[:barcode] }
                elsif extracted[:keyword].present?
                  ActiveProduct.search(extracted[:keyword], unit: extracted[:unit])
                else
