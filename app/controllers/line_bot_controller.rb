@@ -19,6 +19,8 @@ class LineBotController < ApplicationController
     end
 
     events.each do |event|
+      next if event.delivery_context&.is_redelivery
+
       case event
       when Line::Bot::V2::Webhook::MessageEvent
         case event.message

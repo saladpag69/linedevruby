@@ -13,7 +13,7 @@ class LineMessageBuilder
     }
   end
 
-  Postbackdef self.text(message)
+  def self.text(message)
     Line::Bot::V2::MessagingApi::TextMessage.new(
       text: message,
       quickReply: default_quick_reply
@@ -42,7 +42,7 @@ class LineMessageBuilder
           contents: [
             { type: "text", text: product.productname.to_s, weight: "bold", size: "lg", wrap: true },
             { type: "text", text: "บาร์โค้ด: #{product.barcodeid}", size: "sm", color: "#666666", wrap: true },
-             
+
             {
               type: "box", layout: "vertical", margin: "lg", spacing: "sm",
               contents: [

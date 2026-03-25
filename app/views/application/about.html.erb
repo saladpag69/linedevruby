@@ -207,7 +207,9 @@
 
     <div class="search-bar">
       <%= form_with url: aboutus_path, method: :get, local: true do %>
-        <%= text_field_tag :q, @query, placeholder: "ค้นหาสินค้า / บาร์โค้ด", class: "search-input" %>        <button type="submit" class="search-button">ค้นหา</button> &nbsp;
+        <%= text_field_tag :q, @query, placeholder: "ค้นหาสินค้า / บาร์โค้ด", class: "search-input" %>
+        <button type="submit" class="search-button">ค้นหา</button> &nbsp;
+        <%= link_to "🛒 ดูตะกร้า", cart_path, class: "search-button", style: "background:linear-gradient(120deg,#10b981,#059669); text-decoration:none;" %>
 
 
         <!--<button
@@ -282,7 +284,10 @@
           </div>
         </div>
 
-        <button class="cta-button">เลือกสินค้า</button>
+        <%= form_with url: cart_add_path, method: :post, local: true, style: "margin:0" do %>
+          <%= hidden_field_tag :product_id, product._id %>
+          <button type="submit" class="cta-button">เลือกสินค้า</button>
+        <% end %>
       </article>
     <% end %>
   </div>

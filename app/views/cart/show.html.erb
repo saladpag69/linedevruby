@@ -1,2 +1,9 @@
-<h1>Cart#show</h1>
-<p>Find me in app/views/cart/show.html.erb</p>
+<h1>🛒 ตะกร้าสินค้าที่ active (<%= @carts.count %>)</h1>
+
+<% if @carts.empty? %>
+  <p>ไม่มีตะกร้าที่ active ขณะนี้</p>
+<% else %>
+  <% @carts.each do |cart| %>
+    <%= render partial: "cart", locals: { cart: cart } %>
+  <% end %>
+<% end %>

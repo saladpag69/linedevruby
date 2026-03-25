@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
-  # get "/cart", to: "cart#show"
-  # post "/cart/add"
-  # post "/cart/reomove"
-  # resources :services
-  # resources :products
+  get "/cart", to: "cart#show"
+  post "/cart/add"
+  post "/cart/reomove"
+  resources :services
+  resources :products
 
   # root "services#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
