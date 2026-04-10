@@ -1,0 +1,194 @@
+<!-- Shared Mind Map Hub - Displayed on all pages -->
+
+<section class="mindmap-hub">
+  <div class="mindmap-hub-toggle" onclick="toggleMindmap()">
+    <span class="mindmap-hub-icon">🧭</span>
+    <span class="mindmap-hub-text"><%= @lang == 'th' ? 'เมนูบริการ' : 'Services' %></span>
+    <span class="mindmap-hub-arrow">▼</span>
+  </div>
+
+  <div class="mindmap-hub-content" id="mindmapHubContent">
+    <div class="mindmap-hub-center">
+      <a href="/" class="mindmap-hub-logo">
+        <span class="mindmap-hub-emoji">👩‍🚀</span>
+        <span class="mindmap-hub-brand">SIAMCOSMO</span>
+      </a>
+    </div>
+
+    <div class="mindmap-hub-nodes">
+      <% @services.values.each do |service| %>
+        <a href="<%= service[:path] %>" class="mindmap-hub-node <%= 'active' if current_page?(service[:path]) %>">
+          <span class="mindmap-hub-node-icon"><%= service[:icon] %></span>
+          <span class="mindmap-hub-node-title"><%= service[:title] %></span>
+        </a>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<style>
+  .mindmap-hub {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+
+  .mindmap-hub-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    font-weight: 600;
+  }
+
+  .mindmap-hub-toggle:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+  }
+
+  .mindmap-hub-icon {
+    font-size: 1.2rem;
+  }
+
+  .mindmap-hub-arrow {
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+  }
+
+  .mindmap-hub.expanded .mindmap-hub-arrow {
+    transform: rotate(180deg);
+  }
+
+  .mindmap-hub-content {
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+    background: var(--white);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    display: none;
+    min-width: 320px;
+    max-width: 400px;
+  }
+
+  .mindmap-hub.expanded .mindmap-hub-content {
+    display: block;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .mindmap-hub-center {
+    text-align: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .mindmap-hub-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    gap: 4px;
+  }
+
+  .mindmap-hub-emoji {
+    font-size: 2rem;
+  }
+
+  .mindmap-hub-brand {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 0.9rem;
+  }
+
+  .mindmap-hub-nodes {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .mindmap-hub-node {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--bg-primary);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+  }
+
+  .mindmap-hub-node:hover {
+    background: var(--white);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+  }
+
+  .mindmap-hub-node.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+  }
+
+  .mindmap-hub-node-icon {
+    font-size: 1.2rem;
+  }
+
+  .mindmap-hub-node-title {
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  @media (max-width: 480px) {
+    .mindmap-hub {
+      bottom: 15px;
+      right: 15px;
+    }
+
+    .mindmap-hub-toggle {
+      padding: 10px 16px;
+      font-size: 0.85rem;
+    }
+
+    .mindmap-hub-content {
+      left: -100px;
+      right: auto;
+      min-width: 280px;
+    }
+  }
+</style>
+
+<script>
+  function toggleMindmap() {
+    const hub = document.querySelector('.mindmap-hub');
+    hub.classList.toggle('expanded');
+  }
+
+  // Close when clicking outside
+  document.addEventListener('click', function(e) {
+    const hub = document.querySelector('.mindmap-hub');
+    if (!hub.contains(e.target)) {
+      hub.classList.remove('expanded');
+    }
+  });
+</script>

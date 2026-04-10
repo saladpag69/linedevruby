@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="<%= @lang %>">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= @t["calculator"] || "เครื่องคำนวณวัสดุ" %> - SIAMCOSMO</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: <%= @color[:bg] %>;
+  --bg-card: <%= @color[:bg_card] %>;
+  --primary: <%= @color[:primary] %>;
+  --secondary: <%= @color[:secondary] %>;
+  --text: <%= @color[:text] %>;
+  --text-secondary: <%= @color[:text_secondary] %>;
+  --white: #FFFFFF;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+  --radius: 16px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: <%= @lang == 'th' ? "'Kanit'" : "'Inter'" %>, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.header {
+  background: var(--white);
+  padding: 1rem 2rem;
+  box-shadow: var(--shadow);
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.back-link { color: var(--primary); text-decoration: none; font-weight: 500; }
+.hero {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  padding: 2rem;
+  text-align: center;
+  color: white;
+}
+.hero h1 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+.hero p { opacity: 0.9; font-size: 0.9rem; }
+.calculator-container {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid var(--primary);
+  background: var(--white);
+  color: var(--primary);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.tab-btn:hover { background: var(--bg-primary); }
+.tab-btn.active {
+  background: var(--primary);
+  color: white;
+}
+.tab-content {
+  display: none;
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
+}
+.tab-content.active { display: block; }
+.form-section {
+  margin-bottom: 1.5rem;
+}
+.form-section h3 {
+  color: var(--primary);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  border-bottom: 2px solid var(--bg-primary);
+  padding-bottom: 0.5rem;
+}
+.shape-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.shape-option {
+  padding: 1rem;
+  border: 2px solid var(--bg-primary);
+  border-radius: var(--radius);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.shape-option:hover { border-color: var(--primary); }
+.shape-option.selected {
+  border-color: var(--primary);
+  background: var(--bg-primary);
+}
+.shape-option .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+.shape-option .label { font-weight: 500; font-size: 0.9rem; }
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.form-group { margin-bottom: 0.5rem; }
+.form-group label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--bg-primary);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+.input-with-unit {
+  position: relative;
+}
+.input-with-unit input { padding-right: 3.5rem; }
+.input-with-unit .unit {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+.wall-item {
+  background: var(--bg-primary);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+.wall-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+.wall-item-header h4 { color: var(--primary); font-size: 0.95rem; }
+.remove-wall-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+.btn-secondary {
+  background: var(--bg-primary);
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+.btn-secondary:hover { background: var(--primary); color: white; }
+.result-box {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  margin-top: 1.5rem;
+  text-align: center;
+  display: none;
+}
+.result-box.show { display: block; animation: fadeIn 0.3s ease; }
+.result-box h3 { font-size: 1rem; margin-bottom: 0.5rem; opacity: 0.9; }
+.result-box .value { font-size: 2.5rem; font-weight: 700; }
+.result-box .unit { font-size: 1.25rem; opacity: 0.9; }
+.result-details {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.3);
+  text-align: left;
+}
+.result-details .detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  font-size: 0.9rem;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 640px) {
+  .form-row { grid-template-columns: 1fr; }
+  .tabs { gap: 0.25rem; }
+  .tab-btn { padding: 0.5rem 1rem; font-size: 0.8rem; }
+  .shape-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="back-link">← <%= @lang == 'th' ? 'กลับหน้าหลัก' : 'Back' %></a>
+    <a href="/" style="text-decoration: none; color: var(--primary); font-weight: 700;">👩‍🚀 SIAMCOSMO</a>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>🧮 <%= @t["calculator"] || "เครื่องคำนวณวัสดุ" %></h1>
+  <p><%= @lang == 'th' ? 'คำนวณพื้นที่และปริมาณวัสดุก่อสร้าง' : 'Calculate area and construction materials' %></p>
+</section>
+
+<div class="calculator-container">
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="area"><%= @lang == 'th' ? 'พื้นที่' : 'Area' %></button>
+    <button class="tab-btn" data-tab="wall"><%= @lang == 'th' ? 'ผนังทาสี' : 'Wall Painting' %></button>
+    <button class="tab-btn" data-tab="volume"><%= @lang == 'th' ? 'ปริมาณคอนกรีต' : 'Concrete Volume' %></button>
+  </div>
+
+  <!-- Area Tab -->
+  <div id="tab-area" class="tab-content active">
+    <div class="form-section">
+      <h3><%= @lang == 'th' ? 'เลือกรูปแบบพื้นที่' : 'Select Area Shape' %></h3>
+      <div class="shape-grid">
+        <div class="shape-option selected" data-shape="rectangle">
+          <div class="icon">⬜</div>
+          <div class="label"><%= @lang == 'th' ? 'สี่เหลี่ยม' : 'Rectangle' %></div>
+        </div>
+        <div class="shape-option" data-shape="triangle">
+          <div class="icon">🔺</div>
+          <div class="label"><%= @lang == 'th' ? 'สามเหลี่ยม' : 'Triangle' %></div>
+        </div>
+        <div class="shape-option" data-shape="trapezoid">
+          <div class="icon">🔻</div>
+          <div class="label"><%= @lang == 'th' ? 'สี่เหลี่ยมคางหมู' : 'Trapezoid' %></div>
+        </div>
+        <div class="shape-option" data-shape="circle">
+          <div class="icon">⭕</div>
+          <div class="label"><%= @lang == 'th' ? 'วงกลม' : 'Circle' %></div>
+        </div>
+      </div>
+    </div>
+
+    <form id="area-form">
+      <input type="hidden" name="shape" id="selected-shape" value="rectangle">
+      
+      <div id="shape-inputs">
+        <!-- Rectangle Inputs -->
+        <div class="shape-inputs" id="inputs-rectangle">
+          <div class="form-row">
+            <div class="form-group">
+              <label><%= @lang == 'th' ? 'กว้าง (เมตร)' : 'Width (m)' %></label>
+              <div class="input-with-unit">
+                <input type="number" name="width" step="0.01" min="0" value="5">
+                <span class="unit">ม.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label><%= @lang == 'th' ? 'ยาว (เมตร)' : 'Length (m)' %></label>
+              <div class="input-with-unit">
+                <input type="number" name="height" step="0.01" min="0" value="6">
+                <span class="unit">ม.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Triangle Inputs -->
+        <div class="shape-inputs" id="inputs-triangle" style="display:none;">
+          <div class="form-row">
+            <div class="form-group">
+              <label><%= @lang == 'th' ? 'ฐาน (เมตร)' : 'Base (m)' %></label>
+              <div class="input-with-unit">
+                <input type="number" name="base" step="0.01" min="0" value="4">
+                <span class="unit">ม.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label><%= @lang == 'th' ? 'สูง (เมตร)' : 'Height (m)' %></label>
+              <div class="input-with-unit">
+                <input type="number" name="height" step="0.01" min="0" value="3">
+                <span class="unit">ม.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trapezoid Inputs -->
+        <div class="shape-inputs" id="inputs-trapezoid" style="display:none;">
+          <div class="form-row">
+            <div class="form-group">
+              <label><%= @lang == 'th' ? 'ด้านคู่ขนาน 1 (ม.)' : 'Parallel Side 1 (m)' %></label>
+              <div class="input-with-unit">
+                <input type="number" name="parallel1" step="0.01" min="0" value="6">
+                <span class="unit">ม.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label><%= @lang == 'th' ? 'ด้านคู่ขนาน 2 (ม.)' : 'Parallel Side 2 (m)' %></label>
+              <div class="input-with-unit">
+                <input type="number" name="parallel2" step="0.01" min="0" value="4">
+                <span class="unit">ม.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label><%= @lang == 'th' ? 'สูง (เมตร)' : 'Height (m)' %></label>
+              <div class="input-with-unit">
+                <input type="number" name="height" step="0.01" min="0" value="3">
+                <span class="unit">ม.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Circle Inputs -->
+        <div class="shape-inputs" id="inputs-circle" style="display:none;">
+          <div class="form-row">
+            <div class="form-group">
+              <label><%= @lang == 'th' ? 'รัศมี (เมตร)' : 'Radius (m)' %></label>
+              <div class="input-with-unit">
+                <input type="number" name="radius" step="0.01" min="0" value="3">
+                <span class="unit">ม.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary"><%= @lang == 'th' ? 'คำนวณพื้นที่' : 'Calculate Area' %></button>
+    </form>
+
+    <div id="area-result" class="result-box">
+      <h3><%= @lang == 'th' ? 'พื้นที่ทั้งหมด' : 'Total Area' %></h3>
+      <div class="value" id="area-value">0</div>
+      <div class="unit">ตร.ม.</div>
+    </div>
+  </div>
+
+  <!-- Wall Painting Tab -->
+  <div id="tab-wall" class="tab-content">
+    <div class="form-section">
+      <h3><%= @lang == 'th' ? 'ขนาดผนังแต่ละด้าน' : 'Wall Dimensions' %></h3>
+      <div id="wall-list">
+        <div class="wall-item" data-wall-index="0">
+          <div class="wall-item-header">
+            <h4><%= @lang == 'th' ? 'ผนังด้านที่ 1' : 'Wall 1' %></h4>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label><%= @lang == 'th' ? 'กว้าง (ม.)' : 'Width (m)' %></label>
+              <div class="input-with-unit">
+                <input type="number" name="walls[0][width]" step="0.01" min="0" value="4">
+                <span class="unit">ม.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label><%= @lang == 'th' ? 'สูง (ม.)' : 'Height (m)' %></label>
+              <div class="input-with-unit">
+                <input type="number" name="walls[0][height]" step="0.01" min="0" value="3">
+                <span class="unit">ม.</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label><%= @lang == 'th' ? 'กว้างประตู (ม.)' : 'Door Width (m)' %></label>
+              <div class="input-with-unit">
+                <input type="number" name="walls[0][door_width]" step="0.01" min="0" value="0.9">
+                <span class="unit">ม.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label><%= @lang == 'th' ? 'สูงประตู (ม.)' : 'Door Height (m)' %></label>
+              <div class="input-with-unit">
+                <input type="number" name="walls[0][door_height]" step="0.01" min="0" value="2.1">
+                <span class="unit">ม.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label><%= @lang == 'th' ? 'จำนวนประตู' : 'Door Count' %></label>
+              <input type="number" name="walls[0][door_count]" min="0" value="1">
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-secondary" id="add-wall-btn">+ <%= @lang == 'th' ? 'เพิ่มผนัง' : 'Add Wall' %></button>
+    </div>
+
+    <button type="button" class="btn btn-primary" id="calculate-wall-btn"><%= @lang == 'th' ? 'คำนวณพื้นที่ทาสี' : 'Calculate Paintable Area' %></button>
+
+    <div id="wall-result" class="result-box">
+      <h3><%= @lang == 'th' ? 'พื้นที่ทาสีทั้งหมด' : 'Total Paintable Area' %></h3>
+      <div class="value" id="wall-value">0</div>
+      <div class="unit">ตร.ม.</div>
+      <div class="result-details" id="wall-details"></div>
+    </div>
+  </div>
+
+  <!-- Volume Tab -->
+  <div id="tab-volume" class="tab-content">
+    <div class="form-section">
+      <h3><%= @lang == 'th' ? 'ขนาดพื้นที่' : 'Area Dimensions' %></h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label><%= @lang == 'th' ? 'ยาว (เมตร)' : 'Length (m)' %></label>
+          <div class="input-with-unit">
+            <input type="number" id="vol-length" step="0.01" min="0" value="5">
+            <span class="unit">ม.</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label><%= @lang == 'th' ? 'กว้าง (เมตร)' : 'Width (m)' %></label>
+          <div class="input-with-unit">
+            <input type="number" id="vol-width" step="0.01" min="0" value="4">
+            <span class="unit">ม.</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label><%= @lang == 'th' ? 'หนา/สูง (เมตร)' : 'Thickness/Height (m)' %></label>
+          <div class="input-with-unit">
+            <input type="number" id="vol-height" step="0.01" min="0" value="0.15">
+            <span class="unit">ม.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3><%= @lang == 'th' ? 'สัดส่วนคอนกรีต' : 'Concrete Ratio' %></h3>
+      <div class="shape-grid">
+        <div class="shape-option selected" data-ratio="1:2:4">
+          <div class="label">1 : 2 : 4</div>
+          <div style="font-size:0.75rem;color:var(--text-secondary);"><%= @lang == 'th' ? 'มาตรฐาน' : 'Standard' %></div>
+        </div>
+        <div class="shape-option" data-ratio="1:3:6">
+          <div class="label">1 : 3 : 6</div>
+          <div style="font-size:0.75rem;color:var(--text-secondary);"><%= @lang == 'th' ? 'บาง' : 'Thin' %></div>
+        </div>
+        <div class="shape-option" data-ratio="1:1.5:3">
+          <div class="label">1 : 1.5 : 3</div>
+          <div style="font-size:0.75rem;color:var(--text-secondary);"><%= @lang == 'th' ? 'แข็งแรง' : 'Strong' %></div>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" id="calculate-volume-btn"><%= @lang == 'th' ? 'คำนวณวัสดุ' : 'Calculate Materials' %></button>
+
+    <div id="volume-result" class="result-box">
+      <h3><%= @lang == 'th' ? 'ปริมาณคอนกรีต' : 'Concrete Volume' %></h3>
+      <div class="value" id="volume-value">0</div>
+      <div class="unit">ลบ.ม.</div>
+      <div class="result-details" id="volume-details">
+        <div class="detail-row">
+          <span><%= @lang == 'th' ? 'ปูนซีเมนต์' : 'Cement' %></span>
+          <span id="cement-value">0 ถุง</span>
+        </div>
+        <div class="detail-row">
+          <span><%= @lang == 'th' ? 'ทราย' : 'Sand' %></span>
+          <span id="sand-value">0 ลบ.ม.</span>
+        </div>
+        <div class="detail-row">
+          <span><%= @lang == 'th' ? 'หิน 3/4' : 'Gravel 3/4' %></span>
+          <span id="gravel-value">0 ลบ.ม.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+      document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Shape selection
+  document.querySelectorAll('.shape-option[data-shape]').forEach(function(option) {
+    option.addEventListener('click', function() {
+      document.querySelectorAll('.shape-option[data-shape]').forEach(o => o.classList.remove('selected'));
+      this.classList.add('selected');
+      var shape = this.dataset.shape;
+      document.getElementById('selected-shape').value = shape;
+      document.querySelectorAll('.shape-inputs').forEach(div => div.style.display = 'none');
+      document.getElementById('inputs-' + shape).style.display = 'block';
+    });
+  });
+
+  // Area calculation
+  document.getElementById('area-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var shape = document.getElementById('selected-shape').value;
+    var formData = new FormData(this);
+    var data = { shape: shape };
+    formData.forEach(function(value, key) { data[key] = value; });
+    
+    fetch('/calculator/calculate_area', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content },
+      body: JSON.stringify({ area: data })
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('area-value').textContent = data.area.toFixed(2);
+      document.getElementById('area-result').classList.add('show');
+    });
+  });
+
+  // Add wall
+  var wallIndex = 1;
+  document.getElementById('add-wall-btn').addEventListener('click', function() {
+    var wallList = document.getElementById('wall-list');
+    var wallHtml = '<div class="wall-item" data-wall-index="' + wallIndex + '">' +
+      '<div class="wall-item-header">' +
+      '<h4><%= @lang == "th" ? "ผนังด้านที่" : "Wall" %> ' + (wallIndex + 1) + '</h4>' +
+      '<button type="button" class="remove-wall-btn" onclick="this.parentElement.parentElement.remove()">ลบ</button>' +
+      '</div>' +
+      '<div class="form-row">' +
+      '<div class="form-group"><label><%= @lang == "th" ? "กว้าง (ม.)" : "Width (m)" %></label><div class="input-with-unit"><input type="number" name="walls[' + wallIndex + '][width]" step="0.01" min="0" value="4"><span class="unit">ม.</span></div></div>' +
+      '<div class="form-group"><label><%= @lang == "th" ? "สูง (ม.)" : "Height (m)" %></label><div class="input-with-unit"><input type="number" name="walls[' + wallIndex + '][height]" step="0.01" min="0" value="3"><span class="unit">ม.</span></div></div>' +
+      '</div>' +
+      '<div class="form-row">' +
+      '<div class="form-group"><label><%= @lang == "th" ? "กว้างประตู (ม.)" : "Door Width (m)" %></label><div class="input-with-unit"><input type="number" name="walls[' + wallIndex + '][door_width]" step="0.01" min="0" value="0.9"><span class="unit">ม.</span></div></div>' +
+      '<div class="form-group"><label><%= @lang == "th" ? "สูงประตู (ม.)" : "Door Height (m)" %></label><div class="input-with-unit"><input type="number" name="walls[' + wallIndex + '][door_height]" step="0.01" min="0" value="2.1"><span class="unit">ม.</span></div></div>' +
+      '<div class="form-group"><label><%= @lang == "th" ? "จำนวนประตู" : "Door Count" %></label><input type="number" name="walls[' + wallIndex + '][door_count]" min="0" value="1"></div>' +
+      '</div></div>';
+    wallList.insertAdjacentHTML('beforeend', wallHtml);
+    wallIndex++;
+  });
+
+  // Wall calculation
+  document.getElementById('calculate-wall-btn').addEventListener('click', function() {
+    var walls = [];
+    document.querySelectorAll('.wall-item').forEach(function(wall) {
+      walls.push({
+        width: wall.querySelector('input[name*="[width]"]').value,
+        height: wall.querySelector('input[name*="[height]"]').value,
+        door_width: wall.querySelector('input[name*="[door_width]"]').value,
+        door_height: wall.querySelector('input[name*="[door_height]"]').value,
+        door_count: wall.querySelector('input[name*="[door_count]"]').value
+      });
+    });
+    
+    fetch('/calculator/calculate_wall', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content },
+      body: JSON.stringify({ walls: walls })
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('wall-value').textContent = data.total_area.toFixed(2);
+      var details = '';
+      data.walls.forEach(function(w, i) {
+        details += '<div class="detail-row"><span><%= @lang == "th" ? "ผนัง" : "Wall" %> ' + (i+1) + ':</span><span>' + w.paintable_area.toFixed(2) + ' ตร.ม.</span></div>';
+      });
+      document.getElementById('wall-details').innerHTML = details;
+      document.getElementById('wall-result').classList.add('show');
+    });
+  });
+
+  // Ratio selection
+  document.querySelectorAll('.shape-option[data-ratio]').forEach(function(option) {
+    option.addEventListener('click', function() {
+      document.querySelectorAll('.shape-option[data-ratio]').forEach(o => o.classList.remove('selected'));
+      this.classList.add('selected');
+    });
+  });
+
+  // Volume calculation
+  document.getElementById('calculate-volume-btn').addEventListener('click', function() {
+    var selectedRatio = document.querySelector('.shape-option[data-ratio].selected');
+    var ratio = selectedRatio ? selectedRatio.dataset.ratio : '1:2:4';
+    
+    fetch('/calculator/calculate_volume', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content },
+      body: JSON.stringify({
+        length: document.getElementById('vol-length').value,
+        width: document.getElementById('vol-width').value,
+        height: document.getElementById('vol-height').value,
+        ratio: ratio
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('volume-value').textContent = data.volume.toFixed(3);
+      document.getElementById('cement-value').textContent = data.materials.cement_bags + ' ถุง';
+      document.getElementById('sand-value').textContent = data.materials.sand + ' ลบ.ม.';
+      document.getElementById('gravel-value').textContent = data.materials.gravel + ' ลบ.ม.';
+      document.getElementById('volume-result').classList.add('show');
+    });
+  });
+});
+</script>
+
+</body>
+</html>

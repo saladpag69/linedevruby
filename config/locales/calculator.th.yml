@@ -1,0 +1,17 @@
+th:
+  calculator:
+    title: "เครื่องคำนวณวัสดุ"
+    rectangle: "สี่เหลี่ยม"
+    triangle: "สามเหลี่ยม"
+    trapezoid: "สี่เหลี่ยมคางหมู"
+    circle: "วงกลม"
+    unknown_shape: "รูปแบบไม่รู้จัก"
+    
+en:
+  calculator:
+    title: "Material Calculator"
+    rectangle: "Rectangle"
+    triangle: "Triangle"
+    trapezoid: "Trapezoid"
+    circle: "Circle"
+    unknown_shape: "Unknown shape"

@@ -24,12 +24,29 @@ Rails.application.routes.draw do
     post :clear, on: :collection
   end
 
- # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
- # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
- # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
+  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
+  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
- # Defines the root path route ("/")
- # root "posts#index"
+  # Defines the root path route ("/")
+  # root "posts#index"
 
- root "application#about"
+  root "siamcosmo#index"
+  # root "application#about"
+
+  get "/set_language", to: "siamcosmo#change_language"
+
+  # Service pages
+  get "/calculator", to: "calculator#index"
+  get "/documents", to: "documents#index"
+  get "/price", to: "price#index"
+  get "/contractor", to: "contractor#index"
+  get "/projects", to: "projects#index"
+  get "/rental", to: "rental#index"
+  get "/it", to: "it#index"
+
+  # Calculator API
+  post "/calculator/calculate_area", to: "calculator#calculate_area"
+  post "/calculator/calculate_wall", to: "calculator#calculate_wall"
+  post "/calculator/calculate_volume", to: "calculator#calculate_volume"
 end

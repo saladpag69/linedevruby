@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="<%= @lang %>">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIAMCOSMO - <%= @t[:tagline] %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: <%= @color[:bg] %>;
+      --bg-card: <%= @color[:bg_card] %>;
+      --primary: <%= @color[:primary] %>;
+      --secondary: <%= @color[:secondary] %>;
+      --accent: <%= @color[:accent] %>;
+      --text: <%= @color[:text] %>;
+      --text-secondary: <%= @color[:text_secondary] %>;
+      --white: #FFFFFF;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+      --radius: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: <%= @lang == "th" ? "'Kanit'" : "'Inter'" %>, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .logo-text span { color: var(--primary); }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-left: 1rem;
+      padding-left: 1rem;
+      border-left: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .header-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .header-nav-item:hover {
+      background: var(--bg-primary);
+      color: var(--primary);
+    }
+
+    .header-nav-item-icon { font-size: 1rem; }
+    .header-nav-item-text { white-space: nowrap; }
+
+    .lang-switcher {
+      display: flex;
+      background: var(--bg-primary);
+      border-radius: 8px;
+      padding: 4px;
+    }
+
+    .lang-btn {
+      padding: 6px 12px;
+      border: none;
+      background: transparent;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 6px;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .lang-btn:hover { color: var(--primary); }
+
+    .lang-btn.active {
+      background: var(--white);
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .color-picker {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .color-picker-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-right: 4px;
+    }
+
+    .color-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: block;
+    }
+
+    .color-btn:hover { transform: scale(1.15); }
+
+    .color-btn.active {
+      border-color: var(--text);
+      box-shadow: 0 0 0 2px var(--white);
+    }
+
+    .service-pages {
+      padding: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      min-height: 60vh;
+    }
+
+    .service-header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      padding: 3rem 2rem;
+      text-align: center;
+      color: white;
+      border-radius: var(--radius);
+      margin-bottom: 2rem;
+    }
+
+    .service-header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .service-header p { opacity: 0.9; }
+
+    .service-body {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .coming-soon {
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .coming-soon h2 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .coming-soon p { color: var(--text-secondary); }
+
+    .mindmap-hub {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .mindmap-hub-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 12px 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .mindmap-hub-toggle:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+    }
+
+    .mindmap-hub-icon { font-size: 1.2rem; }
+
+    .mindmap-hub-arrow {
+      font-size: 0.7rem;
+      transition: transform 0.3s ease;
+    }
+
+    .mindmap-hub.expanded .mindmap-hub-arrow { transform: rotate(180deg); }
+
+    .mindmap-hub-content {
+      position: absolute;
+      bottom: 60px;
+      right: 0;
+      background: var(--white);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      display: none;
+      min-width: 320px;
+      max-width: 400px;
+    }
+
+    .mindmap-hub.expanded .mindmap-hub-content {
+      display: block;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .mindmap-hub-center {
+      text-align: center;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .mindmap-hub-emoji { font-size: 2rem; }
+
+    .mindmap-hub-brand {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 0.9rem;
+    }
+
+    .mindmap-hub-nodes {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .mindmap-hub-node {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: var(--bg-primary);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+
+    .mindmap-hub-node:hover {
+      background: var(--white);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .mindmap-hub-node-icon { font-size: 1.2rem; }
+    .mindmap-hub-node-title { font-size: 0.8rem; font-weight: 500; }
+
+    .footer {
+      background: var(--white);
+      border-top: 1px solid rgba(0,0,0,0.05);
+      padding: 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .footer-info {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 1200px) {
+      .header-nav-item-text { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      .header-inner { flex-wrap: wrap; }
+
+      .header-nav {
+        order: 3;
+        width: 100%;
+        margin-left: 0;
+        padding-left: 0;
+        border-left: none;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(0,0,0,0.1);
+        overflow-x: auto;
+        gap: 0.25rem;
+      }
+
+      .header-nav-item-text { display: none; }
+      .header-nav-item { flex-shrink: 0; padding: 8px; }
+
+      .footer-inner { flex-direction: column; }
+    }
+
+    @media (max-width: 480px) {
+      .header { padding: 0.75rem 1rem; }
+      .header-nav-item { padding: 6px; font-size: 0.75rem; }
+
+      .mindmap-hub { bottom: 15px; right: 15px; }
+      .mindmap-hub-toggle { padding: 10px 16px; font-size: 0.85rem; }
+      .mindmap-hub-content { left: -100px; right: auto; min-width: 280px; }
+
+      .service-header { padding: 2rem 1rem; }
+      .service-header h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo">
+          <div class="logo-icon">🏠</div>
+          <div class="logo-text">SIAM<span>COSMO</span></div>
+        </div>
+
+        <nav class="header-nav">
+          <% @services.each do |key, service| %>
+            <a href="#" class="header-nav-item" data-service="<%= key %>">
+              <span class="header-nav-item-icon"><%= service[:icon] %></span>
+              <span class="header-nav-item-text"><%= service[:title] %></span>
+            </a>
+          <% end %>
+        </nav>
+
+        <div class="header-actions">
+          <div class="lang-switcher">
+            <%= link_to "TH", set_language_path(lang: "th", color: @color_key), class: ("lang-btn active" if @lang == "th") %>
+            <%= link_to "EN", set_language_path(lang: "en", color: @color_key), class: ("lang-btn active" if @lang == "en") %>
+          </div>
+
+          <div class="color-picker">
+            <span class="color-picker-label">🎨</span>
+            <% HomeContentService::COLORS.each do |key, c| %>
+              <%= link_to set_language_path(lang: @lang, color: key),
+                          class: ("color-btn active" if @color_key == key.to_s),
+                          style: "background: #{c[:primary]}",
+                          title: c[:name] do %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </header>
+
+  <main class="service-pages">
+    <% @services.each do |key, service| %>
+      <div id="service-<%= key %>" class="service-content" style="display: <%= key == :calculator ? 'block' : 'none' %>;">
+        <div class="service-header">
+          <h1><%= service[:icon] %> <%= service[:title] %></h1>
+          <p><%= service[:subtitle] %></p>
+        </div>
+        <div class="service-body">
+          <div class="coming-soon">
+            <h2>🚧 <%= @lang == "th" ? "กำลังพัฒนา" : "Under Construction" %></h2>
+            <p><%= @lang == "th" ? "ระบบกำลังอยู่ในขั้นตอนการพัฒนา" : "System is under development" %></p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </main>
+
+  <section class="mindmap-hub">
+    <div class="mindmap-hub-toggle">
+      <span class="mindmap-hub-icon">🧭</span>
+      <span class="mindmap-hub-text"><%= @lang == "th" ? "เมนูบริการ" : "Services" %></span>
+      <span class="mindmap-hub-arrow">▼</span>
+    </div>
+
+    <div class="mindmap-hub-content" id="mindmapHubContent">
+      <div class="mindmap-hub-center">
+        <span class="mindmap-hub-emoji">🏠</span>
+        <span class="mindmap-hub-brand">SIAMCOSMO</span>
+      </div>
+
+      <div class="mindmap-hub-nodes">
+        <% @services.each do |key, service| %>
+          <a href="#" class="mindmap-hub-node" data-service="<%= key %>">
+            <span class="mindmap-hub-node-icon"><%= service[:icon] %></span>
+            <span class="mindmap-hub-node-title"><%= service[:title] %></span>
+          </a>
+        <% end %>
+      </div>
+    </div>
+
+  </section>
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <%= @t[:copyright] %>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -70,6 +70,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_25_000001) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "line_display_name"
+    t.string "line_id"
+    t.string "shop_id", default: "branch_001"
+    t.string "siamcosmo_token"
+    t.string "siamcosmo_user_id"
+    t.datetime "updated_at", null: false
+    t.string "username"
+    t.index ["line_id"], name: "index_users_on_line_id"
+    t.index ["siamcosmo_user_id"], name: "index_users_on_siamcosmo_user_id"
+    t.index ["username"], name: "index_users_on_username", unique: true
+  end
+
   add_foreign_key "cart_items", "carts"
   add_foreign_key "models", "carts"
   add_foreign_key "models", "products"
