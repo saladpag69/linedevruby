@@ -5,6 +5,9 @@ require "json"
 require "securerandom"
 
 class ApplicationController < ActionController::Base
+  # Devise helpers
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
   CHAT_MESSAGES_CACHE_KEY = "chat:ai_messages"
   CHAT_MESSAGES_MAX = 30
 
@@ -13,6 +16,10 @@ class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [ :username, :email ])
+    devise_parameter_sanitizer.permit(:sign_in, keys: [ :email, :password ])
+  end
 
   def set_render_cart
     @render_cart = true
@@ -74,6 +81,6 @@ class ApplicationController < ActionController::Base
     messages << { "role" => role.to_s, "text" => text.to_s, "at" => Time.current.to_i }
     Rails.cache.write(CHAT_MESSAGES_CACHE_KEY, messages.last(CHAT_MESSAGES_MAX))
   end
-  
+
   private :read_chat_messages, :append_chat_message
 end

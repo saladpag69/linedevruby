@@ -1,0 +1,51 @@
+th:
+  siamcosmo: "ไซมคอสโม"
+  home: "หน้าแรก"
+  services: "บริการ"
+  profile: "โปรไฟล์"
+  login: "เข้าสู่ระบบ"
+  logout: "ออกจากระบบ"
+  register: "สมัครสมาชิก"
+  search: "ค้นหา"
+  back: "กลับ"
+  
+  # Auth
+  email: "อีเมล"
+  password: "รหัสผ่าน"
+  confirm_password: "ยืนยันรหัสผ่าน"
+  forgot_password: "ลืมรหัสผ่าน?"
+  sign_in: "เข้าสู่ระบบ"
+  sign_up: "สมัครสมาชิก"
+  
+  # Services
+  calculator: "เครื่องคำนวณวัสดุ"
+  price: "ราคาวัสดุ"
+  contractor: "ผู้รับเหมา"
+  transport: "ขนส่ง"
+  rental: "เช่าเครื่องมือ"
+  projects: "ผลงาน"
+  documents: "เอกสาร"
+  
+  # Common
+  view_all: "ดูทั้งหมด"
+  contact: "ติดต่อ"
+  request_quote: "ขอใบเสนอราคา"
+  close: "ปิด"
+  open: "เปิด"
+  verified: "verified"
+  providers_count: "ผู้ให้บริการ %{count} ราย"
+  no_providers: "ยังไม่มีผู้ให้บริการ"
+  
+  # Chat
+  type_message: "พิมพ์ข้อความ..."
+  send: "ส่ง"
+  suggested: "แนะนำ"
+  
+  # Errors
+  error: "ข้อผิดพลาด"
+  success: "สำเร็จ"
+  
+  # Theme
+  theme_light: "สว่าง"
+  theme_dark: "มืด"
+  theme_system: "ตามระบบ"

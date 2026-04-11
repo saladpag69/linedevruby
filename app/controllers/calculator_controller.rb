@@ -8,22 +8,24 @@ class CalculatorController < ApplicationController
     @services = HomeContentService.services(@lang)
     @shapes = [ "rectangle", "triangle", "trapezoid", "circle" ]
     @ratios = [ "1:2:4", "1:3:6", "1:1.5:3" ]
+
+    # Render standalone HTML (without layout)
+    render template: "calculator/index", layout: false
   end
 
   def calculate_area
-    shape = params[:area][:shape]
-    result = CalculatorService.calculate_area(shape, area_params)
-    render json: result
+    calculator = AreaCalculator.new(area_params)
+    render json: calculator.calculate
   end
 
   def calculate_wall
-    result = CalculatorService.calculate_wall_area(wall_params)
-    render json: result
+    calculator = WallCalculator.new(wall_params)
+    render json: calculator.calculate
   end
 
   def calculate_volume
-    result = CalculatorService.calculate_volume(volume_params)
-    render json: result
+    calculator = VolumeCalculator.new(volume_params)
+    render json: calculator.calculate
   end
 
   private
@@ -38,7 +40,7 @@ class CalculatorController < ApplicationController
   end
 
   def area_params
-    params.require(:area).permit(:shape, :width, :height, :base, :parallel1, :parallel2, :radius)
+    params.require(:area).permit(:shape, :length, :width, :height, :base, :parallel1, :parallel2, :radius)
   end
 
   def wall_params

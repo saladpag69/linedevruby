@@ -1,0 +1,311 @@
+<% content_for :title, @service.name(I18n.locale) %>
+
+<div class="chat-page">
+  <a href="/" class="back-btn">← <%= t("back") %></a>
+  
+  <div class="chat-header">
+    <span class="chat-icon"><%= @service.icon %></span>
+    <h2><%= @service.name(I18n.locale) %></h2>
+  </div>
+
+  <div class="chat-messages" id="chat-messages">
+    <% if @greeting %>
+      <div class="message bot">
+        <div class="message-content"><%= @greeting %></div>
+      </div>
+    <% end %>
+    
+    <% @messages.each do |msg| %>
+      <div class="message <%= msg.role %>">
+        <div class="message-content"><%= msg.content %></div>
+      </div>
+    <% end %>
+    
+    <% if @service.key == "calculator" %>
+      <div class="calculator-form">
+        <div class="shape-selector">
+          <% @shapes.each do |shape| %>
+            <button class="shape-btn <%= 'active' if shape == 'rectangle' %>" data-shape="<%= shape %>">
+              <%= shape == 'rectangle' ? '⬜' : (shape == 'triangle' ? '🔺' : (shape == 'circle' ? '⭕' : '🔻')) %>
+            </button>
+          <% end %>
+        </div>
+        
+        <div class="shape-inputs" id="rectangle-inputs">
+          <input type="number" id="width" placeholder="กว้าง (ม.)" value="5">
+          <input type="number" id="length" placeholder="ยาว (ม.)" value="6">
+        </div>
+        
+        <div class="shape-inputs" id="triangle-inputs" style="display:none;">
+          <input type="number" id="base" placeholder="ฐาน (ม.)" value="4">
+          <input type="number" id="height" placeholder="สูง (ม.)" value="3">
+        </div>
+        
+        <div class="shape-inputs" id="circle-inputs" style="display:none;">
+          <input type="number" id="radius" placeholder="รัศมี (ม.)" value="3">
+        </div>
+        
+        <div class="shape-inputs" id="trapezoid-inputs" style="display:none;">
+          <input type="number" id="parallel1" placeholder="ด้านขนาน 1 (ม.)" value="5">
+          <input type="number" id="parallel2" placeholder="ด้านขนาน 2 (ม.)" value="3">
+          <input type="number" id="height" placeholder="สูง (ม.)" value="4">
+        </div>
+        
+        <button class="calc-btn" id="calc-area">คำนวณ</button>
+        <div class="calc-result" id="result"></div>
+      </div>
+    <% end %>
+  </div>
+
+  <% suggestions = @service.suggestions || [] %>
+  <% if suggestions.any? %>
+    <div class="suggestions">
+      <% suggestions.each do |s| %>
+        <button class="suggestion-chip" data-suggestion="<%= I18n.locale == :th ? s[:th] : s[:en] %>">
+          <%= I18n.locale == :th ? s[:th] : s[:en] %>
+        </button>
+      <% end %>
+    </div>
+  <% end %>
+
+  <form class="chat-input" id="chat-form" data-service="<%= @service.key %>">
+    <input type="text" name="message" placeholder="<%= t('type_message') %>" autocomplete="off">
+    <button type="submit"><%= t("send") %></button>
+  </form>
+</div>
+
+<style>
+  .chat-page {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 120px);
+  }
+  .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .chat-icon {
+    font-size: 1.5rem;
+  }
+  .chat-header h2 {
+    font-size: 1.125rem;
+  }
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .message {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 0.9375rem;
+  }
+  .message.user {
+    align-self: flex-end;
+    background: var(--primary);
+    color: var(--bg);
+  }
+  .message.bot {
+    align-self: flex-start;
+    background: var(--bg-secondary);
+    color: var(--text);
+  }
+  .calculator-form {
+    background: var(--bg-secondary);
+    padding: 16px;
+    border-radius: 12px;
+    margin: 8px 0;
+  }
+  .shape-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .shape-btn {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.25rem;
+  }
+  .shape-btn.active {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+  .calc-inputs {
+    display: flex;
+    gap: 8px;
+  }
+  .shape-inputs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .shape-inputs input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .calc-btn {
+    padding: 10px 16px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .calc-result {
+    margin-top: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    text-align: center;
+  }
+  .suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 0;
+  }
+  .suggestion-chip {
+    padding: 8px 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 0.8125rem;
+    cursor: pointer;
+  }
+  .suggestion-chip:hover {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .chat-input {
+    display: flex;
+    gap: 8px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+  }
+  .chat-input input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .chat-input button {
+    padding: 12px 20px;
+    background: var(--primary);
+    color: var(--bg);
+    border: none;
+    border-radius: 24px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  const form = document.getElementById('chat-form');
+  const messagesDiv = document.getElementById('chat-messages');
+  const serviceKey = form?.dataset.service;
+  let currentShape = 'rectangle';
+
+  // Shape selector
+  document.querySelectorAll('.shape-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentShape = btn.dataset.shape;
+      
+      // Show/hide appropriate inputs
+      document.querySelectorAll('.shape-inputs').forEach(div => div.style.display = 'none');
+      document.getElementById(currentShape + '-inputs').style.display = 'flex';
+    });
+  });
+
+  // Calculate button
+  document.getElementById('calc-area')?.addEventListener('click', async () => {
+    const width = document.getElementById('width').value;
+    const length = document.getElementById('length').value;
+    const base = document.getElementById('base')?.value;
+    const height = document.getElementById('height').value;
+    const radius = document.getElementById('radius')?.value;
+    const parallel1 = document.getElementById('parallel1')?.value;
+    const parallel2 = document.getElementById('parallel2')?.value;
+    const resultDiv = document.getElementById('result');
+    
+    let body = { 
+      service_key: serviceKey,
+      shape: currentShape
+    };
+    
+    if (currentShape === 'rectangle') {
+      body.width = width;
+      body.length = length;
+    } else if (currentShape === 'triangle') {
+      body.base = base || width;
+      body.height = height || length;
+    } else if (currentShape === 'circle') {
+      body.radius = radius || width;
+    } else if (currentShape === 'trapezoid') {
+      body.parallel1 = parallel1 || width;
+      body.parallel2 = parallel2 || length;
+      body.height = height;
+    }
+    
+    try {
+      const res = await fetch('/chat/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      resultDiv.textContent = data.text || data.error;
+    } catch (err) {
+      console.error('Calc error:', err);
+      resultDiv.textContent = 'เกิดข้อผิดพลาด';
+    }
+  });
+
+  // Form submit
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = form.querySelector('input');
+    const message = input.value.trim();
+    if (!message || !serviceKey) return;
+
+    messagesDiv.innerHTML += `<div class="message user"><div class="message-content">${message}</div></div>`;
+    input.value = '';
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+    try {
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ service_key: serviceKey, message })
+      });
+      const data = await res.json();
+      if (data.success) window.location.reload();
+    } catch (err) {
+      console.error('Chat error:', err);
+    }
+  });
+
+  // Suggestion click
+  document.querySelectorAll('.suggestion-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      form.querySelector('input').value = chip.dataset.suggestion;
+    });
+  });
+</script>

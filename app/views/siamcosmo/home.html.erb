@@ -1,0 +1,88 @@
+<% content_for :title, t("siamcosmo") %>
+
+<div class="welcome">
+  <h1>SiamCosmo</h1>
+  <p>ยินดีต้อนรับสู่ ศูนย์การค้าออนไลน์ของชุมชน</p>
+</div>
+
+<div class="services-grid">
+  <% @services.each do |service| %>
+    <a href="/chat/<%= service.key %>" class="service-card">
+      <span class="service-icon"><%= service.icon %></span>
+      <span class="service-name"><%= service.name(I18n.locale) %></span>
+      <span class="service-providers">
+        <%= service.providers.count %> ผู้ให้บริการ
+      </span>
+    </a>
+  <% end %>
+</div>
+
+<style>
+  .welcome {
+    text-align: center;
+    padding: 32px 16px;
+  }
+  .welcome h1 {
+    color: var(--accent);
+    font-size: 2rem;
+  }
+  .welcome p {
+    color: var(--text-secondary);
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  /* Tablet: 3 columns */
+  @media (min-width: 481px) {
+    .services-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  /* PC: 4 columns */
+  @media (min-width: 769px) {
+    .services-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      padding: 24px;
+    }
+  }
+  
+  /* Desktop XL: 5 columns */
+  @media (min-width: 1200px) {
+    .services-grid {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+  
+  .service-card {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .service-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .service-icon {
+    font-size: 1.5rem;
+  }
+  .service-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+  .service-providers {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+</style>

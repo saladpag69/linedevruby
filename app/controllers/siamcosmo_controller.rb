@@ -1,34 +1,32 @@
 class SiamcosmoController < ApplicationController
-  before_action :set_language, only: [ :index ]
-  before_action :set_color_theme, only: [ :index ]
-  before_action :store_return_to, only: [ :change_language ]
+  before_action :set_locale
+  layout "siamcosmo"
 
   def index
-    @services = HomeContentService.services(@lang)
-    @t = HomeContentService.translations(@lang)
-    @products = ActiveProduct.all.first(12)
-    @cart_count = session[:cart_id] ? Cart.find_by(id: session[:cart_id])&.cart_items&.sum(:quantity) || 0 : 0
+    @services = Service.active.order(:id)
   end
 
-  def change_language
-    session[:lang] = params[:lang] || "th"
-    session[:color_theme] = params[:color] if params[:color].present?
-    redirect_to session[:return_to] || root_path
+  alias_method :home, :index
+
+  def show
+    @service = Service.find_by(key: params[:id])
+    redirect_to root_path unless @service
+  end
+
+  def set_language
+    locale = params[:locale]&.to_sym
+    if locale && I18n.available_locales.include?(locale)
+      session[:locale] = locale
+      I18n.locale = locale
+    else
+      session[:locale] ||= I18n.default_locale
+    end
+    redirect_back fallback_location: root_path
   end
 
   private
 
-  def set_language
-    @lang = session[:lang] || "th"
-  end
-
-  def store_return_to
-    session[:return_to] = request.referer || root_path
-  end
-
-  def set_color_theme
-    @color_key = session[:color_theme] || params[:color] || "C"
-    session[:color_theme] = @color_key
-    @color = HomeContentService.color(@color_key)
+  def set_locale
+    I18n.locale = session[:locale] || I18n.default_locale
   end
 end

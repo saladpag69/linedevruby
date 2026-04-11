@@ -1,29 +1,47 @@
 class User < ApplicationRecord
-  validates :username, presence: true, uniqueness: true
+  # Devise disabled for now
+  # devise :database_authenticatable, :registerable,
+  #        :recoverable, :rememberable, :validatable,
+  #        :confirmable, :trackable
 
-  def self.find_or_create_from_siamcosmo(user_data:, token:, shop_id:)
-    user = find_or_initialize_by(siamcosmo_user_id: user_data["_id"])
-    user.assign_attributes(
-      username: user_data["username"],
-      siamcosmo_token: token,
-      shop_id: shop_id
-    )
-    user.save!
-    user
+  validates :username, presence: true, uniqueness: true, if: :username_required?
+
+  has_many :providers, dependent: :destroy
+  has_many :chat_sessions, dependent: :destroy
+  has_many :messages, through: :chat_sessions
+
+  enum role: { user: 0, provider: 1, admin: 2 }
+
+  def username_required?
+    username.present?
   end
 
-  def self.find_or_create_from_line(line_id:, display_name:)
-    user = find_or_initialize_by(line_id: line_id)
-    user.assign_attributes(line_display_name: display_name) if user.new_record?
-    user.save!
-    user
+  def name
+    username || email.split("@").first
   end
 
-  def link_line(line_id:, display_name:)
-    update!(line_id: line_id, line_display_name: display_name)
+  def provider?
+    role == "provider"
   end
 
-  def has_line_linked?
-    line_id.present?
+  def admin?
+    role == "admin"
+  end
+
+  # Helper methods for Devise compatibility
+  def email_required?
+    false
+  end
+
+  def email
+    read_attribute(:email)
+  end
+
+  def password
+    nil
+  end
+
+  def password=
+    nil
   end
 end

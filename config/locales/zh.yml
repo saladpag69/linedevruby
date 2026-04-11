@@ -1,0 +1,51 @@
+zh:
+  siamcosmo: "SiamCosmo"
+  home: "首页"
+  services: "服务"
+  profile: "个人资料"
+  login: "登录"
+  logout: "退出"
+  register: "注册"
+  search: "搜索"
+  back: "返回"
+  
+  # Auth
+  email: "邮箱"
+  password: "密码"
+  confirm_password: "确认密码"
+  forgot_password: "忘记密码?"
+  sign_in: "登录"
+  sign_up: "注册"
+  
+  # Services
+  calculator: "材料计算器"
+  price: "材料价格"
+  contractor: "承包商"
+  transport: "运输"
+  rental: "设备租赁"
+  projects: "作品集"
+  documents: "文档"
+  
+  # Common
+  view_all: "查看全部"
+  contact: "联系"
+  request_quote: "请求报价"
+  close: "关闭"
+  open: "开放"
+  verified: "已验证"
+  providers_count: "%{count} 服务商"
+  no_providers: "暂无服务商"
+  
+  # Chat
+  type_message: "输入消息..."
+  send: "发送"
+  suggested: "建议"
+  
+  # Errors
+  error: "错误"
+  success: "成功"
+  
+  # Theme
+  theme_light: "浅色"
+  theme_dark: "深色"
+  theme_system: "系统"
