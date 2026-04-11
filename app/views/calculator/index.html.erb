@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="<%= @lang %>">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>เครื่องคำนวณวัสดุ - SiamCosmo</title>
+<title><%= @t["calculator"] || "เครื่องคำนวณวัสดุ" %> - SIAMCOSMO</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -38,7 +38,7 @@ body {
 .header a { color: var(--primary); text-decoration: none; font-weight: 600; }
 .hero {
   background: linear-gradient(135deg, var(--primary), var(--accent));
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
   text-align: center;
   color: white;
 }
@@ -64,7 +64,7 @@ body {
   border-radius: var(--radius);
   cursor: pointer;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-family: inherit;
   transition: all 0.2s;
 }
@@ -73,7 +73,10 @@ body {
   background: var(--accent);
   color: var(--primary);
 }
-.tab-content { display: none; padding: 16px; }
+.tab-content {
+  display: none;
+  padding: 16px;
+}
 .tab-content.active { display: block; }
 
 .calc-section {
@@ -96,7 +99,9 @@ body {
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
-@media (min-width: 768px) { .input-row { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 768px) {
+  .input-row { grid-template-columns: repeat(4, 1fr); }
+}
 .input-group {
   display: flex;
   flex-direction: column;
@@ -107,7 +112,7 @@ body {
   color: var(--text-secondary);
   font-weight: 500;
 }
-.input-group input, .input-group select {
+.input-group input {
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -116,7 +121,7 @@ body {
   background: var(--bg);
   color: var(--text);
 }
-.input-group input:focus, .input-group select:focus {
+.input-group input:focus {
   outline: none;
   border-color: var(--accent);
 }
@@ -135,7 +140,7 @@ body {
 }
 .result-card .shape-icon { font-size: 1.5rem; margin-bottom: 4px; }
 .result-card .shape-name { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; }
-.result-card .shape-value { font-size: 1rem; font-weight: 700; color: var(--accent); }
+.result-card .shape-value { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
 
 .job-buttons {
   display: grid;
@@ -160,15 +165,6 @@ body {
   background: var(--accent);
   color: var(--primary);
 }
-
-.roof-input {
-  display: none;
-  margin-top: 12px;
-  padding: 12px;
-  background: var(--bg-secondary);
-  border-radius: 8px;
-}
-.roof-input.show { display: block; }
 
 .material-table {
   width: 100%;
@@ -213,18 +209,111 @@ body {
 .btn-pdf { background: var(--error); color: white; }
 .btn-line { background: #06C755; color: white; }
 
-.empty-state {
+.chat-messages {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+.message {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+.message.bot {
+  background: var(--bg);
+  align-self: flex-start;
+}
+.message.user {
+  background: var(--accent);
+  color: var(--primary);
+  margin-left: auto;
+}
+.chat-input {
+  display: flex;
+  gap: 8px;
+}
+.chat-input input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+.chat-input button {
+  padding: 12px 20px;
+  background: var(--accent);
+  color: var(--primary);
+  border: none;
+  border-radius: 24px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.calculator-form {
+  background: var(--bg-secondary);
+  padding: 16px;
+  border-radius: 12px;
+  margin: 8px 0;
+}
+.shape-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.shape-btn {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.25rem;
+}
+.shape-btn.active {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+.shape-inputs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.shape-inputs input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+}
+.calc-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--accent);
+  color: var(--primary);
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.calc-result {
+  margin-top: 12px;
+  font-weight: 600;
+  color: var(--accent);
   text-align: center;
-  padding: 32px;
-  color: var(--text-secondary);
 }
 </style>
 </head>
 <body>
 
 <header class="header">
-  <a href="/">← กลับ</a>
-  <a href="/">👩‍🚀 SiamCosmo</a>
+  <!--<a href="/">← กลับ</a>
+  <a href="/">👩‍🚀 SiamCosmo</a>-->
 </header>
 
 <section class="hero">
@@ -233,48 +322,54 @@ body {
 </section>
 
 <div class="tabs">
-  <button class="tab-btn active" data-tab="area">คำนวณพื้นที่</button>
-  <button class="tab-btn" data-tab="material">คำนวณตามประเภทวัสดุ</button>
-  <button class="tab-btn" data-tab="custom" disabled>กำหนดเอง</button>
+  <button class="tab-btn active" data-tab="calc">คำนวณพื้นที่</button>
+  <button class="tab-btn" data-tab="ai">ถาม AI Bot</button>
 </div>
 
-<!-- Tab 1: คำนวณพื้นที่/ปริมาตร -->
-<div id="tab-area" class="tab-content active">
+<!-- Tab 1: คำนวณพื้นที่ -->
+<div id="tab-calc" class="tab-content active">
+
+  <!-- Section 1: Input พื้นฐาน -->
   <div class="calc-section">
     <h3>📐 ขนาดพื้นที่</h3>
     <div class="input-row">
       <div class="input-group">
         <label>กว้าง (ม.)</label>
-        <input type="number" id="area-width" value="4" min="0" step="0.01">
+        <input type="number" id="input-width" value="4" min="0" step="0.01">
       </div>
       <div class="input-group">
         <label>ยาว (ม.)</label>
-        <input type="number" id="area-length" value="4" min="0" step="0.01">
+        <input type="number" id="input-length" value="4" min="0" step="0.01">
       </div>
       <div class="input-group">
-        <label>สูง/หนา (ม.)</label>
-        <input type="number" id="area-height" value="0.15" min="0" step="0.01">
+        <label>สูง (ม.)</label>
+        <input type="number" id="input-height" value="4" min="0" step="0.01">
+      </div>
+      <div class="input-group">
+        <label>หนา (ม.)</label>
+        <input type="number" id="input-thickness" value="0.10" min="0" step="0.01">
       </div>
     </div>
   </div>
 
+  <!-- Section 1: Output รูปทรง -->
   <div class="calc-section">
-    <h3>📊 ผลลัพธ์</h3>
+    <h3>📊 ผลลัพธ์พื้นที่และปริมาตร</h3>
     <div class="results-grid">
       <div class="result-card">
         <div class="shape-icon">⬜</div>
         <div class="shape-name">สี่เหลี่ยม</div>
-        <div class="shape-value" id="res-rectangle">16.00 ตร.ม.</div>
+        <div class="shape-value" id="res-rectangle">16 ตร.ม.</div>
       </div>
       <div class="result-card">
         <div class="shape-icon">🔺</div>
         <div class="shape-name">สามเหลี่ยม</div>
-        <div class="shape-value" id="res-triangle">0.60 ตร.ม.</div>
+        <div class="shape-value" id="res-triangle">8 ตร.ม.</div>
       </div>
       <div class="result-card">
         <div class="shape-icon">🔻</div>
         <div class="shape-name">สี่เหลี่ยมคางหมู</div>
-        <div class="shape-value" id="res-trapezoid">0.60 ตร.ม.</div>
+        <div class="shape-value" id="res-trapezoid">16 ตร.ม.</div>
       </div>
       <div class="result-card">
         <div class="shape-icon">⭕</div>
@@ -284,52 +379,39 @@ body {
       <div class="result-card">
         <div class="shape-icon">📦</div>
         <div class="shape-name">ปริมาตร</div>
-        <div class="shape-value" id="res-volume">0.24 ลบ.ม.</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Tab 2: คำนวณตามประเภทวัสดุ -->
-<div id="tab-material" class="tab-content">
-  <div class="calc-section">
-    <h3>📐 ขนาดพื้นที่</h3>
-    <div class="input-row">
-      <div class="input-group">
-        <label>กว้าง (ม.)</label>
-        <input type="number" id="mat-width" value="4" min="0" step="0.01">
-      </div>
-      <div class="input-group">
-        <label>ยาว (ม.)</label>
-        <input type="number" id="mat-length" value="4" min="0" step="0.01">
-      </div>
-      <div class="input-group">
-        <label>หนา (ม.)</label>
-        <input type="number" id="mat-thickness" value="0.10" min="0" step="0.01">
+        <div class="shape-value" id="res-volume">1.60 ลบ.ม.</div>
       </div>
     </div>
   </div>
 
+  <!-- Section 2: ประเภทงาน -->
   <div class="calc-section">
     <h3>🔨 เลือกประเภทงาน</h3>
     <div class="job-buttons">
-      <button class="job-btn" data-job="concrete">🏗️ เทพื้น</button>
-      <button class="job-btn" data-job="tile">🔲 กระเบื้อง</button>
-      <button class="job-btn" data-job="ceiling">🎯 ฝ้าเพดาน</button>
-      <button class="job-btn" data-job="roofing">🏠 มุงหลังคา</button>
+      <button class="job-btn" data-job="concrete">เทพื้นคอนกรีต</button>
+      <button class="job-btn" data-job="tile">ปูกระเบื้อง</button>
+      <button class="job-btn" data-job="wood">ติดตั้งไม้ฝา</button>
+      <button class="job-btn" data-job="paint">ทาสี</button>
     </div>
-    
-    <div class="roof-input" id="roofing-input">
-      <div class="input-row">
-        <div class="input-group">
-          <label>ความยาวสันหลังคา (ม.)</label>
-          <input type="number" id="roof-ridge" value="5" min="0" step="0.01">
-        </div>
+  </div>
+
+  <!-- Paint extra inputs -->
+  <div class="calc-section" id="paint-inputs" style="display: none;">
+    <h3>🚪 หักพื้นที่เปิด (ไม่ทาสี)</h3>
+    <div class="input-row">
+      <div class="input-group">
+        <label>พื้นที่ประตู (ตร.ม.)</label>
+        <input type="number" id="paint-door" value="2.1" min="0" step="0.01">
+      </div>
+      <div class="input-group">
+        <label>พื้นที่หน้าต่าง (ตร.ม.)</label>
+        <input type="number" id="paint-window" value="1.5" min="0" step="0.01">
       </div>
     </div>
   </div>
 
-  <div class="calc-section" id="materials-result" style="display: none;">
+  <!-- Section 3: รายการวัสดุ -->
+  <div class="calc-section" id="materials-section" style="display: none;">
     <h3>📋 รายการวัสดุและราคา</h3>
     <table class="material-table">
       <thead>
@@ -340,7 +422,8 @@ body {
           <th>รวม</th>
         </tr>
       </thead>
-      <tbody id="materials-body"></tbody>
+      <tbody id="materials-body">
+      </tbody>
       <tfoot>
         <tr class="total-row">
           <td colspan="3">ยอดรวม</td>
@@ -354,28 +437,61 @@ body {
     </div>
   </div>
 
-  <div class="empty-state" id="materials-empty">
-    <p>กรุณาเลือกประเภทงานเพื่อคำนวณวัสดุ</p>
-  </div>
 </div>
 
-<!-- Tab 3: กำหนดเอง (ยังไม่ทำ) -->
-<div id="tab-custom" class="tab-content">
+<!-- Tab 2: AI Bot -->
+<!--<div id="tab-ai" class="tab-content">
   <div class="calc-section">
-    <div class="empty-state">
-      <p> Coming Soon - กำลังพัฒนา...</p>
+    <h3>💬 ถาม AI Bot</h3>
+    <div class="chat-messages" id="chat-messages">
+      <div class="message bot">สวัสดีครับ! ผมช่วยอะไรได้บ้างเกี่ยวกับการก่อสร้าง?</div>
     </div>
+
+    <div class="calculator-form">
+      <div class="shape-selector">
+        <button class="shape-btn active" data-shape="rectangle">⬜</button>
+        <button class="shape-btn" data-shape="triangle">🔺</button>
+        <button class="shape-btn" data-shape="circle">⭕</button>
+        <button class="shape-btn" data-shape="trapezoid">🔻</button>
+      </div>
+      <div class="shape-inputs" id="rectangle-inputs">
+        <input type="number" id="ai-width" placeholder="กว้าง (ม.)" value="5">
+        <input type="number" id="ai-length" placeholder="ยาว (ม.)" value="6">
+      </div>
+      <div class="shape-inputs" id="triangle-inputs" style="display:none;">
+        <input type="number" id="ai-base" placeholder="ฐาน (ม.)" value="4">
+        <input type="number" id="ai-height" placeholder="สูง (ม.)" value="3">
+      </div>
+      <div class="shape-inputs" id="circle-inputs" style="display:none;">
+        <input type="number" id="ai-radius" placeholder="รัศมี (ม.)" value="3">
+      </div>
+      <div class="shape-inputs" id="trapezoid-inputs" style="display:none;">
+        <input type="number" id="ai-parallel1" placeholder="ด้านที่ 1 (ม.)" value="5">
+        <input type="number" id="ai-parallel2" placeholder="ด้านที่ 2 (ม.)" value="3">
+        <input type="number" id="ai-height" placeholder="สูง (ม.)" value="4">
+      </div>
+      <button class="calc-btn" id="ai-calc-btn">คำนวณ</button>
+      <div class="calc-result" id="ai-result"></div>
+    </div>
+
+    <form class="chat-input" id="chat-form">
+      <input type="text" name="message" placeholder="พิมพ์ข้อความ..." autocomplete="off">
+      <button type="submit">ส่ง</button>
+    </form>
   </div>
-</div>
+</div>-->
+
+
 
 <script>
-// Price cache
+// Wait for prices to load
 function getPrice(name) {
-  if (!window.siamCosmoPrices || window.siamCosmoPrices.error || !Array.isArray(window.siamCosmoPrices)) {
+  if (!window.siamCosmoPrices || window.siamCosmoPrices.error) {
     return null;
   }
-  for (let p of window.siamCosmoPrices) {
-    if (p.productname && p.productname.toLowerCase().includes(name.toLowerCase())) {
+  const prices = window.siamCosmoPrices;
+  for (let p of prices) {
+    if (p.productname && p.productname.includes(name)) {
       return parseFloat(p.productsale1 || p.productcost || 0);
     }
   }
@@ -383,14 +499,12 @@ function getPrice(name) {
 }
 
 function fmt(num) {
-  if (num === null || num === undefined || isNaN(num)) return '0';
   return num.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 // Tab switching
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    if (btn.disabled) return;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     btn.classList.add('active');
@@ -398,87 +512,99 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
-// Tab 1: Real-time calculation
-function calculateArea() {
-  const w = parseFloat(document.getElementById('area-width').value) || 0;
-  const l = parseFloat(document.getElementById('area-length').value) || 0;
-  const h = parseFloat(document.getElementById('area-height').value) || 0;
+// Real-time calculation
+function calculateAll() {
+  const w = parseFloat(document.getElementById('input-width').value) || 0;
+  const l = parseFloat(document.getElementById('input-length').value) || 0;
+  const h = parseFloat(document.getElementById('input-height').value) || 0;
+  const t = parseFloat(document.getElementById('input-thickness').value) || 0.1;
 
+  // 5 shapes
   document.getElementById('res-rectangle').textContent = fmt(w * l) + ' ตร.ม.';
   document.getElementById('res-triangle').textContent = fmt(w * h * 0.5) + ' ตร.ม.';
   document.getElementById('res-trapezoid').textContent = fmt((w + l) * h * 0.5) + ' ตร.ม.';
   document.getElementById('res-circle').textContent = fmt(Math.PI * Math.pow(w / 2, 2)) + ' ตร.ม.';
-  document.getElementById('res-volume').textContent = fmt(w * l * h) + ' ลบ.ม.';
+  document.getElementById('res-volume').textContent = fmt(w * l * t) + ' ลบ.ม.';
+
+  // Auto calculate materials if job selected
+  const activeJob = document.querySelector('.job-btn.active');
+  if (activeJob) {
+    calculateMaterials(activeJob.dataset.job, w, l, h, t);
+  }
 }
 
-['area-width', 'area-length', 'area-height'].forEach(id => {
-  document.getElementById(id)?.addEventListener('input', calculateArea);
+// Job buttons
+document.querySelectorAll('.job-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.job-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Show paint inputs if paint job
+    document.getElementById('paint-inputs').style.display = btn.dataset.job === 'paint' ? 'block' : 'none';
+    document.getElementById('materials-section').style.display = 'block';
+
+    calculateAll();
+  });
 });
 
-// Tab 2: Material calculation
-function calculateMaterials() {
-  const w = parseFloat(document.getElementById('mat-width').value) || 0;
-  const l = parseFloat(document.getElementById('mat-length').value) || 0;
-  const t = parseFloat(document.getElementById('mat-thickness').value) || 0.1;
-  const ridge = parseFloat(document.getElementById('roof-ridge').value) || 0;
-  
+// Add input listeners
+['input-width', 'input-length', 'input-height', 'input-thickness', 'paint-door', 'paint-window'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', calculateAll);
+});
+
+function calculateMaterials(job, w, l, h, t) {
   const area = w * l;
   const volume = w * l * t;
-
-  const activeJob = document.querySelector('.job-btn.active');
-  if (!activeJob) return;
-
-  const job = activeJob.dataset.job;
   let materials = [];
 
-  // Price fallbacks
   const prices = {
-    readymix: getPrice('ปูน') || getPrice('คอนกรีต') || 1500,
+    cement: getPrice('ปูน') || 188,
     sand: getPrice('ทราย') || 660,
-    wiremesh: getPrice('ไวร์เมช') || getPrice('ตะแกรง') || 120,
+    stone: getPrice('หิน') || 730,
     tile: getPrice('กระเบื้อง') || 85,
     glue: getPrice('กาว') || 78,
     grout: getPrice('ยาแนว') || 45,
-    gypsum: getPrice('ยิปซัม') || getPrice('Gypsum') || 180,
-    cchannel: getPrice('C-Line') || getPrice('โครงคร่าว') || 85,
-    nail: getPrice('ตะปู') || getPrice('สกรู') || 68,
-    roofTile: getPrice('กระเบื้องลอน') || 22,
-    roofCap: getPrice('ครอบ') || 52
+    wood: getPrice('ไม้อัด') || 482,
+    nail: getPrice('ตะปู') || 68,
+    primer: getPrice('รองพื้น') || 380,
+    paint: getPrice('สี TOA') || 1505
   };
 
   if (job === 'concrete') {
-    // เทพื้น
+    const vol = volume;
     materials = [
-      { name: 'ปูนผสมเสร็จ (คิว)', qty: Math.ceil(volume * 1.1 * 10) / 10, price: prices.readymix, unit: 'คิว' },
-      { name: 'ทรายรองพื้น 5 ซม.', qty: Math.ceil(area * 0.05 * 10) / 10, price: prices.sand, unit: 'คิว' },
-      { name: 'เหล็กไวร์เมช', qty: Math.ceil(area * 1.1 * 10) / 10, price: prices.wiremesh, unit: 'ตร.ม.' }
+      { name: 'ปูนซีเมนต์ 50 กก.', qty: Math.ceil(vol * 7), price: prices.cement, unit: 'ถุง' },
+      { name: 'ทรายหยาบ', qty: Math.ceil(vol * 0.5), price: prices.sand, unit: 'ครึ่งกระบะ' },
+      { name: 'หิน 3/4', qty: Math.ceil(vol * 0.8), price: prices.stone, unit: 'ครึ่งคัน' },
+      { name: 'ทรายรองพื้น 5 ซม.', qty: Math.ceil(area * 0.05 * 10) / 10, price: prices.sand / 2, unit: 'ครึ่งกระบะ' }
     ];
   } else if (job === 'tile') {
-    // ปูกระเบื้อง
     materials = [
-      { name: 'กระเบื้อง', qty: Math.ceil(area * 1.05 * 10) / 10, price: prices.tile, unit: 'ตร.ม.' },
-      { name: 'ปูนกาว', qty: Math.ceil(area / 4.5 * 10) / 10, price: prices.glue, unit: 'กก.' },
-      { name: 'ยาแนว', qty: Math.ceil(area / 4 * 10) / 10, price: prices.grout, unit: 'กก.' }
+      { name: 'กระเบื้อง 60x60', qty: Math.ceil(area * 3 * 1.1), price: prices.tile, unit: 'แผ่น' },
+      { name: 'กาวซีเมนต์', qty: Math.ceil(area * 4.5 * 10) / 10, price: prices.glue, unit: 'กก.' },
+      { name: 'ยาแนว', qty: Math.ceil(area * 0.3 * 10) / 10, price: prices.grout, unit: 'กก.' }
     ];
-  } else if (job === 'ceiling') {
-    // ฝ้าเพดาน
+  } else if (job === 'wood') {
     materials = [
-      { name: 'แผ่นยิปซัม 1.2×2.4 ม.', qty: Math.ceil(area / 2.88 * 1.05 * 10) / 10, price: prices.gypsum, unit: 'แผ่น' },
-      { name: 'โครงคร่าว C-Line', qty: Math.ceil(area * 1.5 * 10) / 10, price: prices.cchannel, unit: 'เส้น' },
-      { name: 'ตะปูยิง/สกรู', qty: Math.ceil(area * 18), price: prices.nail / 100, unit: 'ตัว' }
+      { name: 'ไม้อัดดำ 15 มิล', qty: Math.ceil(area * 1.15 * 10) / 10, price: prices.wood, unit: 'แผ่น' },
+      { name: 'ตะปู', qty: Math.ceil(area * 0.2 * 10) / 10, price: prices.nail, unit: 'กก.' },
+      { name: 'สีรองพื้นไม้', qty: Math.ceil(area * 0.1 * 10) / 10, price: prices.primer, unit: 'ลิตร' }
     ];
-  } else if (job === 'roofing') {
-    // มุงหลังคา
+  } else if (job === 'paint') {
+    const door = parseFloat(document.getElementById('paint-door').value) || 0;
+    const win = parseFloat(document.getElementById('paint-window').value) || 0;
+    const realArea = Math.max(0, area - door - win);
     materials = [
-      { name: 'กระเบื้องลอนคู่', qty: Math.ceil(area * 2.2), price: prices.roofTile, unit: 'แผ่น' },
-      { name: 'ครอบหลังคา', qty: Math.ceil(ridge * 3.3), price: prices.roofCap, unit: 'ตัว' }
+      { name: 'สีทาบ้าน 2.5 GL', qty: Math.ceil(realArea * 0.13 / 2.5 * 10) / 10, price: prices.paint, unit: 'แกลลอน' },
+      { name: 'สีรองพื้น', qty: Math.ceil(realArea * 0.07 * 10) / 10, price: prices.primer, unit: 'ลิตร' }
     ];
   }
 
-  // Calculate totals
+  // Add 10% buffer and calculate
   materials = materials.map(m => ({
     ...m,
-    total: (m.qty * m.price)
+    qty: Math.ceil(m.qty * 1.1 * 10) / 10,
+    total: m.qty * m.price
   }));
 
   // Render table
@@ -494,40 +620,74 @@ function calculateMaterials() {
 
   const total = materials.reduce((sum, m) => sum + m.total, 0);
   document.getElementById('total-price').textContent = fmt(total) + ' บาท';
-  document.getElementById('materials-result').style.display = 'block';
-  document.getElementById('materials-empty').style.display = 'none';
 }
 
-// Job buttons
-document.querySelectorAll('.job-btn').forEach(btn => {
+// AI Bot - Shape selector
+let currentShape = 'rectangle';
+document.querySelectorAll('.shape-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.job-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    
-    // Show roofing input if needed
-    document.getElementById('roofing-input').classList.toggle('show', btn.dataset.job === 'roofing');
-    
-    document.getElementById('materials-result').style.display = 'none';
-    document.getElementById('materials-empty').style.display = 'none';
-    
-    calculateMaterials();
+    currentShape = btn.dataset.shape;
+    document.querySelectorAll('.shape-inputs').forEach(div => div.style.display = 'none');
+    document.getElementById(currentShape + '-inputs').style.display = 'flex';
   });
 });
 
-// Material input listeners
-['mat-width', 'mat-length', 'mat-thickness', 'roof-ridge'].forEach(id => {
-  document.getElementById(id)?.addEventListener('input', () => {
-    if (document.querySelector('.job-btn.active')) {
-      calculateMaterials();
+// AI Bot - Calculate
+document.getElementById('ai-calc-btn').addEventListener('click', () => {
+  let result = '';
+  if (currentShape === 'rectangle') {
+    const w = parseFloat(document.getElementById('ai-width').value) || 0;
+    const l = parseFloat(document.getElementById('ai-length').value) || 0;
+    result = `พื้นที่สี่เหลี่ยม = ${fmt(w * l)} ตร.ม.`;
+  } else if (currentShape === 'triangle') {
+    const b = parseFloat(document.getElementById('ai-base').value) || 0;
+    const h = parseFloat(document.getElementById('ai-height').value) || 0;
+    result = `พื้นที่สามเหลี่ยม = ${fmt(b * h * 0.5)} ตร.ม.`;
+  } else if (currentShape === 'circle') {
+    const r = parseFloat(document.getElementById('ai-radius').value) || 0;
+    result = `พื้นที่วงกลม = ${fmt(Math.PI * r * r)} ตร.ม.`;
+  } else if (currentShape === 'trapezoid') {
+    const p1 = parseFloat(document.getElementById('ai-parallel1').value) || 0;
+    const p2 = parseFloat(document.getElementById('ai-parallel2').value) || 0;
+    const h = parseFloat(document.getElementById('ai-height').value) || 0;
+    result = `พื้นที่สี่เหลี่ยมคางหมู = ${fmt((p1 + p2) * h * 0.5)} ตร.ม.`;
+  }
+  document.getElementById('ai-result').textContent = result;
+});
+
+// AI Bot - Chat
+const chatForm = document.getElementById('chat-form');
+const chatMessages = document.getElementById('chat-messages');
+
+chatForm?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const input = chatForm.querySelector('input');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  chatMessages.innerHTML += `<div class="message user">${msg}</div>`;
+  input.value = '';
+
+  try {
+    const res = await fetch('/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ service_key: 'calculator', message: msg })
+    });
+    const data = await res.json();
+    if (data.success) {
+      chatMessages.innerHTML += `<div class="message bot">ขอบคุณที่สอบถามครับ! กรุณาใช้เครื่องมือคำนวณด้านบน หรือติดต่อผู้ให้บริการได้เลยครับ</div>`;
     }
-  });
+  } catch (err) {
+    chatMessages.innerHTML += `<div class="message bot">ขออภัย มีข้อผิดพลาด กรุณาลองใหม่ครับ</div>`;
+  }
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
-// Initial calculations
-setTimeout(() => {
-  calculateArea();
-  calculateMaterials();
-}, 500);
+// Initial calculation
+setTimeout(calculateAll, 500);
 </script>
 
 </body>
