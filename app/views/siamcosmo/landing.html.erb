@@ -1,0 +1,988 @@
+<% content_for :title, t("landing.title") %>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     SECTION 1: HERO - ดึงดูดความสนใจ สร้าง First Impression ที่ดี
+     - Headline: ข้อความหลักที่สื่อสาร Value Proposition
+     - Subheadline: อธิบายเพิ่มเติม
+     - CTA Button: นำไปสู่การกระทำ
+     - Badge: แสดงความน่าเชื่อถือ
+═══════════════════════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="badge-icon">🚀</span>
+    <span class="badge-text"><%= t("landing.hero.badge") %></span>
+  </div>
+  
+  <h1 class="hero-headline">
+    <%= t("landing.hero.headline") %>
+  </h1>
+  
+  <p class="hero-subheadline">
+    <%= t("landing.hero.subheadline") %>
+  </p>
+  
+  <div class="hero-actions">
+    <a href="/chat" class="btn btn-primary">
+      <span>💬</span>
+      <%= t("landing.hero.cta_primary") %>
+    </a>
+    <a href="#features" class="btn btn-secondary">
+      <%= t("landing.hero.cta_secondary") %>
+    </a>
+  </div>
+  
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-value">10K+</span>
+      <span class="stat-label"><%= t("landing.hero.stat1") %></span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-value">500+</span>
+      <span class="stat-label"><%= t("landing.hero.stat2") %></span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-value">4.9</span>
+      <span class="stat-label"><%= t("landing.hero.stat3") %></span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     SECTION 2: FEATURES - แสดงจุดเด่นของบริการ
+     - Icon + Title + Description สำหรับแต่ละ feature
+     - Grid layout ที่ responsive
+     - Animation สำหรับ interaction
+═══════════════════════════════════════════════════════════════════════════ -->
+<section class="features" id="features">
+  <div class="section-header">
+    <span class="section-tag"><%= t("landing.features.tag") %></span>
+    <h2 class="section-title"><%= t("landing.features.title") %></h2>
+    <p class="section-desc"><%= t("landing.features.desc") %></p>
+  </div>
+  
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3 class="feature-title"><%= t("landing.features.f1.title") %></h3>
+      <p class="feature-desc"><%= t("landing.features.f1.desc") %></p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <h3 class="feature-title"><%= t("landing.features.f2.title") %></h3>
+      <p class="feature-desc"><%= t("landing.features.f2.desc") %></p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">💰</div>
+      <h3 class="feature-title"><%= t("landing.features.f3.title") %></h3>
+      <p class="feature-desc"><%= t("landing.features.f3.desc") %></p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3 class="feature-title"><%= t("landing.features.f4.title") %></h3>
+      <p class="feature-desc"><%= t("landing.features.f4.desc") %></p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">💬</div>
+      <h3 class="feature-title"><%= t("landing.features.f5.title") %></h3>
+      <p class="feature-desc"><%= t("landing.features.f5.desc") %></p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3 class="feature-title"><%= t("landing.features.f6.title") %></h3>
+      <p class="feature-desc"><%= t("landing.features.f6.desc") %></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     SECTION 3: HOW IT WORKS - อธิบายขั้นตอนการใช้งาน
+     - Step-by-step process ที่เข้าใจง่าย
+     - Visual connector ระหว่าง steps
+     - Clear numbering
+═══════════════════════════════════════════════════════════════════════════ -->
+<section class="how-it-works" id="how-it-works">
+  <div class="section-header">
+    <span class="section-tag"><%= t("landing.how_it_works.tag") %></span>
+    <h2 class="section-title"><%= t("landing.how_it_works.title") %></h2>
+    <p class="section-desc"><%= t("landing.how_it_works.desc") %></p>
+  </div>
+  
+  <div class="steps">
+    <div class="step">
+      <div class="step-number">1</div>
+      <div class="step-content">
+        <h3 class="step-title"><%= t("landing.how_it_works.s1.title") %></h3>
+        <p class="step-desc"><%= t("landing.how_it_works.s1.desc") %></p>
+      </div>
+    </div>
+    
+    <div class="step-connector"></div>
+    
+    <div class="step">
+      <div class="step-number">2</div>
+      <div class="step-content">
+        <h3 class="step-title"><%= t("landing.how_it_works.s2.title") %></h3>
+        <p class="step-desc"><%= t("landing.how_it_works.s2.desc") %></p>
+      </div>
+    </div>
+    
+    <div class="step-connector"></div>
+    
+    <div class="step">
+      <div class="step-number">3</div>
+      <div class="step-content">
+        <h3 class="step-title"><%= t("landing.how_it_works.s3.title") %></h3>
+        <p class="step-desc"><%= t("landing.how_it_works.s3.desc") %></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     SECTION 4: SERVICES SHOWCASE - แสดงบริการที่มี
+     - Card-based design พร้อม icon
+     - Hover effects สำหรับ engagement
+     - Provider count แสดงความ popular
+═══════════════════════════════════════════════════════════════════════════ -->
+<section class="services-showcase" id="services">
+  <div class="section-header">
+    <span class="section-tag"><%= t("landing.services.tag") %></span>
+    <h2 class="section-title"><%= t("landing.services.title") %></h2>
+    <p class="section-desc"><%= t("landing.services.desc") %></p>
+  </div>
+  
+  <div class="services-grid">
+    <% @services.first(6).each do |service| %>
+      <a href="/chat/<%= service.key %>" class="service-card">
+        <div class="service-icon"><%= service.icon %></div>
+        <div class="service-info">
+          <h3 class="service-name"><%= service.name(I18n.locale) %></h3>
+          <span class="service-providers">
+            <span class="providers-icon">👥</span>
+            <%= service.providers_count %> <%= t("landing.services.providers") %>
+          </span>
+        </div>
+        <div class="service-arrow">→</div>
+      </a>
+    <% end %>
+  </div>
+  
+  <div class="services-more">
+    <a href="/services" class="btn btn-outline">
+      <%= t("landing.services.view_all") %>
+      <span>→</span>
+    </a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     SECTION 5: TESTIMONIALS - Social Proof
+     - User feedback ที่สร้างความน่าเชื่อถือ
+     - Star ratings
+     - Avatar + Name
+═══════════════════════════════════════════════════════════════════════════ -->
+<section class="testimonials" id="testimonials">
+  <div class="section-header">
+    <span class="section-tag"><%= t("landing.testimonials.tag") %></span>
+    <h2 class="section-title"><%= t("landing.testimonials.title") %></h2>
+    <p class="section-desc"><%= t("landing.testimonials.desc") %></p>
+  </div>
+  
+  <div class="testimonials-scroll">
+    <div class="testimonial-card">
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testimonial-text"><%= t("landing.testimonials.t1.text") %></p>
+      <div class="testimonial-author">
+        <div class="author-avatar">👩</div>
+        <div class="author-info">
+          <span class="author-name"><%= t("landing.testimonials.t1.name") %></span>
+          <span class="author-role"><%= t("landing.testimonials.t1.role") %></span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="testimonial-card">
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testimonial-text"><%= t("landing.testimonials.t2.text") %></p>
+      <div class="testimonial-author">
+        <div class="author-avatar">👨</div>
+        <div class="author-info">
+          <span class="author-name"><%= t("landing.testimonials.t2.name") %></span>
+          <span class="author-role"><%= t("landing.testimonials.t2.role") %></span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="testimonial-card">
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testimonial-text"><%= t("landing.testimonials.t3.text") %></p>
+      <div class="testimonial-author">
+        <div class="author-avatar">👨‍💼</div>
+        <div class="author-info">
+          <span class="author-name"><%= t("landing.testimonials.t3.name") %></span>
+          <span class="author-role"><%= t("landing.testimonials.t3.role") %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     SECTION 6: CTA - Call To Action
+     - เรียกให้ผู้ใช้กระทำการ
+     - urgency/scarcity element
+     - Clear benefit statement
+═══════════════════════════════════════════════════════════════════════════ -->
+<section class="cta-section">
+  <div class="cta-content">
+    <h2 class="cta-title"><%= t("landing.cta.title") %></h2>
+    <p class="cta-desc"><%= t("landing.cta.desc") %></p>
+    <a href="/chat" class="btn btn-cta">
+      <span>🚀</span>
+      <%= t("landing.cta.button") %>
+    </a>
+    <span class="cta-note"><%= t("landing.cta.note") %></span>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     SECTION 7: FOOTER - ข้อมูลติดต่อและ links
+     - Logo + Description
+     - Quick Links
+     - Contact Info
+     - Social Media
+     - Copyright
+═══════════════════════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-brand">
+      <a href="/" class="footer-logo">Siam<span>Cosmo</span></a>
+      <p class="footer-desc"><%= t("landing.footer.desc") %></p>
+    </div>
+    
+    <div class="footer-links">
+      <h4 class="footer-title"><%= t("landing.footer.quick_links") %></h4>
+      <a href="/" class="footer-link"><%= t("landing.footer.home") %></a>
+      <a href="/services" class="footer-link"><%= t("landing.footer.services") %></a>
+      <a href="/chat" class="footer-link"><%= t("landing.footer.chat") %></a>
+      <a href="/about" class="footer-link"><%= t("landing.footer.about") %></a>
+    </div>
+    
+    <div class="footer-contact">
+      <h4 class="footer-title"><%= t("landing.footer.contact") %></h4>
+      <div class="contact-item">
+        <span>📧</span>
+        <span>contact@siamcosmo.com</span>
+      </div>
+      <div class="contact-item">
+        <span>📞</span>
+        <span>02-xxx-xxxx</span>
+      </div>
+      <div class="contact-item">
+        <span>📍</span>
+        <span><%= t("landing.footer.location") %></span>
+      </div>
+    </div>
+    
+    <div class="footer-social">
+      <h4 class="footer-title"><%= t("landing.footer.follow_us") %></h4>
+      <div class="social-links">
+        <a href="#" class="social-link">📘</a>
+        <a href="#" class="social-link">🐦</a>
+        <a href="#" class="social-link">📸</a>
+        <a href="#" class="social-link">💼</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <p>© 2026 SiamCosmo. <%= t("landing.footer.rights") %></p>
+  </div>
+</footer>
+
+<style>
+  /* ═══════════════════════════════════════════════════════════════════════════
+     RESPONSIVE TYPOGRAPHY & BASE STYLES
+     Mobile-first approach: base styles สำหรับ mobile ก่อน
+  �═══════════════════════════════════════════════════════════════════════════ */
+  .landing-page {
+    --primary: #1A1814;
+    --accent: #C8A84B;
+    --accent-light: #E8C96B;
+    --bg: #FFFFFF;
+    --bg-secondary: #F8F7F5;
+    --bg-card: #FFFFFF;
+    --text: #1A1814;
+    --text-secondary: #6B6B6B;
+    --text-muted: #9CA3AF;
+    --border: #E5E5E3;
+    --success: #22C55E;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
+    --radius: 16px;
+    --radius-sm: 8px;
+    --radius-lg: 24px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     HERO SECTION STYLES
+  �═══════════════════════════════════════════════════════════════════════════ */
+  .hero {
+    padding: 48px 20px 64px;
+    text-align: center;
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg) 100%);
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .hero-badge .badge-icon { font-size: 0.875rem; }
+
+  .hero-headline {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  .hero-headline span { color: var(--accent); }
+
+  .hero-subheadline {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    max-width: 320px;
+    margin: 0 auto 24px;
+    line-height: 1.6;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--primary);
+    box-shadow: 0 4px 12px rgba(200, 168, 75, 0.3);
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(200, 168, 75, 0.4);
+  }
+
+  .btn-secondary {
+    background: var(--bg-card);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover {
+    background: var(--bg-secondary);
+    border-color: var(--text-secondary);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+  }
+
+  .btn-outline:hover {
+    background: var(--accent);
+    color: var(--primary);
+  }
+
+  .btn-cta {
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: var(--primary);
+    font-size: 1.125rem;
+    padding: 16px 32px;
+    box-shadow: 0 6px 20px rgba(200, 168, 75, 0.4);
+  }
+
+  .btn-cta:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 28px rgba(200, 168, 75, 0.5);
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+  }
+
+  .stat { text-align: center; }
+
+  .stat-value {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .stat-divider {
+    width: 1px;
+    height: 32px;
+    background: var(--border);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     SECTION HEADER STYLES (Shared)
+  �═══════════════════════════════════════════════════════════════════════════ */
+  .section-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .section-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--primary);
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .section-desc {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     FEATURES SECTION STYLES
+  �═══════════════════════════════════════════════════════════════════════════ */
+  .features {
+    padding: 64px 20px;
+    background: var(--bg);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+
+  .feature-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow);
+    transform: translateY(-4px);
+  }
+
+  .feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+  }
+
+  .feature-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .feature-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     HOW IT WORKS SECTION STYLES
+  �═══════════════════════════════════════════════════════════════════════════ */
+  .how-it-works {
+    padding: 64px 20px;
+    background: var(--bg-secondary);
+  }
+
+  .steps {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .step {
+    display: flex;
+    gap: 20px;
+    padding: 20px 0;
+  }
+
+  .step-number {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    background: var(--accent);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(200, 168, 75, 0.3);
+  }
+
+  .step-content { flex: 1; }
+
+  .step-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .step-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .step-connector {
+    width: 2px;
+    height: 24px;
+    background: var(--border);
+    margin-left: 23px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     SERVICES SECTION STYLES
+  �═══════════════════════════════════════════════════════════════════════════ */
+  .services-showcase {
+    padding: 64px 20px;
+    background: var(--bg);
+  }
+
+  .services-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .service-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s ease;
+  }
+
+  .service-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow);
+    transform: translateX(4px);
+  }
+
+  .service-icon {
+    font-size: 2rem;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+  }
+
+  .service-info { flex: 1; }
+
+  .service-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .service-providers {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .providers-icon { font-size: 0.875rem; }
+
+  .service-arrow {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+  }
+
+  .service-card:hover .service-arrow {
+    color: var(--accent);
+    transform: translateX(4px);
+  }
+
+  .services-more {
+    text-align: center;
+    margin-top: 24px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     TESTIMONIALS SECTION STYLES
+  �═══════════════════════════════════════════════════════════════════════════ */
+  .testimonials {
+    padding: 64px 20px;
+    background: var(--bg-secondary);
+  }
+
+  .testimonials-scroll {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 16px;
+    margin: 0 -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .testimonials-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .testimonial-card {
+    flex-shrink: 0;
+    width: 280px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    scroll-snap-align: start;
+  }
+
+  .testimonial-stars {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+  }
+
+  .testimonial-text {
+    font-size: 0.875rem;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .author-avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--bg-secondary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+  }
+
+  .author-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .author-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .author-role {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     CTA SECTION STYLES
+  �═══════════════════════════════════════════════════════════════════════════ */
+  .cta-section {
+    padding: 64px 20px;
+    background: linear-gradient(135deg, var(--primary) 0%, #2D2A26 100%);
+    text-align: center;
+  }
+
+  .cta-content { max-width: 400px; margin: 0 auto; }
+
+  .cta-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 12px;
+  }
+
+  .cta-desc {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .cta-note {
+    display: block;
+    margin-top: 12px;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     FOOTER SECTION STYLES
+  ════════════════════════════════════════════════════════════════════════════ */
+  .footer {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 48px 20px 24px;
+  }
+
+  .footer-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+
+  .footer-logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+
+  .footer-logo span { color: var(--accent); }
+
+  .footer-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .footer-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .footer-link {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 6px 0;
+    transition: color 0.2s;
+  }
+
+  .footer-link:hover { color: var(--accent); }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    padding: 4px 0;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 12px;
+  }
+
+  .social-link {
+    width: 40px;
+    height: 40px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.125rem;
+    transition: all 0.2s;
+  }
+
+  .social-link:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .footer-bottom {
+    text-align: center;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-bottom p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     TABLET STYLES (481px - 768px)
+  ════════════════════════════════════════════════════════════════════════════ */
+  @media (min-width: 481px) {
+    .hero-headline { font-size: 2.5rem; }
+    
+    .hero-actions { flex-direction: row; justify-content: center; }
+    
+    .hero-stats { max-width: 400px; margin: 0 auto; }
+    
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    
+    .services-grid { max-width: 500px; margin: 0 auto; }
+    
+    .testimonial-card { width: 320px; }
+    
+    .footer-content { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     DESKTOP STYLES (769px+)
+  ════════════════════════════════════════════════════════════════════════════ */
+  @media (min-width: 769px) {
+    .hero {
+      padding: 80px 40px 100px;
+    }
+    
+    .hero-headline { font-size: 3rem; }
+    
+    .hero-subheadline { max-width: 560px; font-size: 1.125rem; }
+    
+    .hero-stats { max-width: 500px; }
+    
+    .section-title { font-size: 2.25rem; }
+    
+    .features, .how-it-works, .services-showcase, .testimonials {
+      padding: 80px 40px;
+    }
+    
+    .features-grid { 
+      grid-template-columns: repeat(3, 1fr); 
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .steps {
+      max-width: 700px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    
+    .step { flex-direction: column; text-align: center; padding: 0; }
+    .step-connector { display: none; }
+    
+    .services-grid { 
+      max-width: 700px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .services-grid .service-card { padding: 20px; }
+    
+    .testimonials-scroll { justify-content: center; }
+    
+    .cta-section { padding: 100px 40px; }
+    .cta-title { font-size: 2.5rem; }
+    
+    .footer { padding: 64px 40px 32px; }
+    .footer-content { grid-template-columns: 2fr 1fr 1fr 1fr; max-width: 1000px; margin: 0 auto 32px; }
+    .footer-bottom { max-width: 1000px; margin: 0 auto; }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     LARGE DESKTOP STYLES (1200px+)
+  ════════════════════════════════════════════════════════════════════════════ */
+  @media (min-width: 1200px) {
+    .hero { padding: 100px 60px 120px; }
+    .hero-headline { font-size: 3.5rem; }
+    .hero-subheadline { font-size: 1.25rem; max-width: 640px; }
+    
+    .features-grid { max-width: 1100px; }
+    .services-grid { max-width: 900px; }
+    .footer-content { max-width: 1200px; }
+    .footer-bottom { max-width: 1200px; }
+  }
+</style>

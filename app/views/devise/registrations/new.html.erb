@@ -1,0 +1,121 @@
+<% content_for :title, "สมัครสมาชิก - SiamCosmo" %>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <h1>สมัครสมาชิก</h1>
+    <p class="auth-subtitle">สร้างบัญชีเพื่อสั่งซื้อและจัดการออเดอร์</p>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <div class="form-group">
+        <%= f.label :email, "อีเมล" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-input" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :username, "ชื่อผู้ใช้" %>
+        <%= f.text_field :username, autocomplete: "username", class: "form-input" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password, "รหัสผ่าน" %>
+        <% if @minimum_password_length %>
+          <span class="hint">(<%= @minimum_password_length %> ตัวอักษรขึ้นไป)</span>
+        <% end %>
+        <%= f.password_field :password, autocomplete: "new-password", class: "form-input" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password_confirmation, "ยืนยันรหัสผ่าน" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-input" %>
+      </div>
+
+      <%= f.submit "สมัครสมาชิก", class: "btn-primary" %>
+    <% end %>
+
+    <div class="auth-links">
+      <%= render "devise/shared/links" %>
+    </div>
+  </div>
+</div>
+
+<style>
+  .auth-page {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .auth-card {
+    background: var(--bg);
+    border-radius: var(--radius);
+    padding: 32px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: var(--shadow);
+  }
+  .auth-card h1 {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .auth-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .form-group {
+    margin-bottom: 16px;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .form-group .hint {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-left: 8px;
+  }
+  .form-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+  }
+  .form-input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  .btn-primary:hover {
+    background: #2D2A26;
+  }
+  .auth-links {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.875rem;
+  }
+  .auth-links a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+</style>

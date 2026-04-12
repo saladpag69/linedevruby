@@ -49,3 +49,96 @@ en:
   theme_light: "Light"
   theme_dark: "Dark"
   theme_system: "System"
+
+  # Landing Page
+  landing:
+    title: "SiamCosmo - Handyman Service Hub"
+    
+    hero:
+      badge: "🚀 #1 Online Handyman Service"
+      headline: "Quality <span>Handyman</span> Just a Chat Away"
+      subheadline: "Connect with professional service providers in your community, with complete project management system"
+      cta_primary: "Start Chatting"
+      cta_secondary: "See How It Works"
+      stat1: "Users"
+      stat2: "Providers"
+      stat3: "Avg Rating"
+    
+    features:
+      tag: "✨ Key Features"
+      title: "Why SiamCosmo?"
+      desc: "Complete services from finding a handyman to tracking your project"
+      f1:
+        title: "Fast"
+        desc: "Instant chat response within seconds"
+      f2:
+        title: "Safe"
+        desc: "Every provider is verified before recommendation"
+      f3:
+        title: "Affordable"
+        desc: "Compare prices from multiple providers easily"
+      f4:
+        title: "Easy Tracking"
+        desc: "Real-time project status, 24/7"
+      f5:
+        title: "LINE Support"
+        desc: "Use through LINE app you're familiar with"
+      f6:
+        title: "Mobile First"
+        desc: "Designed specifically for mobile devices"
+    
+    how_it_works:
+      tag: "📋 Simple Steps"
+      title: "Get Started in 3 Easy Steps"
+      desc: "No app download, no registration required"
+      s1:
+        title: "Choose Service"
+        desc: "Select the type of work you need: building, extension, or repair"
+      s2:
+        title: "Chat & Inquire"
+        desc: "Send messages to ask about details and prices immediately"
+      s3:
+        title: "Wait for Response"
+        desc: "Providers will contact you with quotes and appointments"
+    
+    services:
+      tag: "🛠️ Services"
+      title: "Our Services"
+      desc: "Covering all your handyman needs"
+      providers: "providers"
+      view_all: "View All Services"
+    
+    testimonials:
+      tag: "💬 Reviews"
+      title: "What Our Customers Say"
+      desc: "10,000+ users trust us"
+      t1:
+        text: "Used building service, handyman responded very quickly, good price, easy to track progress"
+        name: "Mr. Somchai"
+        role: "Homeowner"
+      t2:
+        text: "Extended kitchen, compared prices from multiple sources, saved a lot of money"
+        name: "Mr. Vichai"
+        role: "Business Owner"
+      t3:
+        text: "Recommended quality electrician, work completed fast, cleaned up well"
+        name: "Ms. Pim"
+        role: "Office Worker"
+    
+    cta:
+      title: "Ready to Get Started?"
+      desc: "Start chatting with service providers immediately, no fees"
+      button: "Start Free Chat"
+      note: "✓ Free  ✓ Fast response within 5 mins"
+    
+    footer:
+      desc: "Platform connecting handyman service providers with quality work seekers"
+      quick_links: "Quick Links"
+      home: "Home"
+      services: "Services"
+      chat: "Chat"
+      about: "About Us"
+      contact: "Contact"
+      location: "Bangkok, Thailand"
+      follow_us: "Follow Us"
+      rights: "All rights reserved"

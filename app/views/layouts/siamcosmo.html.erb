@@ -271,7 +271,12 @@
           <button class="lang-btn <%= 'active' if I18n.locale == :zh %>" data-lang="zh">ZH</button>
         </div>
         <button class="icon-btn" data-theme-toggle>🌓</button>
-        <a href="/login" class="icon-btn">👤</a>
+        <% if user_signed_in? %>
+          <span class="user-name"><%= current_user.username || current_user.email %></span>
+          <%= button_to "ออก", destroy_user_session_path, method: :delete, class: "icon-btn", title: "Logout" %>
+        <% else %>
+          <a href="/users/sign_in" class="icon-btn">👤</a>
+        <% end %>
       </div>
     </header>
 

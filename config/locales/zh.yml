@@ -49,3 +49,96 @@ zh:
   theme_light: "浅色"
   theme_dark: "深色"
   theme_system: "系统"
+
+  # Landing Page
+  landing:
+    title: "SiamCosmo - 维修服务平台"
+    
+    hero:
+      badge: "🚀 #1 在线维修服务"
+      headline: "优质<span>维修</span>服务 一键即达"
+      subheadline: "与您社区的专业服务商建立联系，配备完整的项目管理系统"
+      cta_primary: "开始聊天"
+      cta_secondary: "了解如何使用"
+      stat1: "用户"
+      stat2: "服务商"
+      stat3: "平均评分"
+    
+    features:
+      tag: "✨ 核心功能"
+      title: "为什么选择 SiamCosmo？"
+      desc: "从找维修师傅到项目跟踪，一站式服务"
+      f1:
+        title: "快速"
+        desc: "即时聊天响应，秒级回复"
+      f2:
+        title: "安全"
+        desc: "每位服务商都经过验证审核"
+      f3:
+        title: "实惠"
+        desc: "轻松比较多位服务商的价格"
+      f4:
+        title: "便捷追踪"
+        desc: "实时项目状态，全天候24小时"
+      f5:
+        title: "支持LINE"
+        desc: "通过您熟悉的LINE应用使用"
+      f6:
+        title: "移动优先"
+        desc: "专为移动设备设计"
+    
+    how_it_works:
+      tag: "📋 简单步骤"
+      title: "简单3步开始使用"
+      desc: "无需下载APP，无需注册"
+      s1:
+        title: "选择服务"
+        desc: "选择您需要的服务类型：建筑、扩建或维修"
+      s2:
+        title: "聊天咨询"
+        desc: "立即发送消息询问详情和价格"
+      s3:
+        title: "等待回复"
+        desc: "服务商将联系您，提供报价和预约"
+    
+    services:
+      tag: "🛠️ 服务"
+      title: "我们的服务"
+      desc: "满足您所有维修需求"
+      providers: "服务商"
+      view_all: "查看所有服务"
+    
+    testimonials:
+      tag: "💬 评价"
+      title: "客户对我们的评价"
+      desc: "超过10,000名用户信任我们"
+      t1:
+        text: "使用了建筑服务，师傅回复很快，价格合理，追踪进度很方便"
+        name: "宋猜先生"
+        role: "房主"
+      t2:
+        text: "扩建厨房，比较了多家的价格，省了很多钱"
+        name: "威猜先生"
+        role: "企业主"
+      t3:
+        text: "推荐了优质的电工，工作完成很快，现场清理得很干净"
+        name: "萍女士"
+        role: "办公室职员"
+    
+    cta:
+      title: "准备好开始了吗？"
+      desc: "立即开始与服务商聊天，无需付费"
+      button: "免费开始聊天"
+      note: "✓ 免费  ✓ 5分钟内快速回复"
+    
+    footer:
+      desc: "连接维修服务商与需求用户的平台"
+      quick_links: "快速链接"
+      home: "首页"
+      services: "服务"
+      chat: "聊天"
+      about: "关于我们"
+      contact: "联系我们"
+      location: "泰国曼谷"
+      follow_us: "关注我们"
+      rights: "版权所有"

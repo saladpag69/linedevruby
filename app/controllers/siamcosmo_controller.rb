@@ -7,6 +7,7 @@ class SiamcosmoController < ApplicationController
   end
 
   alias_method :home, :index
+  alias_method :landing, :index
 
   def show
     @service = Service.find_by(key: params[:id])

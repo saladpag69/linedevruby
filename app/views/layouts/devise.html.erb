@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= content_for(:title) || "SiamCosmo" %></title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #1A1814;
+      --accent: #C8A84B;
+      --bg: #FFFFFF;
+      --bg-secondary: #F5F5F4;
+      --text: #1A1814;
+      --text-secondary: #6B6B6B;
+      --border: #E5E5E3;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'IBM Plex Sans Thai', sans-serif;
+      background: var(--bg-secondary);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    
+    .auth-layout {
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: var(--bg);
+    }
+    
+    .auth-header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .auth-logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    .auth-logo span {
+      color: var(--accent);
+    }
+    
+    .auth-main {
+      padding: 24px;
+    }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      margin-bottom: 16px;
+    }
+    
+    .back-link:hover {
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-layout">
+    <header class="auth-header">
+      <a href="/" class="auth-logo">Siam<span>Cosmo</span></a>
+    </header>
+    
+    <main class="auth-main">
+      <%= yield %>
+    </main>
+  </div>
+</body>
+</html>

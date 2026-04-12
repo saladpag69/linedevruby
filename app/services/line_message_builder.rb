@@ -49,15 +49,15 @@ class LineMessageBuilder
                 { type: "box", layout: "baseline", spacing: "sm", contents: [
                   { type: "text", text: "ราคาเต็ม",   color: "#aaaaaa", size: "sm", flex: 2 },
                   { type: "text", text: "฿#{price_secondary}", size: "sm", color: "#111111", flex: 4 }
-                ]},
+                ] },
                 { type: "box", layout: "baseline", spacing: "sm", contents: [
                   { type: "text", text: "ราคาพิเศษ", color: "#aaaaaa", size: "sm", flex: 2 },
                   { type: "text", text: "฿#{price_primary}",   size: "sm", color: "#0ea5e9", flex: 4 }
-                ]},
+                ] },
                 { type: "box", layout: "baseline", spacing: "sm", contents: [
                   { type: "text", text: "สต็อก",      color: "#aaaaaa", size: "sm", flex: 2 },
                   { type: "text", text: "#{product.productstock} ชิ้น", size: "sm", color: "#111111", flex: 4 }
-                ]}
+                ] }
               ]
             }
           ]

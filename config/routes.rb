@@ -1,11 +1,12 @@
 Rails.application.routes.draw do
-  # Devise routes (commented for now until fixed)
-  # devise_for :users
+  # Devise authentication
+  devise_for :users
 
   # Home - use home action
-  root "calculator#index"
-  get "home" => "siamcosmo#home"
-  get "siamcosmo" => "siamcosmo#home"
+  root "siamcosmo#home"
+  get "home" => "siamcosmo#landing"
+  get "landing" => "siamcosmo#landing"
+  get "siamcosmo" => "siamcosmo#landing"
   get "siamcosmo/:id" => "siamcosmo#show", as: :service
 
   # Language

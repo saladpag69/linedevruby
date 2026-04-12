@@ -1,23 +1,20 @@
 class User < ApplicationRecord
-  # Devise disabled for now
-  # devise :database_authenticatable, :registerable,
-  #        :recoverable, :rememberable, :validatable,
-  #        :confirmable, :trackable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable,
+         :trackable
 
-  validates :username, presence: true, uniqueness: true, if: :username_required?
+  validates :username, uniqueness: true, allow_blank: true
 
   has_many :providers, dependent: :destroy
   has_many :chat_sessions, dependent: :destroy
   has_many :messages, through: :chat_sessions
 
-  enum role: { user: 0, provider: 1, admin: 2 }
-
-  def username_required?
-    username.present?
+  def role
+    read_attribute(:role) || "user"
   end
 
-  def name
-    username || email.split("@").first
+  def role=(value)
+    write_attribute(:role, value)
   end
 
   def provider?
@@ -28,20 +25,7 @@ class User < ApplicationRecord
     role == "admin"
   end
 
-  # Helper methods for Devise compatibility
-  def email_required?
-    false
-  end
-
-  def email
-    read_attribute(:email)
-  end
-
-  def password
-    nil
-  end
-
-  def password=
-    nil
+  def name
+    username || email.split("@").first
   end
 end

@@ -13,15 +13,15 @@ module LineBotHandler
     source   = event.source
     group_id = if source.is_a?(Line::Bot::V2::Webhook::GroupSource)
                  source.group_id
-               elsif source.is_a?(Line::Bot::V2::Webhook::RoomSource)
+    elsif source.is_a?(Line::Bot::V2::Webhook::RoomSource)
                  source.room_id
-               end
+    end
 
     messages = if group_id == SUPPLIER_GROUP_ID
                  [ Line::Bot::V2::MessagingApi::TextMessage.new(text: "ไม่สามารถตอบคำถามผู้ค้าได้") ]
-               else
+    else
                  build_text_reply(user_text, user_id, group_id)
-               end
+    end
 
     reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
       reply_token: event.reply_token,
@@ -64,9 +64,9 @@ module LineBotHandler
                          LineMessageBuilder.cart_message(user_id)
                      end
                    end
-                 else
+      else
                    LineMessageBuilder.cart_message(user_id)
-                 end
+      end
 
       reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
         reply_token: event.reply_token,
@@ -77,7 +77,7 @@ module LineBotHandler
     end
 
     reply_text = case action
-                 when "process_order"
+    when "process_order"
                    if CartService.processing?(user_id)
                      "กำลังดำเนินการออเดอร์อยู่ครับ กรุณารอสักครู่ 🔄"
                    else
@@ -91,12 +91,12 @@ module LineBotHandler
                        order_text
                      end
                    end
-                 when "clear_cart"
+    when "clear_cart"
                    CartService.clear_cart(user_id)
                    "ล้างตะกร้าเรียบร้อยแล้วครับ 🗑️"
-                 else
+    else
                    "ได้รับ postback: #{data}"
-                 end
+    end
 
     reply_req = Line::Bot::V2::MessagingApi::ReplyMessageRequest.new(
       reply_token: event.reply_token,
@@ -113,13 +113,13 @@ module LineBotHandler
 
     products = if response_text.present?
                  ActiveProduct.none
-               elsif extracted[:barcode].present?
+    elsif extracted[:barcode].present?
                  ActiveProduct.all.select { |p| p.barcodeid.to_s == extracted[:barcode] }
-               elsif extracted[:keyword].present?
+    elsif extracted[:keyword].present?
                  ActiveProduct.search(extracted[:keyword], unit: extracted[:unit])
-               else
+    else
                  ActiveProduct.none
-               end
+    end
 
     if response_text.present?
       [ LineMessageBuilder.text(response_text) ]
