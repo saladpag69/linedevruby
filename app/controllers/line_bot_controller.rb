@@ -27,6 +27,8 @@ class LineBotController < ApplicationController
       render plain: "OK" and return
     end
 
+    return render plain: "OK" if events.empty?
+
     events.each do |event|
       next if event.delivery_context&.is_redelivery
 
@@ -62,7 +64,7 @@ class LineBotController < ApplicationController
     end
 
     @client ||= Line::Bot::V2::MessagingApi::ApiClient.new(
-      channel_access_token: Rails.application.credentials.channel_access_token,
+      channel_access_token: ENV["CHANNEL_ACCESS_TOKEN"],
       http_options: {
         verify_mode: OpenSSL::SSL::VERIFY_PEER,
         verify_callback: verify_callback
@@ -72,7 +74,7 @@ class LineBotController < ApplicationController
 
   def parser
     @parser ||= Line::Bot::V2::WebhookParser.new(
-      channel_secret: Rails.application.credentials.channel_secret
+      channel_secret: ENV["CHANNEL_SECRET"]
     )
   end
 
