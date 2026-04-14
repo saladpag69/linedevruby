@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ใบเสนอราคา #<%= @quote.id %></title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; color: #333; }
+    
+    .container { max-width: 210mm; margin: 0 auto; padding: 20mm; }
+    
+    .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; border-bottom: 2px solid #C8A84B; padding-bottom: 20px; }
+    .logo { font-size: 24px; font-weight: bold; color: #1A1814; }
+    .logo span { color: #C8A84B; }
+    .quote-info { text-align: right; }
+    .quote-number { font-size: 18px; font-weight: bold; color: #C8A84B; }
+    .quote-date { color: #666; }
+    
+    .title { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
+    .subtitle { color: #666; margin-bottom: 20px; }
+    
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+    .info-box { background: #f9f9f9; padding: 15px; border-radius: 8px; }
+    .info-label { font-size: 10px; color: #666; margin-bottom: 5px; text-transform: uppercase; }
+    .info-value { font-weight: bold; }
+    
+    .section { margin-bottom: 25px; }
+    .section-title { font-size: 14px; font-weight: bold; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #ddd; }
+    
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #C8A84B; color: white; padding: 10px; text-align: left; font-weight: 500; }
+    td { padding: 10px; border-bottom: 1px solid #eee; }
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
+    
+    .totals { margin-top: 20px; }
+    .total-row { display: flex; justify-content: flex-end; padding: 5px 0; }
+    .total-label { width: 150px; text-align: right; color: #666; }
+    .total-value { width: 120px; text-align: right; font-weight: 500; }
+    .grand-total { border-top: 2px solid #C8A84B; margin-top: 10px; padding-top: 10px; }
+    .grand-total .total-label, .grand-total .total-value { font-size: 16px; font-weight: bold; color: #C8A84B; }
+    
+    .note { background: #fff9e6; padding: 15px; border-radius: 8px; margin-top: 30px; font-size: 10px; color: #666; }
+    
+    .footer { margin-top: 50px; text-align: center; color: #999; font-size: 10px; }
+    
+    @page { size: A4; margin: 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <div class="logo">Siam<span>Cosmo</span></div>
+        <div style="color: #666; margin-top: 5px;">ศูนย์การค้าออนไลน์ของชุมชน</div>
+      </div>
+      <div class="quote-info">
+        <div class="quote-number">ใบเสนอราคา #<%= @quote.id %></div>
+        <div class="quote-date">วันที่ <%= @quote.formatted_date %></div>
+      </div>
+    </div>
+    
+    <div class="title"><%= @quote.service_type.icon %> <%= @quote.service_type.name %></div>
+    <div class="subtitle">ประเมินราคางานก่อสร้างและตกแต่ง</div>
+    
+    <div class="info-grid">
+      <div class="info-box">
+        <div class="info-label">ขนาดพื้นที่</div>
+        <div class="info-value"><%= number_with_precision(@quote.area, precision: 2) %> ตร.ม.</div>
+      </div>
+      <% if @quote.volume > 0 %>
+        <div class="info-box">
+          <div class="info-label">ปริมาตร</div>
+          <div class="info-value"><%= number_with_precision(@quote.volume, precision: 2) %> ลบ.ม.</div>
+        </div>
+      <% end %>
+      <div class="info-box">
+        <div class="info-label">รายละเอียด</div>
+        <div class="info-value"><%= @quote.inputs_display %></div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">สถานะ</div>
+        <div class="info-value"><%= @quote.status_label %></div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="section-title">📦 รายการวัสดุ</div>
+      <table>
+        <thead>
+          <tr>
+            <th>รายการ</th>
+            <th class="text-center">จำนวน</th>
+            <th class="text-right">ราคา/หน่วย</th>
+            <th class="text-right">รวม</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @quote.quote_materials.each do |mat| %>
+            <tr>
+              <td><%= mat.product_name %></td>
+              <td class="text-center"><%= mat.quantity %> <%= mat.unit %></td>
+              <td class="text-right">฿<%= number_with_delimiter(mat.unit_price.to_i) %></td>
+              <td class="text-right">฿<%= number_with_delimiter(mat.subtotal.to_i) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    
+    <% if @quote.contractor %>
+    <div class="section">
+      <div class="section-title">👷 ช่างผู้รับเหมา</div>
+      <table>
+        <thead>
+          <tr>
+            <th>ชื่อช่าง</th>
+            <th class="text-center">ประสบการณ์</th>
+            <th class="text-right">อัตราค่าแรง</th>
+            <th class="text-right">รวม</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= @quote.contractor.name %></td>
+            <td class="text-center"><%= @quote.contractor.experience_label %></td>
+            <td class="text-right">฿<%= number_with_delimiter(@quote.contractor.rate_per_sqm.to_i) %>/ตร.ม.</td>
+            <td class="text-right">฿<%= number_with_delimiter(@quote.labor_total.to_i) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <% end %>
+    
+    <div class="totals">
+      <div class="total-row">
+        <span class="total-label">ค่าวัสดุ</span>
+        <span class="total-value">฿<%= number_with_delimiter(@quote.material_total.to_i) %></span>
+      </div>
+      <div class="total-row">
+        <span class="total-label">ค่าแรง</span>
+        <span class="total-value">฿<%= number_with_delimiter(@quote.labor_total.to_i) %></span>
+      </div>
+      <% if @quote.delivery_fee > 0 %>
+        <div class="total-row">
+          <span class="total-label">ค่าจัดส่ง</span>
+          <span class="total-value">฿<%= number_with_delimiter(@quote.delivery_fee.to_i) %></span>
+        </div>
+      <% end %>
+      <div class="total-row">
+        <span class="total-label">ภาษีมูลค่าเพิ่ม 7%</span>
+        <span class="total-value">฿<%= number_with_delimiter(@quote.tax.to_i) %></span>
+      </div>
+      <div class="total-row grand-total">
+        <span class="total-label">รวมทั้งสิ้น</span>
+        <span class="total-value">฿<%= number_with_delimiter(@quote.grand_total.to_i) %></span>
+      </div>
+    </div>
+    
+    <div class="note">
+      <strong>หมายเหตุ:</strong> ราคานี้เป็นราคาประมาณการ อาจมีการเปลี่ยนแปลงตามสถานการณ์จริง ราคารวม VAT 7% แล้ว
+    </div>
+    
+    <div class="footer">
+      <p>Generated by SiamCosmo Platform | <%= Date.today.strftime("%d/%m/%Y") %></p>
+    </div>
+  </div>
+</body>
+</html>

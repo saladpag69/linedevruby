@@ -2,7 +2,7 @@
 
 <div class="chat-page">
   <a href="/" class="back-btn">← <%= t("back") %></a>
-  
+
   <div class="chat-header">
     <span class="chat-icon"><%= @service.icon %></span>
     <h2><%= @service.name(I18n.locale) %></h2>
@@ -14,13 +14,13 @@
         <div class="message-content"><%= @greeting %></div>
       </div>
     <% end %>
-    
+
     <% @messages.each do |msg| %>
       <div class="message <%= msg.role %>">
         <div class="message-content"><%= msg.content %></div>
       </div>
     <% end %>
-    
+
     <% if @service.key == "calculator" %>
       <div class="calculator-form">
         <div class="shape-selector">
@@ -30,27 +30,27 @@
             </button>
           <% end %>
         </div>
-        
+
         <div class="shape-inputs" id="rectangle-inputs">
           <input type="number" id="width" placeholder="กว้าง (ม.)" value="5">
           <input type="number" id="length" placeholder="ยาว (ม.)" value="6">
         </div>
-        
+
         <div class="shape-inputs" id="triangle-inputs" style="display:none;">
           <input type="number" id="base" placeholder="ฐาน (ม.)" value="4">
           <input type="number" id="height" placeholder="สูง (ม.)" value="3">
         </div>
-        
+
         <div class="shape-inputs" id="circle-inputs" style="display:none;">
           <input type="number" id="radius" placeholder="รัศมี (ม.)" value="3">
         </div>
-        
+
         <div class="shape-inputs" id="trapezoid-inputs" style="display:none;">
           <input type="number" id="parallel1" placeholder="ด้านขนาน 1 (ม.)" value="5">
           <input type="number" id="parallel2" placeholder="ด้านขนาน 2 (ม.)" value="3">
           <input type="number" id="height" placeholder="สูง (ม.)" value="4">
         </div>
-        
+
         <button class="calc-btn" id="calc-area">คำนวณ</button>
         <div class="calc-result" id="result"></div>
       </div>
@@ -227,7 +227,7 @@
       document.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentShape = btn.dataset.shape;
-      
+
       // Show/hide appropriate inputs
       document.querySelectorAll('.shape-inputs').forEach(div => div.style.display = 'none');
       document.getElementById(currentShape + '-inputs').style.display = 'flex';
@@ -244,12 +244,12 @@
     const parallel1 = document.getElementById('parallel1')?.value;
     const parallel2 = document.getElementById('parallel2')?.value;
     const resultDiv = document.getElementById('result');
-    
-    let body = { 
+
+    let body = {
       service_key: serviceKey,
       shape: currentShape
     };
-    
+
     if (currentShape === 'rectangle') {
       body.width = width;
       body.length = length;
@@ -263,7 +263,7 @@
       body.parallel2 = parallel2 || length;
       body.height = height;
     }
-    
+
     try {
       const res = await fetch('/chat/calculate', {
         method: 'POST',

@@ -13,9 +13,18 @@ class LineBotController < ApplicationController
     signature = request.env["HTTP_X_LINE_SIGNATURE"]
 
     begin
-      events = parser.parse(body: body, signature: signature)
-    rescue Line::Bot::V2::WebhookParser::InvalidSignatureError
-      render plain: "Bad Request", status: 400 and return
+      events = if Rails.env.development?
+                 parse_events_dev(body)
+      else
+                 begin
+                   parser.parse(body: body, signature: signature)
+                 rescue Line::Bot::V2::WebhookParser::InvalidSignatureError
+                   render plain: "Bad Request", status: 400 and return
+                 end
+      end
+    rescue => e
+      Rails.logger.error "❌ callback error: #{e.message} #{e.backtrace.first(3).join}"
+      render plain: "OK" and return
     end
 
     events.each do |event|
@@ -64,6 +73,52 @@ class LineBotController < ApplicationController
   def parser
     @parser ||= Line::Bot::V2::WebhookParser.new(
       channel_secret: Rails.application.credentials.channel_secret
+    )
+  end
+
+  def parse_events_dev(body)
+    json = JSON.parse(body)
+    events_data = json["events"] || []
+
+    events = events_data.map do |event_data|
+      create_mock_event(event_data)
+    end
+
+    Rails.logger.warn "⚠️ Dev mode: parsed #{events.size} events"
+
+    events.each do |event|
+      begin
+        Rails.logger.warn "⚠️ Dev mode processing event type: #{event.type}"
+        case event.type
+        when "message"
+          handle_text_event(event)
+        when "follow"
+          handle_follow_event(event)
+        when "postback"
+          handle_postback_event(event)
+        end
+      rescue => e
+        Rails.logger.error "❌ Event processing error: #{e.message} #{e.backtrace.first(3).join}"
+      end
+    end
+
+    events
+  end
+
+  def create_mock_event(data)
+    OpenStruct.new(
+      type: data["type"],
+      message: OpenStruct.new(
+        type: data.dig("message", "type"),
+        text: data.dig("message", "text"),
+        id: "mock-#{Time.now.to_i}"
+      ),
+      source: OpenStruct.new(
+        user_id: data.dig("source", "userId"),
+        type: data.dig("source", "type")
+      ),
+      reply_token: data["replyToken"],
+      delivery_context: nil
     )
   end
 end

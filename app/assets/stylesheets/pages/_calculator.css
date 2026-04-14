@@ -1,0 +1,309 @@
+/* SiamCosmo - Calculator Page */
+.calculator-header {
+  text-align: center;
+  padding: var(--space-lg) var(--space-md) var(--space-md);
+}
+
+.step-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.step {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.step.active {
+  background: var(--accent);
+  color: var(--primary);
+}
+
+.step.completed {
+  background: var(--success);
+  color: white;
+}
+
+.step-line {
+  width: 24px;
+  height: 2px;
+  background: var(--border);
+}
+
+.step-line.active {
+  background: var(--accent);
+}
+
+.step-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+}
+
+.step-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-top: var(--space-xs);
+}
+
+/* Service Types Grid (Step 1) */
+.service-types-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: var(--space-sm) var(--space-md) var(--space-lg);
+}
+
+@media (min-width: 481px) {
+  .service-types-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 769px) {
+  .service-types-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+  }
+}
+
+.service-type-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 20px 12px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  border: 0.5px solid var(--border);
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.2s;
+}
+
+.service-type-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+  border-color: var(--accent);
+}
+
+.service-type-card .service-icon {
+  font-size: 2rem;
+}
+
+.service-type-card .service-name {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  text-align: center;
+}
+
+.service-type-card .service-rate {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+/* Input Form (Step 2) */
+.input-form {
+  padding: 0 var(--space-md) var(--space-lg);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+}
+
+.form-actions .btn {
+  flex: 1;
+}
+
+/* Calculation Preview */
+.calc-preview {
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  padding: var(--space-md);
+  margin: var(--space-md);
+}
+
+.calc-preview-title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+}
+
+.calc-preview-value {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.calc-preview-unit {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  font-weight: normal;
+}
+
+/* Materials List (Step 3) */
+.materials-list {
+  padding: 0 var(--space-md);
+}
+
+.material-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.material-item:last-child {
+  border-bottom: none;
+}
+
+.material-name {
+  font-weight: 500;
+}
+
+.material-qty {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+/* Delivery Options */
+.delivery-options {
+  padding: 0 var(--space-md);
+}
+
+.delivery-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-sm);
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.delivery-option.selected {
+  border-color: var(--accent);
+}
+
+.delivery-option input {
+  display: none;
+}
+
+/* Contractor Selection */
+.contractor-list {
+  display: grid;
+  gap: var(--space-sm);
+  padding: 0 var(--space-md);
+}
+
+.contractor-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.contractor-card.selected {
+  border-color: var(--accent);
+}
+
+.contractor-card input {
+  display: none;
+}
+
+.contractor-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.contractor-info {
+  flex: 1;
+}
+
+.contractor-name {
+  font-weight: 600;
+}
+
+.contractor-rating {
+  font-size: var(--font-size-xs);
+  color: var(--warning);
+}
+
+/* Quote Summary (Step 4) */
+.quote-summary {
+  padding: var(--space-md);
+}
+
+.quote-item {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.quote-item:last-child {
+  border-bottom: none;
+}
+
+.quote-total {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-md) 0;
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  border-top: 2px solid var(--accent);
+  margin-top: var(--space-sm);
+}
+
+.quote-total .amount {
+  color: var(--accent);
+}
+
+.quote-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+  color: var(--text-secondary);
+}

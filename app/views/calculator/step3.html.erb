@@ -1,0 +1,345 @@
+<% content_for :title, "เลือกวัสดุและช่าง" %>
+
+<div class="calculator-header">
+  <a href="<%= calculator_step2_path(service_type_slug: @service_type.slug) %>" class="back-btn">
+    ← กลับ
+  </a>
+  <div class="step-indicator">
+    <span class="step completed">✓</span>
+    <span class="step-line active"></span>
+    <span class="step completed">✓</span>
+    <span class="step-line active"></span>
+    <span class="step active">3</span>
+    <span class="step-line"></span>
+    <span class="step">4</span>
+  </div>
+  <h2 class="step-title">เลือกวัสดุและช่าง</h2>
+  <p class="step-subtitle"><%= @service_type.icon %> <%= @service_type.name %></p>
+</div>
+
+<div class="options-form" data-controller="calculator-options">
+  <form action="<%= calculator_step4_path %>" method="POST">
+    <input type="hidden" name="service_type_slug" value="<%= @service_type.slug %>">
+    <%= csrf_meta_tags %>
+    <%= hidden_field_tag :width, @inputs[:width] %>
+    <%= hidden_field_tag :length, @inputs[:length] %>
+    <%= hidden_field_tag :thickness, @inputs[:thickness] if @inputs[:thickness] %>
+    <%= hidden_field_tag :height, @inputs[:height] if @inputs[:height] %>
+
+    <section class="options-section">
+      <h3 class="section-title">📦 รายการวัสดุ</h3>
+      <p class="section-subtitle">พื้นที่ <strong><%= @calc_result[:area].round(2) %> ตร.ม.</strong> · ปริมาตร <strong><%= @calc_result[:volume].round(2) %> ลบ.ม.</strong></p>
+      
+      <div class="materials-list">
+        <% @calc_result[:materials].each do |mat| %>
+          <div class="material-item">
+            <div class="material-info">
+              <span class="material-name"><%= mat[:name] %></span>
+              <span class="material-qty"><%= mat[:quantity] %> <%= mat[:unit] %></span>
+            </div>
+            <div class="material-price">
+              <span class="material-unit-price">฿<%= mat[:price].to_i %>/<%= mat[:unit] %></span>
+              <span class="material-subtotal">฿<%= mat[:subtotal].to_i %></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="materials-total">
+        <span>รวมค่าวัสดุ</span>
+        <span class="total-value">฿<%= @calc_result[:material_total].to_i %></span>
+      </div>
+    </section>
+
+    <section class="options-section">
+      <h3 class="section-title">👷 ช่างผู้รับเหมา</h3>
+      
+      <div class="contractors-list">
+        <label class="contractor-option">
+          <input type="radio" name="contractor_id" value="" checked>
+          <div class="contractor-card">
+            <div class="contractor-avatar">🤖</div>
+            <div class="contractor-info">
+              <span class="contractor-name">ไม่เลือกช่าง</span>
+              <span class="contractor-rate">จองช่างภายหลัง</span>
+            </div>
+          </div>
+        </label>
+
+        <% @contractors.each do |contractor| %>
+          <label class="contractor-option">
+            <input type="radio" name="contractor_id" value="<%= contractor.id %>">
+            <div class="contractor-card">
+              <div class="contractor-avatar"><%= contractor.is_mock? ? "🤖" : "👷" %></div>
+              <div class="contractor-info">
+                <span class="contractor-name">
+                  <%= contractor.name %>
+                  <% if contractor.is_mock? %>
+                    <span class="mock-badge">จำลอง</span>
+                  <% end %>
+                </span>
+                <span class="contractor-meta">
+                  <%= contractor.rating_stars %> · <%= contractor.experience_label %>
+                </span>
+              </div>
+              <div class="contractor-rate">
+                <span class="rate-value">฿<%= contractor.rate_per_sqm.to_i %></span>
+                <span class="rate-unit">/<%= @service_type.labor_unit %></span>
+              </div>
+            </div>
+          </label>
+        <% end %>
+      </div>
+
+      <div class="labor-total">
+        <span>รวมค่าแรง</span>
+        <span class="total-value">฿<%= @calc_result[:labor_total].to_i %></span>
+      </div>
+    </section>
+
+    <section class="options-section">
+      <h3 class="section-title">🚚 การจัดส่ง</h3>
+      
+      <div class="delivery-options">
+        <label class="delivery-option">
+          <input type="radio" name="delivery_option" value="pickup" checked>
+          <div class="delivery-card">
+            <span class="delivery-icon">🏪</span>
+            <div class="delivery-info">
+              <span class="delivery-name">รับที่ร้าน</span>
+              <span class="delivery-fee">ฟรี</span>
+            </div>
+          </div>
+        </label>
+
+        <label class="delivery-option">
+          <input type="radio" name="delivery_option" value="delivery">
+          <div class="delivery-card">
+            <span class="delivery-icon">🚚</span>
+            <div class="delivery-info">
+              <span class="delivery-name">จัดส่งที่บ้าน</span>
+              <span class="delivery-fee">฿350</span>
+            </div>
+          </div>
+        </label>
+      </div>
+    </section>
+
+    <button type="submit" class="btn-primary">
+      ดูสรุปราคา →
+    </button>
+  </form>
+</div>
+
+<style>
+  .options-form {
+    padding: 16px;
+  }
+
+  .options-section {
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .section-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+
+  .materials-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .material-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: var(--bg-secondary);
+    border-radius: 10px;
+  }
+
+  .material-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .material-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .material-qty {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .material-price {
+    text-align: right;
+  }
+
+  .material-unit-price {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .material-subtotal {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .materials-total,
+  .labor-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    margin-top: 8px;
+    background: var(--bg);
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  .total-value {
+    color: var(--accent);
+  }
+
+  .contractors-list,
+  .delivery-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .contractor-option,
+  .delivery-option {
+    cursor: pointer;
+  }
+
+  .contractor-option input,
+  .delivery-option input {
+    display: none;
+  }
+
+  .contractor-card,
+  .delivery-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--bg-secondary);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .contractor-option input:checked + .contractor-card,
+  .delivery-option input:checked + .delivery-card {
+    border-color: var(--accent);
+    background: var(--bg);
+  }
+
+  .contractor-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+  }
+
+  .contractor-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .contractor-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .mock-badge {
+    font-size: 0.625rem;
+    background: var(--accent);
+    color: var(--bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 4px;
+  }
+
+  .contractor-meta {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .contractor-rate {
+    text-align: right;
+  }
+
+  .rate-value {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .rate-unit {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .delivery-icon {
+    font-size: 1.5rem;
+  }
+
+  .delivery-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .delivery-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .delivery-fee {
+    font-size: 0.75rem;
+    color: var(--success);
+    font-weight: 600;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 14px 24px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 16px;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+</style>

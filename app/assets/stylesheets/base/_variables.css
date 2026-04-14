@@ -1,0 +1,66 @@
+/* SiamCosmo - Variables */
+:root {
+  /* Colors */
+  --primary: #1A1814;
+  --accent: #C8A84B;
+  --bg: #FFFFFF;
+  --bg-secondary: #F5F5F4;
+  --text: #1A1814;
+  --text-secondary: #6B6B6B;
+  --border: #E5E5E3;
+  --success: #22C55E;
+  --error: #EF4444;
+  --warning: #F59E0B;
+  --info: #3B82F6;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Typography */
+  --font-family: 'IBM Plex Sans Thai', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --bg: #1A1814;
+  --bg-secondary: #2D2A26;
+  --text: #F5F5F4;
+  --text-secondary: #A1A1A1;
+  --border: #3D3A36;
+}
+
+/* System Theme */
+[data-theme="system"] {
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"] {
+    --bg: #1A1814;
+    --bg-secondary: #2D2A26;
+    --text: #F5F5F4;
+    --text-secondary: #A1A1A1;
+    --border: #3D3A36;
+  }
+}

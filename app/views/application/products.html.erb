@@ -206,17 +206,16 @@
     <p>เลือกสินค้าที่พร้อมจำหน่าย ดีไซน์สวย ทันสมัย บ้านสยาม</p>
 
     <div class="search-bar">
-      <%= form_with url: aboutus_path, method: :get, local: true do %>
+      <%= form_with url: products_path, method: :get, local: true do %>
         <%= text_field_tag :q, @query, placeholder: "ค้นหาสินค้า / บาร์โค้ด", class: "search-input" %>
         <button type="submit" class="search-button">ค้นหา</button> &nbsp;
-        <%= link_to "🛒 ดูตะกร้า", cart_path, class: "search-button", style: "background:linear-gradient(120deg,#10b981,#059669); text-decoration:none;" %>
 
 
         <!--<button
           id="supplier-line-button"
           class="cta-button"
           type="button"
-          data-endpoint="<%= supplier_line_path %>"
+          data-endpoint="/chat/supplier"
         >
 
           Ai Chat
@@ -227,7 +226,7 @@
         class="cta-button"
         type="button"
         >
-            เคลียร์แชท
+            เคลีร์แชท
         </button>-->
       <% end %>
     </div>
@@ -246,7 +245,108 @@
   </div>-->
 
   <% image_pool = [
-    "https://images.unsplash.com/photo-1448630360428-65456885c650"  # หมวกนิรภัย/ไซต์งาน
+    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1594488506255-d7e9c8ab6a47?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1590846083693-f23ded9b6df2?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1626497764829-7842d972a681?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1581803118522-7b72a50f7e9f?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1590650213165-c1fef80649c4?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1523772353892-0606d6835cd4?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1513849638713-5719bfe8d5c9?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1621165882701-3b0d6e98f30e?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1594488506255-d7e9c8ab6a47?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1590846083693-f23ded9b6df2?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1590650213165-c1fef80649c4?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1523772353892-0606d6835cd4?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1513849638713-5719bfe8d5c9?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1621165882701-3b0d6e98f30e?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1581803118522-7b72a50f7e9f?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1626497764829-7842d972a681?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1594488506255-d7e9c8ab6a47?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1590846083693-f23ded9b6df2?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1590650213165-c1fef80649c4?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1523772353892-0606d6835cd4?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1513849638713-5719bfe8d5c9?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1621165882701-3b0d6e98f30e?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1581803118522-7b72a50f7e9f?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1626497764829-7842d972a681?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1594488506255-d7e9c8ab6a47?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1590846083693-f23ded9b6df2?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1590650213165-c1fef80649c4?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&h=300&fit=crop",
+    "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&h=300&fit=crop"
   ] %>
 
 
@@ -254,22 +354,27 @@
     <div style="text-align:center; padding:2rem; background:#fee2e2; border-radius:1rem; color:#b91c1c; margin-bottom:1.5rem;">
       ⚠️ ไม่สามารถโหลดข้อมูลสินค้าได้ กรุณาลองใหม่อีกครั้ง
     </div>
-  <% elsif @products.empty? && @query.present? %>
+  <% elsif @products.present? && @products.empty? && @query.present? %>
     <div style="text-align:center; padding:2rem; color:#6b7280; margin-bottom:1.5rem;">
       ไม่พบสินค้าที่ค้นหา "<%= @query %>"
     </div>
   <% end %>
 
   <div class="product-grid">
-    <% @products.each do |product| %>
-      <% image_url = product.productimage.presence || image_pool.sample %>
+    <% (@products || []).each do |product| %>
+      <!--<% image_url = product.productimage.presence || image_pool.sample %>-->
+      <% image_url =  image_pool.sample %>
       <article class="product-card">
         <img src="<%= image_url %>" alt="<%= product.productname %>"> <%# herb:disable erb-prefer-image-tag-helper %>
         <div class="product-body">
           <div class="product-name"><%= product.productname %></div>
           <div class="product-meta">หมวดหมู่: <%= product.category %></div>
           <div class="product-meta">
-            สต็อก: <%= product.productstock %> ชิ้น
+              <% if product.productstock.to_i <= 0 %>
+                สถานะ: ติดต่อ ฝ่ายขาย
+              <% else %>
+                สต็อก: <%= product.productstock %> ชิ้น
+              <% end %>
           </div>
         </div>
         <div class="product-footer">
@@ -277,17 +382,15 @@
             <small>ราคา</small>
 
             <div>
+
               <strong>
-                <%= number_to_currency(product.productsale1.to_f, unit: "฿") %>
+                <%= number_to_currency(product.productsale6.to_f*1.10, unit: "฿") %>
               </strong>
             </div>
           </div>
         </div>
 
-        <%= form_with url: cart_add_path, method: :post, local: true, style: "margin:0" do %>
-          <%= hidden_field_tag :product_id, product._id %>
-          <button type="submit" class="cta-button">เลือกสินค้า</button>
-        <% end %>
+
       </article>
     <% end %>
   </div>

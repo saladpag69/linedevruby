@@ -1,0 +1,119 @@
+<% content_for :title, t("chat.providers_title", default: "เลือกผู้ให้บริการ") %>
+
+<div class="chat-page">
+  <!--<a href="/" class="back-btn">← <%= t("back") %></a>-->
+
+  <div class="chat-header">
+    <!--<span class="chat-icon">👥</span>-->
+    <h2><%= t("chat.providers_title", default: "ผู้ให้บริการ") %></h2>
+  </div>
+
+  <div class="providers-list">
+    <% if @providers.any? %>
+      <% @providers.each do |provider| %>
+        <a  class="provider-card">
+          <div class="provider-avatar">
+            <img src="https://picsum.photos/seed/<%= provider.id %>/128/128" alt="<%= provider.company_name %>">
+          </div>
+          <div class="provider-info">
+            <h3 class="provider-name"><%= provider.company_name %></h3>
+            <p class="provider-service">
+              <% if provider.service_id %>
+                <%= provider.service.name(I18n.locale) %>
+              <% else %>
+                บริการ
+              <% end %>
+            </p>
+            <% if provider.description.present? %>
+              <p class="provider-desc"><%= provider.description.truncate(60) %></p>
+            <% end %>
+          </div>
+          <!--<div class="provider-arrow">→</div>-->
+        </a>
+      <% end %>
+    <% else %>
+      <div class="empty-state">
+        <p>ยังไม่มีผู้ให้บริการ</p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  .providers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 0;
+  }
+
+  .provider-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.2s;
+  }
+
+  .provider-card:hover {
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  transform: translateX(4px);
+  }
+
+  .provider-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  }
+
+  .provider-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  }
+
+  .provider-info {
+  flex: 1;
+  min-width: 0;
+  }
+
+  .provider-name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+  }
+
+  .provider-service {
+  font-size: 0.8125rem;
+  color: var(--accent);
+  font-weight: 500;
+  }
+
+  .provider-desc {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  }
+
+  .provider-arrow {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  }
+
+  .empty-state {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--text-secondary);
+  }
+</style>

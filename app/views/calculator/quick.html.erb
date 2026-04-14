@@ -1,0 +1,326 @@
+<% content_for :title, "คำนวณปริมาตร" %>
+
+<div class="calc-quick-container">
+  <div class="calc-header">
+    <h1 class="calc-title">📐 คำนวณปริมาตร</h1>
+    <p class="calc-subtitle">กรอกขนาดเพื่อคำนวณพื้นที่และปริมาตรแบบเรียลไทม์</p>
+  </div>
+
+  <div class="calc-inputs-section">
+    <h2 class="section-title">ขนาด (เมตร)</h2>
+    
+    <div class="input-grid">
+      <div class="input-card">
+        <label class="input-label">กว้าง (m)</label>
+        <input type="number" id="width" class="calc-input" placeholder="0.00" step="0.01" min="0" value="5">
+        <div class="input-icon">↔️</div>
+      </div>
+      
+      <div class="input-card">
+        <label class="input-label">ยาว (m)</label>
+        <input type="number" id="length" class="calc-input" placeholder="0.00" step="0.01" min="0" value="6">
+        <div class="input-icon">↔️</div>
+      </div>
+      
+      <div class="input-card">
+        <label class="input-label">สูง/หนา (m)</label>
+        <input type="number" id="height" class="calc-input" placeholder="0.00" step="0.01" min="0" value="0.15">
+        <div class="input-icon">↕️</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="calc-results-section">
+    <h2 class="section-title">ผลลัพธ์</h2>
+    
+    <div class="results-grid">
+      <div class="result-card highlight">
+        <div class="result-icon">📐</div>
+        <div class="result-content">
+          <span class="result-label">พื้นที่ (Area)</span>
+          <span class="result-value" id="area-result">30.00 ตร.ม.</span>
+        </div>
+      </div>
+      
+      <div class="result-card">
+        <div class="result-icon">📦</div>
+        <div class="result-content">
+          <span class="result-label">ปริมาตร (Volume)</span>
+          <span class="result-value" id="volume-result">4.50 ลบ.ม.</span>
+        </div>
+      </div>
+      
+      <div class="result-card">
+        <div class="result-icon">🧱</div>
+        <div class="result-content">
+          <span class="result-label">คอนกรีต (คิมบ.)</span>
+          <span class="result-value" id="concrete-result">4.50 คิมบ.</span>
+        </div>
+      </div>
+      
+      <div class="result-card">
+        <div class="result-icon">🚛</div>
+        <div class="result-content">
+          <span class="result-label">จำนวนคันรถ (7 ลบ.ม./คัน)</span>
+          <span class="result-value" id="truck-result">1 คัน</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="calc-info">
+    <div class="info-card">
+      <h3>📝 สูตรการคำนวณ</h3>
+      <ul class="formula-list">
+        <li><strong>พื้นที่</strong> = กว้าง × ยาว</li>
+        <li><strong>ปริมาตร</strong> = กว้าง × ยาว × สูง</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<style>
+  .calc-quick-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  .calc-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .calc-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .calc-subtitle {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+  }
+
+  .section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  .calc-inputs-section {
+    margin-bottom: 32px;
+  }
+
+  .input-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  @media (max-width: 480px) {
+    .input-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .input-card {
+    position: relative;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+    transition: all 0.2s;
+  }
+
+  .input-card:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(200, 168, 75, 0.15);
+  }
+
+  .input-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+
+  .calc-input {
+    width: 100%;
+    padding: 12px 40px 12px 16px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.2s;
+  }
+
+  .calc-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(200, 168, 75, 0.15);
+  }
+
+  .calc-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .input-icon {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    font-size: 1rem;
+    opacity: 0.5;
+  }
+
+  .calc-results-section {
+    margin-bottom: 32px;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  @media (max-width: 480px) {
+    .results-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .result-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    transition: all 0.2s;
+  }
+
+  .result-card.highlight {
+    background: linear-gradient(135deg, var(--accent) 0%, #E5C76B 100%);
+    border-color: transparent;
+    color: var(--primary);
+  }
+
+  .result-card.highlight .result-label {
+    color: rgba(26, 24, 20, 0.7);
+  }
+
+  .result-card.highlight .result-value {
+    color: var(--primary);
+  }
+
+  .result-icon {
+    font-size: 1.75rem;
+    flex-shrink: 0;
+  }
+
+  .result-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .result-label {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+  }
+
+  .result-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .calc-info {
+    margin-top: 24px;
+  }
+
+  .info-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+  }
+
+  .info-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .formula-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .formula-list li {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .formula-list li:last-child {
+    border-bottom: none;
+  }
+
+  .formula-list strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
+</style>
+
+<script>
+  const widthInput = document.getElementById('width');
+  const lengthInput = document.getElementById('length');
+  const heightInput = document.getElementById('height');
+
+  const areaResult = document.getElementById('area-result');
+  const volumeResult = document.getElementById('volume-result');
+  const concreteResult = document.getElementById('concrete-result');
+  const truckResult = document.getElementById('truck-result');
+
+  function calculate() {
+    const w = parseFloat(widthInput.value) || 0;
+    const l = parseFloat(lengthInput.value) || 0;
+    const h = parseFloat(heightInput.value) || 0;
+
+    const area = w * l;
+    const volume = w * l * h;
+    const trucks = Math.ceil(volume / 7);
+
+    areaResult.textContent = area.toFixed(2) + ' ตร.ม.';
+    volumeResult.textContent = volume.toFixed(2) + ' ลบ.ม.';
+    concreteResult.textContent = volume.toFixed(2) + ' คิมบ.';
+    truckResult.textContent = (trucks > 0 ? trucks : '-') + ' คัน';
+  }
+
+  widthInput.addEventListener('input', calculate);
+  lengthInput.addEventListener('input', calculate);
+  heightInput.addEventListener('input', calculate);
+
+  calculate();
+</script>

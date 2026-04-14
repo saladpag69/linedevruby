@@ -1,0 +1,248 @@
+<% content_for :title, "รถขนส่งวัสดุก่อสร้าง" %>
+
+<div class="contractors-page">
+  <div class="contractors-header">
+    <h1>🚛 รถขนส่งวัสดุก่อสร้าง</h1>
+    <p>เลือกบริการขนส่งวัสดุก่อสร้างที่เชื่อถือได้</p>
+  </div>
+
+  <% if @contractors.any? %>
+    <div class="contractors-grid">
+      <% @contractors.each do |contractor| %>
+        <article class="contractor-card">
+          <div class="contractor-image">
+            <img src="<%= contractor.image_url.presence || "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=600&h=400&fit=crop" %>" alt="<%= contractor.company_name %>">
+            <% if contractor.verified? %>
+              <span class="verified-badge">✓verified</span>
+            <% end %>
+          </div>
+          <div class="contractor-body">
+            <h3 class="contractor-name"><%= contractor.company_name %></h3>
+            
+            <% if contractor.description.present? %>
+              <p class="contractor-desc"><%= contractor.description.truncate(100) %></p>
+            <% end %>
+
+            <div class="contractor-stats">
+              <div class="stat-item">
+                <span class="stat-icon">⭐</span>
+                <span class="stat-value"><%= contractor.rating.to_f > 0 ? contractor.rating : "-" %></span>
+                <span class="stat-label">คะแนน</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-icon">📋</span>
+                <span class="stat-value"><%= contractor.jobs_completed %></span>
+                <span class="stat-label">งานเสร็จ</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-icon">🏷️</span>
+                <span class="stat-value">
+                  <% if contractor.service_id %>
+                    <%= contractor.service.name(I18n.locale) %>
+                  <% else %>
+                    -
+                  <% end %>
+                </span>
+                <span class="stat-label">ประเภท</span>
+              </div>
+            </div>
+
+            <div class="contractor-actions">
+              <% if contractor.phone.present? %>
+                <a href="tel:<%= contractor.phone %>" class="action-btn phone">📞 ติดต่อ</a>
+              <% end %>
+              <% if contractor.line_id.present? %>
+                <a href="https://line.me/ti/p/~<%= contractor.line_id %>" target="_blank" class="action-btn line">💬 LINE</a>
+              <% end %>
+              <a href="<%= chat_service_path(contractor.service_id || 'calculator') %>" class="action-btn chat">💬 สอบถาม</a>
+            </div>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-state">
+      <div class="empty-icon">🚛</div>
+      <h3>ยังไม่มีผู้ให้บริการขนส่ง</h3>
+      <p>กำลังอัปเดตรายชื่อผู้ให้บริการขนส่ง กรุณากลับมาใหม่ภายหลัง</p>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .contractors-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem 3rem;
+    font-family: "Inter", "Sarabun", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .contractors-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .contractors-header h1 {
+    font-size: 2.5rem;
+    margin: 0 0 0.5rem;
+    color: #1f2937;
+  }
+
+  .contractors-header p {
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin: 0;
+  }
+
+  .contractors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .contractor-card {
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .contractor-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+
+  .contractor-image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .contractor-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .verified-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .contractor-body {
+    padding: 1.25rem;
+  }
+
+  .contractor-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+    color: #1f2937;
+  }
+
+  .contractor-desc {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin: 0 0 1rem;
+    line-height: 1.5;
+  }
+
+  .contractor-stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: #f9fafb;
+    border-radius: 0.75rem;
+  }
+
+  .stat-item {
+    flex: 1;
+    text-align: center;
+  }
+
+  .stat-icon {
+    display: block;
+    font-size: 1.25rem;
+    margin-bottom: 2px;
+  }
+
+  .stat-value {
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1f2937;
+  }
+
+  .stat-label {
+    display: block;
+    font-size: 0.7rem;
+    color: #9ca3af;
+  }
+
+  .contractor-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .action-btn {
+    flex: 1;
+    padding: 0.65rem 0.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .action-btn:hover {
+    opacity: 0.9;
+  }
+
+  .action-btn.phone {
+    background: #10b981;
+    color: #fff;
+  }
+
+  .action-btn.line {
+    background: #06c755;
+    color: #fff;
+  }
+
+  .action-btn.chat {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    color: #fff;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state h3 {
+    font-size: 1.5rem;
+    color: #374151;
+    margin: 0 0 0.5rem;
+  }
+
+  .empty-state p {
+    color: #6b7280;
+    margin: 0;
+  }
+</style>

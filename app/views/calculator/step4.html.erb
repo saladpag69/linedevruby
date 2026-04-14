@@ -1,0 +1,371 @@
+<% content_for :title, "สรุปราคา" %>
+
+<div class="calculator-header">
+  <a href="<%= calculator_step3_path(service_type_slug: @service_type.slug, 
+                                    width: @inputs[:width],
+                                    length: @inputs[:length],
+                                    thickness: @inputs[:thickness],
+                                    height: @inputs[:height]) %>" class="back-btn">
+    ← กลับ
+  </a>
+  <div class="step-indicator">
+    <span class="step completed">✓</span>
+    <span class="step-line active"></span>
+    <span class="step completed">✓</span>
+    <span class="step-line active"></span>
+    <span class="step completed">✓</span>
+    <span class="step-line active"></span>
+    <span class="step active">4</span>
+  </div>
+  <h2 class="step-title">สรุปราคา</h2>
+</div>
+
+<div class="summary-page">
+  <div class="quote-card">
+    <div class="quote-header">
+      <span class="quote-icon"><%= @service_type.icon %></span>
+      <div class="quote-info">
+        <span class="quote-service"><%= @service_type.name %></span>
+        <span class="quote-date">วันที่ <%= @quote.formatted_date %></span>
+      </div>
+      <span class="quote-id">#<%= @quote.id %></span>
+    </div>
+
+    <div class="quote-details">
+      <div class="detail-row">
+        <span class="detail-label">ขนาดพื้นที่</span>
+        <span class="detail-value"><%= @quote.area %> ตร.ม.</span>
+      </div>
+      <% if @quote.volume > 0 %>
+        <div class="detail-row">
+          <span class="detail-label">ปริมาตร</span>
+          <span class="detail-value"><%= @quote.volume %> ลบ.ม.</span>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="quote-section">
+      <h4 class="section-label">📦 รายการวัสดุ</h4>
+      <div class="items-list">
+        <% @quote.quote_materials.each do |mat| %>
+          <div class="item-row">
+            <span class="item-name"><%= mat.product_name %></span>
+            <span class="item-qty"><%= mat.quantity %> <%= mat.unit %></span>
+            <span class="item-price">฿<%= mat.subtotal.to_i %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="quote-totals">
+      <div class="total-row">
+        <span>ค่าวัสดุ</span>
+        <span>฿<%= @quote.material_total.to_i %></span>
+      </div>
+      <div class="total-row">
+        <span>ค่าแรง<% if @quote.contractor %> (<%= @quote.contractor.name %>)<% end %></span>
+        <span>฿<%= @quote.labor_total.to_i %></span>
+      </div>
+      <% if @quote.delivery_fee > 0 %>
+        <div class="total-row">
+          <span>ค่าจัดส่ง</span>
+          <span>฿<%= @quote.delivery_fee.to_i %></span>
+        </div>
+      <% end %>
+      <div class="total-row tax-row">
+        <span>ภาษี 7%</span>
+        <span>฿<%= @quote.tax.to_i %></span>
+      </div>
+      <div class="total-row grand-total">
+        <span>รวมทั้งสิ้น</span>
+        <span>฿<%= @quote.grand_total.to_i %></span>
+      </div>
+    </div>
+
+    <div class="quote-note">
+      <p><em>* ราคานี้เป็นราคาโดยประมาณ อาจมีการเปลี่ยนแปลงตามสถานการณ์จริง</em></p>
+    </div>
+  </div>
+
+  <div class="action-buttons">
+    <% if user_signed_in? && current_user.line_id.present? %>
+      <button type="button" class="btn-line" data-action="click->calculator-actions#sendLine" data-quote-id="<%= @quote.id %>">
+        <span class="btn-icon">📱</span>
+        รับ PDF ทาง LINE
+      </button>
+    <% elsif user_signed_in? %>
+      <button type="button" class="btn-secondary" onclick="alert('กรุณาลิงก์บัญชี LINE ในหน้าโปรไฟล์เพื่อรับ PDF')">
+        <span class="btn-icon">📱</span>
+        รับ PDF ทาง LINE
+      </button>
+    <% else %>
+      <a href="/users/sign_in" class="btn-secondary">
+        <span class="btn-icon">🔐</span>
+        เข้าสู่ระบบเพื่อรับ PDF
+      </a>
+    <% end %>
+
+    <a href="<%= pdf_calculator_path(@quote, format: :pdf) %>" class="btn-download" target="_blank">
+      <span class="btn-icon">📄</span>
+      ดาวน์โหลด PDF
+    </a>
+
+    <button type="button" class="btn-order">
+      <span class="btn-icon">🛒</span>
+      สั่งซื้อและจองช่าง
+    </button>
+  </div>
+</div>
+
+<div class="success-message" id="lineSuccessMessage" style="display: none;">
+  <span class="success-icon">✅</span>
+  <span>กำลังส่ง PDF ทาง LINE...</span>
+</div>
+
+<style>
+  .summary-page {
+    padding: 16px;
+  }
+
+  .quote-card {
+    background: var(--bg-secondary);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border: 0.5px solid var(--border);
+  }
+
+  .quote-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .quote-icon {
+    font-size: 2rem;
+  }
+
+  .quote-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .quote-service {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .quote-date {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .quote-id {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .quote-details {
+    margin-bottom: 16px;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 0.875rem;
+  }
+
+  .detail-label {
+    color: var(--text-secondary);
+  }
+
+  .quote-section {
+    margin-bottom: 16px;
+  }
+
+  .section-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 0.875rem;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .item-name {
+    flex: 1;
+  }
+
+  .item-qty {
+    color: var(--text-secondary);
+    margin-right: 12px;
+  }
+
+  .item-price {
+    font-weight: 500;
+  }
+
+  .quote-totals {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 12px;
+  }
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 0.875rem;
+  }
+
+  .tax-row {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+  }
+
+  .grand-total {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 2px solid var(--accent);
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+
+  .grand-total span:last-child {
+    color: var(--accent);
+  }
+
+  .quote-note {
+    margin-top: 12px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-align: center;
+  }
+
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn-line,
+  .btn-download,
+  .btn-secondary,
+  .btn-order {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .btn-icon {
+    font-size: 1.25rem;
+  }
+
+  .btn-line {
+    background: #00B900;
+    color: white;
+  }
+
+  .btn-download {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  .btn-secondary {
+    background: var(--bg-secondary);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-order {
+    background: var(--primary);
+    color: var(--bg);
+  }
+
+  .btn-line:hover,
+  .btn-download:hover,
+  .btn-secondary:hover,
+  .btn-order:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .success-message {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--success);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+    z-index: 1000;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sendLineBtn = document.querySelector('[data-action*="sendLine"]');
+    if (sendLineBtn) {
+      sendLineBtn.addEventListener('click', async function() {
+        const quoteId = this.dataset.quoteId;
+        const message = document.getElementById('lineSuccessMessage');
+        
+        try {
+          const response = await fetch(`/calculator/send_line/${quoteId}`, {
+            method: 'POST',
+            headers: {
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+            }
+          });
+          const data = await response.json();
+          
+          if (data.success) {
+            message.style.display = 'flex';
+            setTimeout(() => {
+              message.style.display = 'none';
+            }, 3000);
+          } else {
+            alert(data.error || 'เกิดข้อผิดพลาด');
+          }
+        } catch (error) {
+          alert('เกิดข้อผิดพลาดในการส่ง PDF');
+        }
+      });
+    }
+  });
+</script>

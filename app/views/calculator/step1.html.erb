@@ -1,0 +1,137 @@
+<% content_for :title, "คำนวณราคา" %>
+
+<div class="calculator-header">
+  <!--<div class="step-indicator">
+    <span class="step active">1</span>
+    <span class="step-line"></span>
+    <span class="step">2</span>
+    <span class="step-line"></span>
+    <span class="step">3</span>
+    <span class="step-line"></span>
+    <span class="step">4</span>
+  </div>
+  <h2 class="step-title">เลือกประเภทงาน</h2>-->
+</div>
+
+<% if @service_types.empty? %>
+  <div class="empty-state">
+    <p>ยังไม่มีประเภทบริการ กรุณาติดต่อผู้ดูแลระบบ</p>
+  </div>
+<% else %>
+  <!--<div class="service-types-grid">
+    <% @service_types.each do |type| %>
+      <a href="<%= calculator_step2_path(service_type_slug: type.slug) %>" class="service-type-card" data-service-slug="<%= type.slug %>">
+        <span class="service-icon"><%= type.icon %></span>
+        <span class="service-name"><%= type.name %></span>
+        <span class="service-rate"><%= number_to_currency(type.labor_rate_per_sqm, unit: "") %> บาท/<%= type.labor_unit %></span>
+      </a>
+    <% end %>
+  </div>-->
+<% end %>
+
+
+<style>
+  .calculator-header {
+    text-align: center;
+    padding: 24px 16px 16px;
+  }
+
+  .step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .step {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .step.active {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  .step-line {
+    width: 24px;
+    height: 2px;
+    background: var(--border);
+  }
+
+  .step-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .service-types-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 8px 16px 24px;
+  }
+
+  @media (min-width: 481px) {
+    .service-types-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 769px) {
+    .service-types-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+  }
+
+  .service-type-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 12px;
+    background: var(--bg-secondary);
+    border-radius: 14px;
+    border: 0.5px solid var(--border);
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s;
+  }
+
+  .service-type-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+    border-color: var(--accent);
+  }
+
+  .service-icon {
+    font-size: 2rem;
+  }
+
+  .service-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-align: center;
+  }
+
+  .service-rate {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px 16px;
+    color: var(--text-secondary);
+  }
+</style>

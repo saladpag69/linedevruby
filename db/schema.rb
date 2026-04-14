@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_11_074310) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_14_041922) do
   create_table "cart_items", force: :cascade do |t|
     t.integer "cart_id", null: false
     t.datetime "created_at", null: false
@@ -44,6 +44,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_074310) do
     t.index ["session_key"], name: "index_chat_sessions_on_session_key"
     t.index ["status"], name: "index_chat_sessions_on_status"
     t.index ["user_id"], name: "index_chat_sessions_on_user_id"
+  end
+
+  create_table "contractors", force: :cascade do |t|
+    t.boolean "available", default: true
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.integer "experience_years", default: 0
+    t.string "image_url"
+    t.boolean "is_mock", default: false
+    t.string "line_id"
+    t.string "name", null: false
+    t.string "phone"
+    t.decimal "rate_per_sqm", precision: 10, scale: 2, default: "0.0"
+    t.decimal "rating", precision: 2, scale: 1, default: "0.0"
+    t.json "service_type_slugs", default: []
+    t.datetime "updated_at", null: false
   end
 
   create_table "messages", force: :cascade do |t|
@@ -94,6 +110,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_074310) do
     t.string "company_name"
     t.datetime "created_at", null: false
     t.text "description"
+    t.string "image_url"
     t.integer "jobs_completed", default: 0
     t.string "line_id"
     t.string "phone"
@@ -108,6 +125,68 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_074310) do
     t.index ["status"], name: "index_providers_on_status"
     t.index ["user_id"], name: "index_providers_on_user_id"
     t.index ["verified"], name: "index_providers_on_verified"
+  end
+
+  create_table "quote_materials", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "product_name", null: false
+    t.string "product_slug", null: false
+    t.integer "quantity", default: 0
+    t.integer "quote_id", null: false
+    t.string "shop_id", default: "branch_001"
+    t.decimal "subtotal", precision: 10, scale: 2, default: "0.0"
+    t.string "unit", default: "ชิ้น"
+    t.decimal "unit_price", precision: 10, scale: 2, default: "0.0"
+    t.datetime "updated_at", null: false
+    t.index ["quote_id", "product_slug"], name: "index_quote_materials_on_quote_id_and_product_slug"
+    t.index ["quote_id"], name: "index_quote_materials_on_quote_id"
+  end
+
+  create_table "quotes", force: :cascade do |t|
+    t.decimal "area", precision: 10, scale: 2, default: "0.0"
+    t.integer "contractor_id"
+    t.datetime "created_at", null: false
+    t.decimal "delivery_fee", precision: 10, scale: 2, default: "0.0"
+    t.string "delivery_option", default: "pickup"
+    t.decimal "grand_total", precision: 10, scale: 2, default: "0.0"
+    t.json "inputs", default: {}
+    t.decimal "labor_total", precision: 10, scale: 2, default: "0.0"
+    t.string "line_user_id"
+    t.decimal "material_total", precision: 10, scale: 2, default: "0.0"
+    t.text "note"
+    t.string "pdf_url"
+    t.integer "service_type_id", null: false
+    t.string "session_key"
+    t.json "shop_prices", default: {}
+    t.string "status", default: "draft"
+    t.decimal "tax", precision: 10, scale: 2, default: "0.0"
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.decimal "volume", precision: 10, scale: 2, default: "0.0"
+    t.index ["contractor_id"], name: "index_quotes_on_contractor_id"
+    t.index ["line_user_id"], name: "index_quotes_on_line_user_id"
+    t.index ["service_type_id"], name: "index_quotes_on_service_type_id"
+    t.index ["session_key"], name: "index_quotes_on_session_key"
+    t.index ["status"], name: "index_quotes_on_status"
+    t.index ["user_id"], name: "index_quotes_on_user_id"
+  end
+
+  create_table "service_types", force: :cascade do |t|
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.string "formula", null: false
+    t.string "icon", default: "🔧"
+    t.json "inputs", default: []
+    t.decimal "labor_rate_per_sqm", precision: 10, scale: 2, default: "0.0"
+    t.string "labor_unit", default: "ตร.ม."
+    t.json "materials", default: []
+    t.string "name_en"
+    t.string "name_th", null: false
+    t.string "name_zh"
+    t.string "slug", null: false
+    t.integer "sort_order", default: 0
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_service_types_on_slug", unique: true
   end
 
   create_table "services", force: :cascade do |t|
@@ -170,4 +249,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_074310) do
   add_foreign_key "orderables", "services"
   add_foreign_key "providers", "services"
   add_foreign_key "providers", "users"
+  add_foreign_key "quote_materials", "quotes"
+  add_foreign_key "quotes", "contractors"
+  add_foreign_key "quotes", "service_types"
+  add_foreign_key "quotes", "users"
 end

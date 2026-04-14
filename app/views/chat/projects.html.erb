@@ -1,0 +1,258 @@
+<% content_for :title, "ผลงานของเรา" %>
+
+<div class="projects-page">
+  <div class="projects-header">
+    <h1>ผลงานของเรา</h1>
+    <p>รวมผลงานจากช่างและผู้ให้บริการคุณภาพ</p>
+  </div>
+
+  <% @categories.each do |category| %>
+    <section class="category-section">
+      <div class="category-header">
+        <span class="category-icon"><%= category[:icon] %></span>
+        <h2><%= category[:title] %></h2>
+      </div>
+
+      <div class="projects-grid">
+        <% category[:projects].each do |project| %>
+          <article class="project-card">
+            <div class="project-images">
+              <div class="image-grid">
+                <% project[:images].each_with_index do |img, idx| %>
+                  <img src="<%= img %>" alt="<%= project[:name] %>" class="<%= idx == 0 ? 'main-img' : 'sub-img' %>">
+                <% end %>
+              </div>
+            </div>
+            <div class="project-body">
+              <h3><%= project[:name] %></h3>
+              
+              <div class="project-meta">
+                <div class="meta-item">
+                  <span class="meta-label">มูลค่า</span>
+                  <span class="meta-value"><%= project[:value] %> ฿</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">ระยะเวลา</span>
+                  <span class="meta-value"><%= project[:duration] %></span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">ประกัน</span>
+                  <span class="meta-value"><%= project[:warranty] %></span>
+                </div>
+              </div>
+
+              <div class="project-provider">
+                <span class="provider-icon">👷</span>
+                <span><%= project[:provider] %></span>
+              </div>
+
+              <div class="project-actions">
+                <button class="action-btn secondary">ดูรายละเอียด</button>
+                <button class="action-btn primary">ขอใบเสนอราคา</button>
+              </div>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+</div>
+
+<style>
+  .projects-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+    font-family: "Inter", "Sarabun", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #fff;
+  }
+
+  .projects-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+  }
+
+  .projects-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+    color: #111827;
+  }
+
+  .projects-header p {
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin: 0;
+  }
+
+  .category-section {
+    margin-bottom: 3rem;
+  }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .category-icon {
+    font-size: 1.5rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f3f4f6;
+    border-radius: 0.75rem;
+  }
+
+  .category-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+
+  .project-card:hover {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .project-images {
+    padding: 0.75rem;
+    background: #f9fafb;
+  }
+
+  .image-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 120px 80px;
+    gap: 0.5rem;
+  }
+
+  .image-grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.5rem;
+  }
+
+  .main-img {
+    grid-row: 1 / 3;
+  }
+
+  .project-body {
+    padding: 1.25rem;
+  }
+
+  .project-body h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 1rem;
+    line-height: 1.4;
+  }
+
+  .project-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+  }
+
+  .meta-item {
+    flex: 1;
+    text-align: center;
+  }
+
+  .meta-label {
+    display: block;
+    font-size: 0.7rem;
+    color: #9ca3af;
+    margin-bottom: 2px;
+  }
+
+  .meta-value {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  .project-provider {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+  }
+
+  .project-provider .provider-icon {
+    font-size: 1rem;
+  }
+
+  .project-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .action-btn {
+    flex: 1;
+    padding: 0.6rem 0.75rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .action-btn:hover {
+    opacity: 0.9;
+  }
+
+  .action-btn.primary {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    color: #fff;
+  }
+
+  .action-btn.secondary {
+    background: #f3f4f6;
+    color: #374151;
+  }
+
+  @media (max-width: 768px) {
+    .projects-header h1 {
+      font-size: 2rem;
+    }
+
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .image-grid {
+      grid-template-rows: 140px 70px;
+    }
+  }
+</style>

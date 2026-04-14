@@ -8,7 +8,7 @@ en:
   register: "Register"
   search: "Search"
   back: "Back"
-  
+
   # Auth
   email: "Email"
   password: "Password"
@@ -16,7 +16,7 @@ en:
   forgot_password: "Forgot Password?"
   sign_in: "Sign In"
   sign_up: "Sign Up"
-  
+
   # Services
   calculator: "Material Calculator"
   price: "Material Prices"
@@ -25,7 +25,7 @@ en:
   rental: "Equipment Rental"
   projects: "Portfolio"
   documents: "Documents"
-  
+
   # Common
   view_all: "View All"
   contact: "Contact"
@@ -35,16 +35,16 @@ en:
   verified: "Verified"
   providers_count: "%{count} providers"
   no_providers: "No providers yet"
-  
+
   # Chat
   type_message: "Type a message..."
   send: "Send"
   suggested: "Suggested"
-  
+
   # Errors
   error: "Error"
   success: "Success"
-  
+
   # Theme
   theme_light: "Light"
   theme_dark: "Dark"
@@ -53,17 +53,17 @@ en:
   # Landing Page
   landing:
     title: "SiamCosmo - Handyman Service Hub"
-    
+
     hero:
       badge: "🚀 #1 Online Handyman Service"
-      headline: "Quality <span>Handyman</span> Just a Chat Away"
+      headline: "Quality Handyman Just a Chat Away"
       subheadline: "Connect with professional service providers in your community, with complete project management system"
       cta_primary: "Start Chatting"
       cta_secondary: "See How It Works"
       stat1: "Users"
       stat2: "Providers"
       stat3: "Avg Rating"
-    
+
     features:
       tag: "✨ Key Features"
       title: "Why SiamCosmo?"
@@ -86,7 +86,7 @@ en:
       f6:
         title: "Mobile First"
         desc: "Designed specifically for mobile devices"
-    
+
     how_it_works:
       tag: "📋 Simple Steps"
       title: "Get Started in 3 Easy Steps"
@@ -100,14 +100,14 @@ en:
       s3:
         title: "Wait for Response"
         desc: "Providers will contact you with quotes and appointments"
-    
+
     services:
       tag: "🛠️ Services"
       title: "Our Services"
       desc: "Covering all your handyman needs"
       providers: "providers"
       view_all: "View All Services"
-    
+
     testimonials:
       tag: "💬 Reviews"
       title: "What Our Customers Say"
@@ -124,13 +124,13 @@ en:
         text: "Recommended quality electrician, work completed fast, cleaned up well"
         name: "Ms. Pim"
         role: "Office Worker"
-    
+
     cta:
       title: "Ready to Get Started?"
       desc: "Start chatting with service providers immediately, no fees"
       button: "Start Free Chat"
       note: "✓ Free  ✓ Fast response within 5 mins"
-    
+
     footer:
       desc: "Platform connecting handyman service providers with quality work seekers"
       quick_links: "Quick Links"

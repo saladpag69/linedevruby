@@ -1,12 +1,189 @@
 /*
- * This is a manifest file that'll be compiled into application.css.
- *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
- *
- * Consider organizing styles into separate files for maintainability.
+ * SiamCosmo - Main Stylesheet
+ * All styles combined (Propshaft doesn't support @import)
  */
 
-@import "siamcosmo.css";
+/* ===========================
+   BASE - CSS Variables
+   =========================== */
+:root {
+  --primary: #1A1814;
+  --accent: #C8A84B;
+  --bg: #FFFFFF;
+  --bg-secondary: #F5F5F4;
+  --text: #1A1814;
+  --text-secondary: #6B6B6B;
+  --border: #E5E5E3;
+  --success: #22C55E;
+  --error: #EF4444;
+  --warning: #F59E0B;
+  --info: #3B82F6;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --font-family: 'IBM Plex Sans Thai', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+}
+
+[data-theme="dark"] {
+  --bg: #1A1814;
+  --bg-secondary: #2D2A26;
+  --text: #F5F5F4;
+  --text-secondary: #A1A1A1;
+  --border: #3D3A36;
+}
+
+[data-theme="system"] { color-scheme: light dark; }
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"] {
+    --bg: #1A1814;
+    --bg-secondary: #2D2A26;
+    --text: #F5F5F4;
+    --text-secondary: #A1A1A1;
+    --border: #3D3A36;
+  }
+}
+
+/* ===========================
+   BASE - Reset
+   =========================== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body { font-family: var(--font-family); background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+input, textarea, select { font-family: inherit; font-size: inherit; }
+img { max-width: 100%; height: auto; }
+ul, ol { list-style: none; }
+
+/* ===========================
+   COMPONENTS - Buttons
+   =========================== */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); font-size: var(--font-size-sm); font-weight: 600; border-radius: var(--radius); transition: all 0.2s ease; cursor: pointer; }
+.btn-primary { background: var(--accent); color: var(--primary); }
+.btn-primary:hover { filter: brightness(0.9); }
+.btn-secondary { background: var(--bg-secondary); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--border); }
+.btn-success { background: var(--success); color: white; }
+.btn-danger { background: var(--error); color: white; }
+.btn-lg { padding: var(--space-md) var(--space-lg); font-size: var(--font-size-base); }
+.btn-sm { padding: var(--space-xs) var(--space-sm); font-size: var(--font-size-xs); }
+.btn-block { width: 100%; }
+.icon-btn { width: 36px; height: 36px; padding: 0; background: var(--bg-secondary); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+.icon-btn:hover { background: var(--border); }
+
+/* ===========================
+   COMPONENTS - Layout
+   =========================== */
+.app-container { max-width: 480px; margin: 0 auto; min-height: 100vh; background: var(--bg); box-shadow: var(--shadow); }
+@media (min-width: 481px) and (max-width: 768px) { .app-container { max-width: 100%; } }
+@media (min-width: 769px) { .app-container { max-width: 1200px; margin: 24px auto; min-height: calc(100vh - 48px); border-radius: var(--radius-lg); border: 1px solid var(--border); } }
+@media (min-width: 1200px) { .app-container { max-width: 1400px; } }
+
+.main { padding: var(--space-md); padding-bottom: 80px; }
+@media (min-width: 769px) { .main { max-width: 960px; margin: 0 auto; padding-bottom: var(--space-lg); } }
+
+.header { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); padding: var(--space-sm) var(--space-md); display: flex; align-items: center; justify-content: space-between; }
+.header-left { display: flex; align-items: center; gap: var(--space-sm); }
+.header-right { display: flex; align-items: center; gap: var(--space-sm); }
+.logo { font-size: var(--font-size-xl); font-weight: 700; color: var(--primary); }
+.logo span { color: var(--accent); }
+
+.lang-toggle { display: flex; background: var(--bg-secondary); border-radius: var(--radius-sm); padding: 2px; }
+.lang-btn { padding: 4px 8px; border: none; background: transparent; font-size: var(--font-size-xs); font-weight: 600; cursor: pointer; border-radius: 6px; color: var(--text-secondary); transition: all 0.2s; }
+.lang-btn.active { background: var(--bg); color: var(--accent); box-shadow: var(--shadow-sm); }
+
+.back-btn { display: inline-flex; align-items: center; gap: var(--space-xs); color: var(--text-secondary); text-decoration: none; font-size: var(--font-size-sm); padding: var(--space-sm) 0; cursor: pointer; }
+.back-btn:hover { color: var(--text); }
+
+.footer-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 480px; margin: 0 auto; background: var(--bg); border-top: 1px solid var(--border); display: flex; padding: var(--space-sm) var(--space-md); padding-bottom: env(safe-area-inset-bottom, 8px); z-index: 100; }
+@media (min-width: 769px) { .footer-nav { display: none; } }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: var(--space-sm); text-decoration: none; color: var(--text-secondary); font-size: var(--font-size-xs); transition: color 0.2s; }
+.nav-item.active { color: var(--accent); }
+.nav-item:hover { color: var(--text); }
+.nav-icon { font-size: 1.25rem; }
+
+/* ===========================
+   COMPONENTS - Forms
+   =========================== */
+.form-group { margin-bottom: var(--space-md); }
+.form-label { display: block; font-size: var(--font-size-sm); font-weight: 500; color: var(--text); margin-bottom: var(--space-xs); }
+.form-input { width: 100%; padding: var(--space-sm) var(--space-md); font-size: var(--font-size-base); background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); transition: border-color 0.2s, box-shadow 0.2s; }
+.form-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(200, 168, 75, 0.1); }
+.form-input::placeholder { color: var(--text-secondary); }
+
+/* ===========================
+   PAGES - Home
+   =========================== */
+.welcome { text-align: center; padding: var(--space-lg) var(--space-md) var(--space-md); }
+
+.logo-text { font-size: var(--font-size-3xl); font-weight: 700; letter-spacing: -0.02em; display: flex; justify-content: center; gap: 0.1em; }
+.logo-siam { color: var(--text); font-weight: 500; }
+.logo-cosmo { background: linear-gradient(135deg, var(--accent) 0%, #E5C76B 50%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; position: relative; }
+.logo-cosmo::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--accent), transparent); border-radius: 2px; }
+.welcome p { color: var(--text-secondary); margin-top: var(--space-sm); }
+
+.calculator-cta { padding: 0 var(--space-md) var(--space-lg); }
+.calculator-btn { display: flex; align-items: center; gap: var(--space-md); padding: 20px; background: #0F6E56; border-radius: var(--radius-lg); text-decoration: none; color: #fff; transition: all 0.2s ease; }
+.calculator-btn:hover { background: #0D5A48; transform: scale(1.02); }
+.calc-icon { font-size: 1.75rem; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.15); border-radius: var(--radius-sm); }
+.calc-text { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.calc-title { font-weight: 600; font-size: var(--font-size-lg); }
+.calc-subtitle { font-size: var(--font-size-sm); opacity: 0.85; }
+.calc-arrow { font-size: 1.25rem; opacity: 0.7; }
+
+.services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: var(--space-md); }
+@media (min-width: 481px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 769px) { .services-grid { grid-template-columns: repeat(4, 1fr); gap: var(--space-md); padding: var(--space-lg); } }
+@media (min-width: 1200px) { .services-grid { grid-template-columns: repeat(5, 1fr); } }
+
+.service-card { display: flex; flex-direction: column; gap: var(--space-xs); padding: var(--space-md); background: var(--bg-secondary); border-radius: var(--radius); text-decoration: none; color: var(--text); transition: transform 0.2s, box-shadow 0.2s; }
+.service-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.service-icon { font-size: 1.5rem; }
+.service-name { font-weight: 600; font-size: var(--font-size-sm); }
+.service-providers { font-size: var(--font-size-xs); color: var(--text-secondary); }
+
+/* ===========================
+   SERVICES SLIDER
+   =========================== */
+.services-slider-container { position: relative; padding: 0 var(--space-md); margin-bottom: var(--space-lg); }
+.services-slider { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; padding: 4px 0; }
+.services-slider::-webkit-scrollbar { display: none; }
+.services-slider { -ms-overflow-style: none; scrollbar-width: none; }
+
+.service-slide { flex: 0 0 calc(100% - 24px); min-width: 280px; scroll-snap-align: start; display: flex; align-items: center; gap: var(--space-md); padding: var(--space-md); background: var(--bg-secondary); border-radius: var(--radius); text-decoration: none; color: var(--text); transition: transform 0.2s, box-shadow 0.2s; }
+@media (min-width: 481px) { .service-slide { flex: 0 0 calc(50% - 8px); } }
+@media (min-width: 769px) { .service-slide { flex: 0 0 calc(33.333% - 8px); } }
+@media (min-width: 1200px) { .service-slide { flex: 0 0 calc(25% - 9px); } }
+
+.service-slide:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.service-slide .service-icon { font-size: 1.75rem; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: var(--accent); border-radius: var(--radius-sm); }
+.service-slide .service-info { flex: 1; }
+.service-slide .service-name { font-weight: 600; font-size: var(--font-size-sm); margin-bottom: 2px; }
+.service-slide .service-providers { font-size: var(--font-size-xs); color: var(--text-secondary); }
+.service-slide .service-arrow { font-size: 1.25rem; color: var(--text-secondary); }
+
+.slider-nav { display: flex; justify-content: space-between; position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); pointer-events: none; padding: 0 4px; }
+.slider-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-size: 14px; cursor: pointer; pointer-events: auto; display: flex; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: var(--shadow-sm); }
+.slider-btn:hover { background: var(--bg-secondary); }
+.slider-btn.prev { margin-right: auto; }
+.slider-btn.next { margin-left: auto; }
+
+.slider-dots { display: flex; justify-content: center; gap: 6px; padding: var(--space-sm) 0; }
+.slider-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); cursor: pointer; transition: background 0.2s; }
+.slider-dot.active { background: var(--accent); }

@@ -5,6 +5,8 @@ require "json"
 require "securerandom"
 
 class ApplicationController < ActionController::Base
+  layout "siamcosmo"
+
   # Devise helpers
   before_action :configure_permitted_parameters, if: :devise_controller?
 
@@ -37,6 +39,20 @@ class ApplicationController < ActionController::Base
   end
   def login
   end
+
+  def products
+    @query = params[:q].to_s.strip
+    trigger_supply_push if params[:supply_push].present?
+    trigger_test_push if params[:test_push].present?
+    @products = ActiveProduct.search(@query)
+    @chat_messages = read_chat_messages
+  rescue => e
+    Rails.logger.error("Active product API failed: #{e.message}")
+    @products = []
+    @error = e.message
+    @query = ""
+  end
+
   def about
     @query = params[:q].to_s.strip
     trigger_supply_push if params[:supply_push].present?

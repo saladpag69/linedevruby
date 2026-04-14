@@ -1,6 +1,78 @@
 <% content_for :title, t("landing.title") %>
 
 <!-- ═══════════════════════════════════════════════════════════════════════════
+     SECTION 4: SERVICES SHOWCASE - แสดงบริการที่มี
+     - Card-based design พร้อม icon
+     - Hover effects สำหรับ engagement
+     - Provider count แสดงความ popular
+═══════════════════════════════════════════════════════════════════════════ -->
+<section class="services-showcase" id="services">
+  <div class="hero-services-wrapper">
+    <div class="hero-services-cta">
+      <div class="cta-icon">🛠️</div>
+      <h3 class="cta-title">เลือกบริการที่คุณต้องการ</h3>
+      <p class="cta-desc">แตะที่ไอคอนด้านล่างเพื่อเริ่มต้น</p>
+    </div>
+
+    <div class="services-slider-container hero-slider">
+      <div class="services-slider" id="servicesSlider">
+        <% @services.each_with_index do |service, index| %>
+          <a href="<%= index == 0 ? '/chat/provider' : "/chat/#{service.key}" %>" class="service-slide featured-slide">
+            <div class="slide-glow"></div>
+            <div class="service-icon"><%= service.icon %></div>
+            <div class="service-info">
+              <h3 class="service-name"><%= service.name(I18n.locale) %></h3>
+              <span class="service-providers">
+                <%= index==0?'10':service.providers_count %> <%= t("landing.services.providers") %>
+              </span>
+            </div>
+            <div class="slide-action">
+              <span>เริ่มเลย</span>
+              <span class="action-arrow">→</span>
+            </div>
+          </a>
+        <% end %>
+      </div>
+
+      <div class="slider-nav featured-nav">
+        <button class="slider-btn prev" onclick="slideServices(-1)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="slider-btn next" onclick="slideServices(1)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-services-footer">
+      <div class="trust-badges">
+        <div class="badge-item">
+          <span class="badge-icon">✓</span>
+          <span>ช่างมืออาชีพ</span>
+        </div>
+        <div class="badge-item">
+          <span class="badge-icon">🛡️</span>
+          <span>รับประกันงาน</span>
+        </div>
+        <div class="badge-item">
+          <span class="badge-icon">⚡</span>
+          <span>ตอบเร็ว</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  function slideServices(direction) {
+    const slider = document.getElementById('servicesSlider');
+    const slides = slider.querySelectorAll('.service-slide');
+    if (slides.length === 0) return;
+    const slideWidth = slides[0].offsetWidth + 16;
+    slider.scrollBy({ left: direction * slideWidth * 3, behavior: 'smooth' });
+  }
+  </script>
+</section>
+<!-- ═══════════════════════════════════════════════════════════════════════════
      SECTION 1: HERO - ดึงดูดความสนใจ สร้าง First Impression ที่ดี
      - Headline: ข้อความหลักที่สื่อสาร Value Proposition
      - Subheadline: อธิบายเพิ่มเติม
@@ -12,25 +84,25 @@
     <span class="badge-icon">🚀</span>
     <span class="badge-text"><%= t("landing.hero.badge") %></span>
   </div>
-  
+
   <h1 class="hero-headline">
     <%= t("landing.hero.headline") %>
   </h1>
-  
+
   <p class="hero-subheadline">
     <%= t("landing.hero.subheadline") %>
   </p>
-  
+
   <div class="hero-actions">
-    <a href="/chat" class="btn btn-primary">
+    <a href="https://lin.ee/PTfm8E1" class="btn btn-primary">
       <span>💬</span>
       <%= t("landing.hero.cta_primary") %>
     </a>
-    <a href="#features" class="btn btn-secondary">
+    <a href="#how-it-works" class="btn btn-secondary">
       <%= t("landing.hero.cta_secondary") %>
     </a>
   </div>
-  
+
   <div class="hero-stats">
     <div class="stat">
       <span class="stat-value">10K+</span>
@@ -61,38 +133,38 @@
     <h2 class="section-title"><%= t("landing.features.title") %></h2>
     <p class="section-desc"><%= t("landing.features.desc") %></p>
   </div>
-  
+
   <div class="features-grid">
     <div class="feature-card">
       <div class="feature-icon">⚡</div>
       <h3 class="feature-title"><%= t("landing.features.f1.title") %></h3>
       <p class="feature-desc"><%= t("landing.features.f1.desc") %></p>
     </div>
-    
+
     <div class="feature-card">
       <div class="feature-icon">🔒</div>
       <h3 class="feature-title"><%= t("landing.features.f2.title") %></h3>
       <p class="feature-desc"><%= t("landing.features.f2.desc") %></p>
     </div>
-    
+
     <div class="feature-card">
       <div class="feature-icon">💰</div>
       <h3 class="feature-title"><%= t("landing.features.f3.title") %></h3>
       <p class="feature-desc"><%= t("landing.features.f3.desc") %></p>
     </div>
-    
+
     <div class="feature-card">
       <div class="feature-icon">🎯</div>
       <h3 class="feature-title"><%= t("landing.features.f4.title") %></h3>
       <p class="feature-desc"><%= t("landing.features.f4.desc") %></p>
     </div>
-    
+
     <div class="feature-card">
       <div class="feature-icon">💬</div>
       <h3 class="feature-title"><%= t("landing.features.f5.title") %></h3>
       <p class="feature-desc"><%= t("landing.features.f5.desc") %></p>
     </div>
-    
+
     <div class="feature-card">
       <div class="feature-icon">📱</div>
       <h3 class="feature-title"><%= t("landing.features.f6.title") %></h3>
@@ -113,7 +185,7 @@
     <h2 class="section-title"><%= t("landing.how_it_works.title") %></h2>
     <p class="section-desc"><%= t("landing.how_it_works.desc") %></p>
   </div>
-  
+
   <div class="steps">
     <div class="step">
       <div class="step-number">1</div>
@@ -122,9 +194,9 @@
         <p class="step-desc"><%= t("landing.how_it_works.s1.desc") %></p>
       </div>
     </div>
-    
+
     <div class="step-connector"></div>
-    
+
     <div class="step">
       <div class="step-number">2</div>
       <div class="step-content">
@@ -132,9 +204,9 @@
         <p class="step-desc"><%= t("landing.how_it_works.s2.desc") %></p>
       </div>
     </div>
-    
+
     <div class="step-connector"></div>
-    
+
     <div class="step">
       <div class="step-number">3</div>
       <div class="step-content">
@@ -145,42 +217,6 @@
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     SECTION 4: SERVICES SHOWCASE - แสดงบริการที่มี
-     - Card-based design พร้อม icon
-     - Hover effects สำหรับ engagement
-     - Provider count แสดงความ popular
-═══════════════════════════════════════════════════════════════════════════ -->
-<section class="services-showcase" id="services">
-  <div class="section-header">
-    <span class="section-tag"><%= t("landing.services.tag") %></span>
-    <h2 class="section-title"><%= t("landing.services.title") %></h2>
-    <p class="section-desc"><%= t("landing.services.desc") %></p>
-  </div>
-  
-  <div class="services-grid">
-    <% @services.first(6).each do |service| %>
-      <a href="/chat/<%= service.key %>" class="service-card">
-        <div class="service-icon"><%= service.icon %></div>
-        <div class="service-info">
-          <h3 class="service-name"><%= service.name(I18n.locale) %></h3>
-          <span class="service-providers">
-            <span class="providers-icon">👥</span>
-            <%= service.providers_count %> <%= t("landing.services.providers") %>
-          </span>
-        </div>
-        <div class="service-arrow">→</div>
-      </a>
-    <% end %>
-  </div>
-  
-  <div class="services-more">
-    <a href="/services" class="btn btn-outline">
-      <%= t("landing.services.view_all") %>
-      <span>→</span>
-    </a>
-  </div>
-</section>
 
 <!-- ═══════════════════════════════════════════════════════════════════════════
      SECTION 5: TESTIMONIALS - Social Proof
@@ -194,7 +230,7 @@
     <h2 class="section-title"><%= t("landing.testimonials.title") %></h2>
     <p class="section-desc"><%= t("landing.testimonials.desc") %></p>
   </div>
-  
+
   <div class="testimonials-scroll">
     <div class="testimonial-card">
       <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
@@ -207,7 +243,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="testimonial-card">
       <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
       <p class="testimonial-text"><%= t("landing.testimonials.t2.text") %></p>
@@ -219,7 +255,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="testimonial-card">
       <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
       <p class="testimonial-text"><%= t("landing.testimonials.t3.text") %></p>
@@ -240,7 +276,7 @@
      - urgency/scarcity element
      - Clear benefit statement
 ═══════════════════════════════════════════════════════════════════════════ -->
-<section class="cta-section">
+<!--<section class="cta-section">
   <div class="cta-content">
     <h2 class="cta-title"><%= t("landing.cta.title") %></h2>
     <p class="cta-desc"><%= t("landing.cta.desc") %></p>
@@ -250,7 +286,7 @@
     </a>
     <span class="cta-note"><%= t("landing.cta.note") %></span>
   </div>
-</section>
+</section>-->
 
 <!-- ═══════════════════════════════════════════════════════════════════════════
      SECTION 7: FOOTER - ข้อมูลติดต่อและ links
@@ -260,21 +296,21 @@
      - Social Media
      - Copyright
 ═══════════════════════════════════════════════════════════════════════════ -->
-<footer class="footer">
+<!--<footer class="footer">
   <div class="footer-content">
     <div class="footer-brand">
       <a href="/" class="footer-logo">Siam<span>Cosmo</span></a>
       <p class="footer-desc"><%= t("landing.footer.desc") %></p>
     </div>
-    
+
     <div class="footer-links">
       <h4 class="footer-title"><%= t("landing.footer.quick_links") %></h4>
       <a href="/" class="footer-link"><%= t("landing.footer.home") %></a>
-      <a href="/services" class="footer-link"><%= t("landing.footer.services") %></a>
-      <a href="/chat" class="footer-link"><%= t("landing.footer.chat") %></a>
-      <a href="/about" class="footer-link"><%= t("landing.footer.about") %></a>
+      <a href="#" class="footer-link"><%= t("landing.footer.services") %></a>
+      <a href="#" class="footer-link"><%= t("landing.footer.chat") %></a>
+      <a href="#" class="footer-link"><%= t("landing.footer.about") %></a>
     </div>
-    
+
     <div class="footer-contact">
       <h4 class="footer-title"><%= t("landing.footer.contact") %></h4>
       <div class="contact-item">
@@ -283,14 +319,14 @@
       </div>
       <div class="contact-item">
         <span>📞</span>
-        <span>02-xxx-xxxx</span>
+        <span>02-884-2453</span>
       </div>
       <div class="contact-item">
         <span>📍</span>
         <span><%= t("landing.footer.location") %></span>
       </div>
     </div>
-    
+
     <div class="footer-social">
       <h4 class="footer-title"><%= t("landing.footer.follow_us") %></h4>
       <div class="social-links">
@@ -301,11 +337,11 @@
       </div>
     </div>
   </div>
-  
+
   <div class="footer-bottom">
     <p>© 2026 SiamCosmo. <%= t("landing.footer.rights") %></p>
   </div>
-</footer>
+</footer>-->
 
 <style>
   /* ═══════════════════════════════════════════════════════════════════════════
@@ -905,17 +941,17 @@
   ════════════════════════════════════════════════════════════════════════════ */
   @media (min-width: 481px) {
     .hero-headline { font-size: 2.5rem; }
-    
+
     .hero-actions { flex-direction: row; justify-content: center; }
-    
+
     .hero-stats { max-width: 400px; margin: 0 auto; }
-    
+
     .features-grid { grid-template-columns: repeat(2, 1fr); }
-    
+
     .services-grid { max-width: 500px; margin: 0 auto; }
-    
+
     .testimonial-card { width: 320px; }
-    
+
     .footer-content { grid-template-columns: repeat(2, 1fr); }
   }
 
@@ -926,63 +962,324 @@
     .hero {
       padding: 80px 40px 100px;
     }
-    
+
     .hero-headline { font-size: 3rem; }
-    
+
     .hero-subheadline { max-width: 560px; font-size: 1.125rem; }
-    
+
     .hero-stats { max-width: 500px; }
-    
+
     .section-title { font-size: 2.25rem; }
-    
+
     .features, .how-it-works, .services-showcase, .testimonials {
       padding: 80px 40px;
     }
-    
-    .features-grid { 
-      grid-template-columns: repeat(3, 1fr); 
+
+    .features-grid {
+      grid-template-columns: repeat(3, 1fr);
       max-width: 900px;
       margin: 0 auto;
     }
-    
+
     .steps {
       max-width: 700px;
       display: flex;
       align-items: flex-start;
       gap: 24px;
     }
-    
+
     .step { flex-direction: column; text-align: center; padding: 0; }
     .step-connector { display: none; }
-    
-    .services-grid { 
-      max-width: 700px;
-      grid-template-columns: repeat(2, 1fr);
+
+    .services-grid {
+      max-width: 900px;
     }
-    
-    .services-grid .service-card { padding: 20px; }
-    
-    .testimonials-scroll { justify-content: center; }
-    
-    .cta-section { padding: 100px 40px; }
-    .cta-title { font-size: 2.5rem; }
-    
-    .footer { padding: 64px 40px 32px; }
-    .footer-content { grid-template-columns: 2fr 1fr 1fr 1fr; max-width: 1000px; margin: 0 auto 32px; }
-    .footer-bottom { max-width: 1000px; margin: 0 auto; }
+  }
+
+  /* Services Slider */
+  .services-slider-container { position: relative; padding: 0 8px; }
+  .services-slider { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; padding: 4px 0; }
+  .services-slider::-webkit-scrollbar { display: none; }
+  .services-slider { -ms-overflow-style: none; scrollbar-width: none; }
+
+  .service-slide { flex: 0 0 calc(100% - 16px); min-width: 280px; scroll-snap-align: start; display: flex; align-items: center; gap: 16px; padding: 16px; background: var(--bg-secondary); border-radius: 12px; text-decoration: none; color: var(--text); transition: all 0.2s; border: 1px solid transparent; }
+  @media (min-width: 481px) { .service-slide { flex: 0 0 calc(50% - 8px); } }
+  @media (min-width: 769px) { .service-slide { flex: 0 0 calc(33.333% - 8px); } }
+
+  .service-slide:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-color: var(--accent); }
+  .service-slide .service-icon { font-size: 1.75rem; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: var(--accent); border-radius: 8px; }
+  .service-slide .service-info { flex: 1; }
+  .service-slide .service-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 2px; }
+  .service-slide .service-providers { font-size: 0.75rem; color: var(--text-secondary); }
+  .service-slide .service-arrow { font-size: 1.25rem; color: var(--text-secondary); }
+
+  .slider-nav { display: none; }
+  @media (min-width: 769px) {
+    .slider-nav { display: flex; justify-content: space-between; position: absolute; top: 50%; left: -20px; right: -20px; transform: translateY(-50%); pointer-events: none; }
+    .slider-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-size: 16px; cursor: pointer; pointer-events: auto; display: flex; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .slider-btn:hover { background: var(--accent); color: var(--primary); }
   }
 
   /* ═══════════════════════════════════════════════════════════════════════════
-     LARGE DESKTOP STYLES (1200px+)
-  ════════════════════════════════════════════════════════════════════════════ */
-  @media (min-width: 1200px) {
-    .hero { padding: 100px 60px 120px; }
-    .hero-headline { font-size: 3.5rem; }
-    .hero-subheadline { font-size: 1.25rem; max-width: 640px; }
-    
-    .features-grid { max-width: 1100px; }
-    .services-grid { max-width: 900px; }
-    .footer-content { max-width: 1200px; }
-    .footer-bottom { max-width: 1200px; }
+     HERO SERVICES SECTION - Full Screen Hero
+  ═══════════════════════════════════════════════════════════════════════════ */
+  .services-showcase {
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .services-showcase::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), #0F6E56, var(--accent));
+  }
+
+  .services-showcase::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(to top, var(--bg-secondary), transparent);
+    pointer-events: none;
+  }
+
+  .hero-services-wrapper {
+    padding: 24px 16px 48px;
+    max-width: 1400px;
+    width: 100%;
+    margin: auto 0;
+  }
+
+  .hero-services-cta {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .hero-services-cta .cta-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    display: inline-block;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .hero-services-cta .cta-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .hero-services-cta .cta-desc {
+    font-size: 1rem;
+    color: var(--text-secondary);
+  }
+
+  .hero-slider {
+    margin-bottom: 32px;
+  }
+
+  .services-slider-container {
+    padding: 0 32px;
+  }
+
+  .featured-slide {
+    position: relative;
+    background: var(--bg) !important;
+    border: 2px solid var(--border) !important;
+    overflow: hidden;
+    min-height: 140px;
+  }
+
+  .featured-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(200, 168, 75, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .slide-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(200, 168, 75, 0.15) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .featured-slide:hover .slide-glow {
+    opacity: 1;
+  }
+
+  .featured-slide:hover {
+    border-color: var(--accent) !important;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(200, 168, 75, 0.25);
+  }
+
+  .featured-slide .service-icon {
+    font-size: 2.25rem;
+    width: 64px !important;
+    height: 64px !important;
+    background: linear-gradient(135deg, var(--accent), #E5C76B) !important;
+    color: var(--primary);
+  }
+
+  .featured-slide .service-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .featured-slide .service-name {
+    font-size: 1.1rem !important;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .featured-slide .service-providers {
+    font-size: 0.875rem !important;
+    color: var(--text-secondary);
+  }
+
+  .slide-action {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #0F6E56;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+
+  .featured-slide:hover .slide-action {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .action-arrow {
+    transition: transform 0.2s;
+  }
+
+  .featured-slide:hover .action-arrow {
+    transform: translateX(4px);
+  }
+
+  .featured-nav .slider-btn {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--primary);
+    width: 48px;
+    height: 48px;
+  }
+
+  .featured-nav .slider-btn:hover {
+    background: #0F6E56;
+    border-color: #0F6E56;
+    color: white;
+  }
+
+  .hero-services-footer {
+    text-align: center;
+  }
+
+  .trust-badges {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .badge-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--bg);
+    border-radius: 24px;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+
+  .badge-item .badge-icon {
+    font-size: 1rem;
+  }
+
+  @media (min-width: 769px) {
+    .hero-services-wrapper {
+      padding: 32px 60px 64px;
+    }
+
+    .hero-services-cta {
+      margin-bottom: 40px;
+    }
+
+    .hero-services-cta .cta-title {
+      font-size: 2.5rem;
+    }
+
+    .hero-services-cta .cta-icon {
+      font-size: 4rem;
+    }
+
+    .hero-services-cta .cta-desc {
+      font-size: 1.125rem;
+    }
+
+    .services-slider-container {
+      padding: 0 48px;
+    }
+
+    .featured-slide {
+      min-height: 120px;
+    }
+
+    .featured-slide .service-icon {
+      font-size: 2.5rem;
+    }
+
+    .featured-slide .service-name {
+      font-size: 1.25rem !important;
+    }
+
+    .slide-action {
+      font-size: 0.9rem;
+    }
+
+    .trust-badges {
+      gap: 24px;
+    }
+
+    .badge-item {
+      padding: 12px 24px;
+      font-size: 1rem;
+    }
   }
 </style>
