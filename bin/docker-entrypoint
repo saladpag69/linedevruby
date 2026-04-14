@@ -1,5 +1,8 @@
 #!/bin/bash -e
+set -x
 
+echo "==> Running database migrations..."
 bundle exec rails db:migrate
+echo "==> Database migrations complete."
 
 exec "${@}"
