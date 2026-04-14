@@ -1,5 +1,8 @@
 #!/bin/bash -e
 
-bundle exec rails db:migrate
+if ! bundle exec rails db:prepare; then
+  echo "ERROR: Database preparation failed. Aborting container startup." >&2
+  exit 1
+fi
 
 exec "${@}"
