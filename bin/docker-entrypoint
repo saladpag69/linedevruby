@@ -1,5 +1,16 @@
 #!/bin/bash -e
 
+echo "=== Starting Docker Entrypoint ==="
+echo "RAILS_ENV: $RAILS_ENV"
+echo "Database path: /rails/db/production.sqlite3"
+
+# Ensure directory exists
+mkdir -p /rails/db
+
+# Run db:prepare with verbose output
+echo "Running db:prepare..."
 bundle exec rails db:prepare
+
+echo "=== Database prepared successfully ==="
 
 exec "${@}"
