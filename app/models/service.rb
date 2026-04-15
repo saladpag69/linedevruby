@@ -4,7 +4,9 @@ class Service < ApplicationRecord
 
   validates :key, presence: true, uniqueness: true
 
-  scope :active, -> { where(is_active: true) }
+  def self.active
+    where(is_active: true)
+  end
 
   def name(lang = I18n.locale)
     send("name_#{lang}") || name_th
