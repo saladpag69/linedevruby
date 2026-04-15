@@ -1,4 +1,4 @@
-# SQLite for local development, Postgres for production (Railway)
+# SQLite for local development
 default: &default
   adapter: sqlite3
   max_connections: 5
@@ -14,4 +14,4 @@ test:
 
 production:
   <<: *default
-  database: db/production.sqlite3
+  database: /rails/db/production.sqlite3
