@@ -2,30 +2,16 @@
 
 echo "=== Starting Docker Entrypoint ==="
 echo "RAILS_ENV: $RAILS_ENV"
-echo "Current user: $(id)"
 echo "Current directory: $(pwd)"
 
-# Check if /rails/db exists
-echo "Checking /rails/db..."
-ls -la /rails/ 2>&1 || echo "/rails does not exist"
-
-if [ -d "/rails/db" ]; then
-  echo "Volume mounted at /rails/db"
-  ls -la /rails/db/ 2>&1 || echo "Cannot list /rails/db"
-else
-  echo "Volume NOT mounted at /rails/db, creating..."
-  mkdir -p /rails/db
-  ls -la /rails/db/ 2>&1 || echo "Cannot create /rails/db"
-fi
+# Create db directory if not exists
+mkdir -p db
+echo "db directory ready"
 
 # Change to rails directory
 cd /rails
 
-# Set explicit database path
-export DATABASE_PATH="/rails/db/production.sqlite3"
-echo "Database path: $DATABASE_PATH"
-
-# Run db:prepare with verbose output
+# Run db:prepare
 echo "Running db:prepare..."
 bundle exec rails db:prepare RAILS_ENV=production
 
