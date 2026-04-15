@@ -76,9 +76,6 @@ COPY --chown=rails:rails --from=build /rails /rails
 # Copy master key for credentials decryption (in production, use RAILS_MASTER_KEY env var instead)
 # COPY --chown=rails:rails config/master.key /rails/config/master.key
 
-# Entrypoint prepares the database.
-ENTRYPOINT ["bin/docker-entrypoint"]
-
-# Start server via Thruster by default, this can be overwritten at runtime
+# Entrypoint prepares the database and starts the Rails server.
 EXPOSE 80
-CMD ["bin/rails", "server"]
+CMD ["bin/docker-entrypoint"]
