@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
-bundle exec rails db:migrate
+echo "Running database preparation..."
+bundle exec rails db:prepare
+echo "Database preparation complete. Starting Rails server..."
 
-exec "${@}"
+exec bin/rails server "$@"
