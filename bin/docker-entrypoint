@@ -4,4 +4,4 @@ echo "Running database preparation..."
 bundle exec rails db:prepare
 echo "Database preparation complete. Starting Rails server..."
 
-exec bin/rails server "$@"
+exec bin/rails server
