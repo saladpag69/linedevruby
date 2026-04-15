@@ -7,7 +7,6 @@
   "deploy": {
     "numReplicas": 1,
     "restartPolicyType": "OnFailure",
-    "restartPolicyMaxRetries": 10,
-    "startCommand": "bundle exec rails server -b 0.0.0.0 -p $PORT"
+    "restartPolicyMaxRetries": 10
   }
 }
