@@ -1,5 +1,4 @@
-#!/bin/bash -e
-
+#!/bin/bash
+set -e
 bundle exec rails db:prepare
-
-exec "${@}"
+exec "$@"
