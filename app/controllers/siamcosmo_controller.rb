@@ -3,8 +3,9 @@ class SiamcosmoController < ApplicationController
   layout "siamcosmo"
 
   def index
-    @services = Service.active.order(:id)
+    @services = Service.active.order(:id)  # ตอนนี้จะใช้ PostgreSQL แล้ว
   end
+
 
   alias_method :home, :index
   alias_method :landing, :index
