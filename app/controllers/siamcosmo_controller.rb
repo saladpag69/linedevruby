@@ -3,7 +3,13 @@ class SiamcosmoController < ApplicationController
   layout "siamcosmo"
 
   def index
-    @services = Service.active.order(:id)  # ตอนนี้จะใช้ PostgreSQL แล้ว
+    begin
+      @services = Service.active.order(:id)
+      Rails.logger.info "Services loaded: #{@services.count}"
+    rescue StandardError => e
+      Rails.logger.error "Service error: #{e.message}"
+      @services = []
+    end
   end
 
 
