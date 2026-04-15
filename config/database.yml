@@ -1,4 +1,4 @@
-# SQLite for local development
+# SQLite for local development, PostgreSQL for production
 default: &default
   adapter: sqlite3
   max_connections: 5
@@ -13,5 +13,7 @@ test:
   database: storage/test.sqlite3
 
 production:
-  <<: *default
-  database: /tmp/production.sqlite3
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  url: <%= ENV.fetch("DATABASE_PUBLIC_URL", ENV.fetch("DATABASE_URL", nil)) %>
