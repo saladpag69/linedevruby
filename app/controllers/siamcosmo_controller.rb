@@ -3,12 +3,7 @@ class SiamcosmoController < ApplicationController
   layout "siamcosmo"
 
   def index
-    begin
-      @services = Service.active.order(:id)
-    rescue StandardError => e
-      Rails.logger.error "Failed to load services: #{e.message}"
-      @services = []
-    end
+    @services = Service.active.order(:id)
   end
 
   alias_method :home, :index
