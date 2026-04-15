@@ -7,6 +7,7 @@
   "deploy": {
     "numReplicas": 1,
     "restartPolicyType": "OnFailure",
-    "restartPolicyMaxRetries": 10
+    "restartPolicyMaxRetries": 10,
+    "startCommand": "bash -c 'mkdir -p /rails/db && bundle exec rails db:prepare && bundle exec rails server -b 0.0.0.0 -p $PORT'"
   }
 }
