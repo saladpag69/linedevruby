@@ -1,295 +1,654 @@
-<% content_for :title, "คำนวณปริมาตร" %>
+<% content_for :title, "คำนวณราคา" %>
 
-<div class="calc-quick-container">
-  <div class="calc-header">
-    <h1 class="calc-title">📐 คำนวณปริมาตร</h1>
-    <p class="calc-subtitle">กรอกขนาดเพื่อคำนวณพื้นที่และปริมาตรแบบเรียลไทม์</p>
-  </div>
+<div class="calc-container">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-  <div class="calc-inputs-section">
-    <h2 class="section-title">ขนาด (เมตร)</h2>
-    
-    <div class="input-grid">
-      <div class="input-card">
-        <label class="input-label">กว้าง (m)</label>
-        <input type="number" id="width" class="calc-input" placeholder="0.00" step="0.01" min="0" value="5">
-        <div class="input-icon">↔️</div>
+  <div class="calc-layout">
+    <!-- Input Panel (Left) -->
+    <div class="input-panel">
+      <div class="panel-header">
+        <h1 class="panel-title">คำนวณราคา</h1>
+        <p class="panel-subtitle">เลือกประเภทงานและกรอกข้อมูล</p>
       </div>
-      
-      <div class="input-card">
-        <label class="input-label">ยาว (m)</label>
-        <input type="number" id="length" class="calc-input" placeholder="0.00" step="0.01" min="0" value="6">
-        <div class="input-icon">↔️</div>
+
+      <!-- Tabs -->
+      <div class="service-tabs">
+        <button class="tab-btn active" data-tab="construction">
+          <span class="tab-icon">🏗️</span>
+          <span class="tab-text">งานก่อสร้าง</span>
+        </button>
+        <button class="tab-btn" data-tab="electrical">
+          <span class="tab-icon">⚡</span>
+          <span class="tab-text">ช่างไฟฟ้า</span>
+        </button>
+        <button class="tab-btn" data-tab="plumbing">
+          <span class="tab-icon">🚿</span>
+          <span class="tab-text">ช่างประปา</span>
+        </button>
+        <button class="tab-btn" data-tab="solar">
+          <span class="tab-icon">☀️</span>
+          <span class="tab-text">โซล่า</span>
+        </button>
+        <button class="tab-btn" data-tab="cctv">
+          <span class="tab-icon">📹</span>
+          <span class="tab-text">CCTV</span>
+        </button>
+        <button class="tab-btn" data-tab="autodoor">
+          <span class="tab-icon">🚪</span>
+          <span class="tab-text">ประตูอัตโนมัติ</span>
+        </button>
       </div>
-      
-      <div class="input-card">
-        <label class="input-label">สูง/หนา (m)</label>
-        <input type="number" id="height" class="calc-input" placeholder="0.00" step="0.01" min="0" value="0.15">
-        <div class="input-icon">↕️</div>
+
+      <!-- Preset Buttons -->
+      <div class="preset-section" id="construction-presets">
+        <label class="preset-label">เลือกแบบสำเร็จรูป</label>
+        <div class="preset-buttons">
+          <button class="preset-btn active" data-preset="floor">เทพื้น</button>
+          <button class="preset-btn" data-preset="plaster">ฉาบผนัง</button>
+          <button class="preset-btn" data-preset="tile">ปูกระเบื้อง</button>
+          <button class="preset-btn" data-preset="beam">เทคาน</button>
+        </div>
+      </div>
+
+      <!-- Input Fields -->
+      <div class="input-section">
+        <div class="input-row">
+          <div class="input-group">
+            <label class="input-label">กว้าง (เมตร)</label>
+            <input type="number" id="width" class="calc-input" placeholder="0.00" step="0.01" min="0" value="5">
+          </div>
+          <div class="input-group">
+            <label class="input-label">ยาว (เมตร)</label>
+            <input type="number" id="length" class="calc-input" placeholder="0.00" step="0.01" min="0" value="6">
+          </div>
+          <div class="input-group">
+            <label class="input-label">สูง/หนา (เมตร)</label>
+            <input type="number" id="height" class="calc-input" placeholder="0.00" step="0.01" min="0" value="0.15">
+          </div>
+        </div>
+
+        <div class="select-row">
+          <div class="select-group">
+            <label class="input-label">ประเภทงาน</label>
+            <select id="work-type" class="calc-select">
+              <option value="floor">เทพื้น</option>
+              <option value="plaster">ฉาบผนัง</option>
+              <option value="tile">ปูกระเบื้อง</option>
+              <option value="beam">เทคาน</option>
+              <option value="column">เสาคอนกรีต</option>
+            </select>
+          </div>
+          <div class="select-group">
+            <label class="input-label">เกรดคอนกรีต</label>
+            <select id="concrete-grade" class="calc-select">
+              <option value="180">180 KSC</option>
+              <option value="210">210 KSC</option>
+              <option value="240" selected>240 KSC</option>
+              <option value="280">280 KSC</option>
+              <option value="320">320 KSC</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Materials Table -->
+      <div class="materials-section">
+        <h3 class="section-title">วัสดุที่ต้องใช้</h3>
+        <div class="materials-table">
+          <div class="material-row">
+            <span class="material-name">คอนกรีต</span>
+            <span class="material-value" id="material-concrete">4.50 คิว</span>
+          </div>
+          <div class="material-row">
+            <span class="material-name">ไว์เมช</span>
+            <span class="material-value" id="material-mesh">30.00 ตร.ม.</span>
+          </div>
+          <div class="material-row">
+            <span class="material-name">เหล็กเสริม</span>
+            <span class="material-value" id="material-rebar">-</span>
+          </div>
+          <div class="material-row">
+            <span class="material-name">แผ่นพื้น</span>
+            <span class="material-value" id="material-slab">-</span>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="calc-results-section">
-    <h2 class="section-title">ผลลัพธ์</h2>
-    
-    <div class="results-grid">
-      <div class="result-card highlight">
-        <div class="result-icon">📐</div>
-        <div class="result-content">
-          <span class="result-label">พื้นที่ (Area)</span>
-          <span class="result-value" id="area-result">30.00 ตร.ม.</span>
+    <!-- Result Panel (Right - Sticky) -->
+    <div class="result-panel">
+      <div class="result-sticky">
+        <div class="result-header">
+          <span class="result-badge">ประมาณการราคา</span>
         </div>
-      </div>
-      
-      <div class="result-card">
-        <div class="result-icon">📦</div>
-        <div class="result-content">
-          <span class="result-label">ปริมาตร (Volume)</span>
-          <span class="result-value" id="volume-result">4.50 ลบ.ม.</span>
-        </div>
-      </div>
-      
-      <div class="result-card">
-        <div class="result-icon">🧱</div>
-        <div class="result-content">
-          <span class="result-label">คอนกรีต (คิมบ.)</span>
-          <span class="result-value" id="concrete-result">4.50 คิมบ.</span>
-        </div>
-      </div>
-      
-      <div class="result-card">
-        <div class="result-icon">🚛</div>
-        <div class="result-content">
-          <span class="result-label">จำนวนคันรถ (7 ลบ.ม./คัน)</span>
-          <span class="result-value" id="truck-result">1 คัน</span>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="calc-info">
-    <div class="info-card">
-      <h3>📝 สูตรการคำนวณ</h3>
-      <ul class="formula-list">
-        <li><strong>พื้นที่</strong> = กว้าง × ยาว</li>
-        <li><strong>ปริมาตร</strong> = กว้าง × ยาว × สูง</li>
-      </ul>
+        <div class="result-total">
+          <span class="total-label">ราคารวม</span>
+          <span class="total-value" id="total-price">฿14,600</span>
+        </div>
+
+        <div class="price-range">
+          <span class="range-label">ช่วงราคา:</span>
+          <span class="range-value" id="price-range">฿13,100 - ฿16,100</span>
+        </div>
+
+        <div class="price-breakdown">
+          <div class="breakdown-item">
+            <span class="breakdown-label">ค่าวัสดุ</span>
+            <span class="breakdown-value" id="material-cost">฿6,600</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">ค่าแรง</span>
+            <span class="breakdown-value" id="labor-cost">฿6,000</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">ค่าขนส่ง</span>
+            <span class="breakdown-value" id="transport-cost">฿1,500</span>
+          </div>
+        </div>
+
+        <div class="result-stats">
+          <div class="stat-item">
+            <span class="stat-label">พื้นที่</span>
+            <span class="stat-value" id="area-display">30.00 ตร.ม.</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">ปริมาตร</span>
+            <span class="stat-value" id="volume-display">4.50 ลบ.ม.</span>
+          </div>
+          <div class="stat-item highlight">
+            <span class="stat-label">ราคา/ตร.ม.</span>
+            <span class="stat-value" id="price-per-sqm">฿486.67</span>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button class="action-btn line-btn" id="send-line">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+            </svg>
+            ส่งให้ช่างประเมิน
+          </button>
+          <button class="action-btn pdf-btn" id="save-pdf">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="12" y1="18" x2="12" y2="12"/>
+              <line x1="9" y1="15" x2="15" y2="15"/>
+            </svg>
+            บันทึก PDF
+          </button>
+        </div>
+
+        <div class="disclaimer">
+          * ราคานี้เป็นเพียงประมาณการ และอาจมีการเปลี่ยนแปลงตามสถานการณ์จริง
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <style>
-  .calc-quick-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 24px 16px;
-  }
-
-  .calc-header {
-    text-align: center;
-    margin-bottom: 32px;
-  }
-
-  .calc-title {
-    font-size: 1.75rem;
-    font-weight: 700;
+  .calc-container {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    padding: 16px;
     color: var(--text);
-    margin-bottom: 8px;
   }
 
-  .calc-subtitle {
-    font-size: 0.9375rem;
-    color: var(--text-secondary);
-  }
-
-  .section-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .section-title::before {
-    content: '';
-    width: 4px;
-    height: 20px;
-    background: var(--accent);
-    border-radius: 2px;
-  }
-
-  .calc-inputs-section {
-    margin-bottom: 32px;
-  }
-
-  .input-grid {
+  .calc-layout {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    grid-template-columns: 1fr 380px;
+    gap: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
   }
 
-  @media (max-width: 480px) {
-    .input-grid {
+  @media (max-width: 1024px) {
+    .calc-layout {
       grid-template-columns: 1fr;
     }
   }
 
-  .input-card {
-    position: relative;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
+  /* Input Panel */
+  .input-panel {
+    background: var(--card, var(--bg-secondary));
     border-radius: 16px;
-    padding: 16px;
+    padding: 24px;
+  }
+
+  .panel-header {
+    margin-bottom: 24px;
+  }
+
+  .panel-title {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .panel-subtitle {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+  }
+
+  /* Tabs */
+  .service-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 600px) {
+    .service-tabs {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .tab-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
     transition: all 0.2s;
   }
 
-  .input-card:focus-within {
+  .tab-btn:hover {
+    background: var(--bg-secondary);
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(200, 168, 75, 0.15);
+  }
+
+  .tab-btn.active {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent) 100%);
+    border-color: transparent;
+    color: var(--bg);
+  }
+
+  .tab-icon {
+    font-size: 1.25rem;
+  }
+
+  .tab-text {
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  /* Presets */
+  .preset-section {
+    margin-bottom: 24px;
+  }
+
+  .preset-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+
+  .preset-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .preset-btn {
+    padding: 8px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .preset-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  .preset-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+    font-weight: 600;
+  }
+
+  /* Input Section */
+  .input-section {
+    margin-bottom: 24px;
+  }
+
+  .input-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .input-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
 
   .input-label {
-    display: block;
     font-size: 0.8125rem;
     font-weight: 500;
     color: var(--text-secondary);
-    margin-bottom: 8px;
   }
 
   .calc-input {
     width: 100%;
-    padding: 12px 40px 12px 16px;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--text);
+    padding: 14px 16px;
     background: var(--bg);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 1.125rem;
+    font-weight: 600;
     transition: all 0.2s;
   }
 
   .calc-input:focus {
     outline: none;
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(200, 168, 75, 0.15);
+    box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
   }
 
   .calc-input::placeholder {
     color: var(--text-muted);
+    font-weight: 400;
   }
 
-  .input-icon {
-    position: absolute;
-    right: 16px;
-    bottom: 16px;
-    font-size: 1rem;
-    opacity: 0.5;
-  }
-
-  .calc-results-section {
-    margin-bottom: 32px;
-  }
-
-  .results-grid {
+  .select-row {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
 
-  @media (max-width: 480px) {
-    .results-grid {
+  @media (max-width: 600px) {
+    .select-row {
       grid-template-columns: 1fr;
     }
   }
 
-  .result-card {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 20px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    transition: all 0.2s;
-  }
-
-  .result-card.highlight {
-    background: linear-gradient(135deg, var(--accent) 0%, #E5C76B 100%);
-    border-color: transparent;
-    color: var(--primary);
-  }
-
-  .result-card.highlight .result-label {
-    color: rgba(26, 24, 20, 0.7);
-  }
-
-  .result-card.highlight .result-value {
-    color: var(--primary);
-  }
-
-  .result-icon {
-    font-size: 1.75rem;
-    flex-shrink: 0;
-  }
-
-  .result-content {
+  .select-group {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
   }
 
-  .result-label {
-    font-size: 0.8125rem;
+  .calc-select {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23A0A0A0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+  }
+
+  .calc-select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  /* Materials Table */
+  .materials-section {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .section-title {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .materials-table {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .material-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .material-row:last-child {
+    border-bottom: none;
+  }
+
+  .material-name {
+    font-size: 0.9375rem;
     color: var(--text-secondary);
   }
 
-  .result-value {
-    font-size: 1.25rem;
+  .material-value {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  /* Result Panel */
+  .result-panel {
+    position: relative;
+  }
+
+  @media (max-width: 1024px) {
+    .result-panel {
+      order: -1;
+    }
+  }
+
+  .result-sticky {
+    position: sticky;
+    top: 80px;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  .result-header {
+    margin-bottom: 16px;
+  }
+
+  .result-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background: var(--bg);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .result-total {
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  .total-label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+
+  .total-value {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .price-range {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .range-label {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    margin-right: 8px;
+  }
+
+  .range-value {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .price-breakdown {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .breakdown-item:last-child {
+    border-bottom: none;
+  }
+
+  .breakdown-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+
+  .breakdown-value {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .result-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .stat-item {
+    text-align: center;
+    padding: 12px 8px;
+    background: var(--bg);
+    border-radius: 10px;
+  }
+
+  .stat-item.highlight {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent) 100%);
+  }
+
+  .stat-item.highlight .stat-label,
+  .stat-item.highlight .stat-value {
+    color: var(--bg);
+  }
+
+  .stat-label {
+    display: block;
+    font-size: 0.6875rem;
+    color: var(--text-secondary);
+    margin-bottom: 2px;
+  }
+
+  .stat-value {
+    font-size: 0.875rem;
     font-weight: 700;
     color: var(--text);
   }
 
-  .calc-info {
-    margin-top: 24px;
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
   }
 
-  .info-card {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-  }
-
-  .info-card h3 {
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 20px;
+    border-radius: 12px;
     font-size: 1rem;
     font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .line-btn {
+    background: #00B900;
+    color: white;
+    border: none;
+  }
+
+  .line-btn:hover {
+    background: #00A000;
+    transform: scale(1.02);
+  }
+
+  .pdf-btn {
+    background: transparent;
     color: var(--text);
-    margin-bottom: 12px;
+    border: 2px solid var(--border);
   }
 
-  .formula-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .formula-list li {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    padding: 6px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .formula-list li:last-child {
-    border-bottom: none;
-  }
-
-  .formula-list strong {
+  .pdf-btn:hover {
+    border-color: var(--accent);
     color: var(--accent);
-    font-weight: 600;
+  }
+
+  .disclaimer {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.5;
   }
 </style>
 
@@ -297,30 +656,118 @@
   const widthInput = document.getElementById('width');
   const lengthInput = document.getElementById('length');
   const heightInput = document.getElementById('height');
+  const workType = document.getElementById('work-type');
+  const concreteGrade = document.getElementById('concrete-grade');
 
-  const areaResult = document.getElementById('area-result');
-  const volumeResult = document.getElementById('volume-result');
-  const concreteResult = document.getElementById('concrete-result');
-  const truckResult = document.getElementById('truck-result');
+  const materialConcrete = document.getElementById('material-concrete');
+  const materialMesh = document.getElementById('material-mesh');
+  const materialRebar = document.getElementById('material-rebar');
+  const materialSlab = document.getElementById('material-slab');
+
+  const totalPrice = document.getElementById('total-price');
+  const priceRange = document.getElementById('price-range');
+  const materialCost = document.getElementById('material-cost');
+  const laborCost = document.getElementById('labor-cost');
+  const transportCost = document.getElementById('transport-cost');
+  const areaDisplay = document.getElementById('area-display');
+  const volumeDisplay = document.getElementById('volume-display');
+  const pricePerSqm = document.getElementById('price-per-sqm');
+
+  const concretePrices = {
+    180: 2800,
+    210: 3200,
+    240: 3600,
+    280: 4000,
+    320: 4500
+  };
+
+  const presetConfigs = {
+    floor: { width: 5, length: 6, height: 0.15, thickness: 0.15 },
+    plaster: { width: 4, length: 5, height: 0.02, thickness: 0.02 },
+    tile: { width: 4, length: 4, height: 0.01, thickness: 0.01 },
+    beam: { width: 5, length: 0.3, height: 0.4, thickness: 0.4 }
+  };
 
   function calculate() {
     const w = parseFloat(widthInput.value) || 0;
     const l = parseFloat(lengthInput.value) || 0;
     const h = parseFloat(heightInput.value) || 0;
+    const grade = parseInt(concreteGrade.value) || 240;
 
     const area = w * l;
     const volume = w * l * h;
-    const trucks = Math.ceil(volume / 7);
+    const concretePrice = concretePrices[grade] || 3600;
 
-    areaResult.textContent = area.toFixed(2) + ' ตร.ม.';
-    volumeResult.textContent = volume.toFixed(2) + ' ลบ.ม.';
-    concreteResult.textContent = volume.toFixed(2) + ' คิมบ.';
-    truckResult.textContent = (trucks > 0 ? trucks : '-') + ' คัน';
+    const concreteAmount = volume;
+    const meshAmount = area;
+    const rebarAmount = workType.value === 'beam' ? area * 15 : '-';
+    const slabAmount = workType.value === 'plaster' ? area * 1.1 : '-';
+
+    materialConcrete.textContent = concreteAmount.toFixed(2) + ' คิว';
+    materialMesh.textContent = meshAmount.toFixed(2) + ' ตร.ม.';
+    materialRebar.textContent = rebarAmount;
+    materialSlab.textContent = slabAmount;
+
+    const concreteCost = volume * concretePrice;
+    const meshCost = area * 30;
+    const matCost = concreteCost + meshCost + (workType.value === 'beam' ? area * 200 : 0);
+    const labCost = area * 400;
+    const transCost = volume < 10 ? 1500 : 0;
+    const total = matCost + labCost + transCost;
+
+    const minPrice = total * 0.9;
+    const maxPrice = total * 1.1;
+
+    totalPrice.textContent = '฿' + total.toLocaleString('th-TH', { maximumFractionDigits: 0 });
+    priceRange.textContent = '฿' + minPrice.toLocaleString('th-TH', { maximumFractionDigits: 0 }) + ' - ฿' + maxPrice.toLocaleString('th-TH', { maximumFractionDigits: 0 });
+    materialCost.textContent = '฿' + matCost.toLocaleString('th-TH', { maximumFractionDigits: 0 });
+    laborCost.textContent = '฿' + labCost.toLocaleString('th-TH', { maximumFractionDigits: 0 });
+    transportCost.textContent = '฿' + transCost.toLocaleString('th-TH', { maximumFractionDigits: 0 });
+    areaDisplay.textContent = area.toFixed(2) + ' ตร.ม.';
+    volumeDisplay.textContent = volume.toFixed(2) + ' ลบ.ม.';
+    pricePerSqm.textContent = '฿' + (area > 0 ? (total / area).toFixed(2) : 0);
   }
 
-  widthInput.addEventListener('input', calculate);
-  lengthInput.addEventListener('input', calculate);
-  heightInput.addEventListener('input', calculate);
+  [widthInput, lengthInput, heightInput, concreteGrade].forEach(el => {
+    el.addEventListener('input', calculate);
+    el.addEventListener('change', calculate);
+  });
+
+  workType.addEventListener('change', calculate);
+
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+
+      const preset = presetConfigs[this.dataset.preset];
+      if (preset) {
+        widthInput.value = preset.width;
+        lengthInput.value = preset.length;
+        heightInput.value = preset.height;
+        calculate();
+      }
+    });
+  });
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  document.getElementById('send-line').addEventListener('click', function() {
+    const message = encodeURIComponent('สวัสดีครับ ต้องการให้ช่างประเมินราคา\n' +
+      'พื้นที่: ' + areaDisplay.textContent + '\n' +
+      'ปริมาตร: ' + volumeDisplay.textContent + '\n' +
+      'ราคาประมาณ: ' + totalPrice.textContent);
+    window.open('https://line.me/ti/p/~siamcosmo?text=' + message, '_blank');
+  });
+
+  document.getElementById('save-pdf').addEventListener('click', function() {
+    alert('กำลังเตรียมสร้าง PDF...');
+  });
 
   calculate();
 </script>
