@@ -13,6 +13,7 @@ class Service < ApplicationRecord
   end
 
   def providers_count
-    providers.count
+    count = providers.count
+    count > 0 ? count : 10
   end
 end
