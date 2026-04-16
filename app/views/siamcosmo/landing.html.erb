@@ -38,6 +38,7 @@
         <button class="slider-btn prev" onclick="slideServices(-1)">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
+        
         <button class="slider-btn next" onclick="slideServices(1)">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         </button>
@@ -62,7 +63,7 @@
     </div>
   </div>
 
-  <script>
+  <script nonce="<%= request.content_security_policy_nonce %>">
   function slideServices(direction) {
     const slider = document.getElementById('servicesSlider');
     const slides = slider.querySelectorAll('.service-slide');

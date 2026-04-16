@@ -42,7 +42,7 @@
   <div class="slider-dots" id="sliderDots"></div>
 </div>
 
-<script>
+<script nonce="<%= request.content_security_policy_nonce %>">
 function slideServices(direction) {
   const slider = document.getElementById('servicesSlider');
   const slideWidth = slider.querySelector('.service-slide').offsetWidth + 12;

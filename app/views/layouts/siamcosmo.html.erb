@@ -61,7 +61,7 @@
     </nav>
   </div>
 
-  <script>
+  <script nonce="<%= request.content_security_policy_nonce %>">
     // Language Toggle
     document.querySelectorAll('[data-lang]').forEach(function(btn) {
       btn.addEventListener('click', function() {
