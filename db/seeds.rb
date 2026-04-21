@@ -1,5 +1,5 @@
-# SiamCosmo Services Seed
-services = [
+# Communicate Services (LINE Bot) Seed
+communicate_services = [
   {
     key: "calculator",
     name_th: "เครื่องคำนวณวัสดุ",
@@ -59,7 +59,7 @@ services = [
     greeting_message_zh: "建筑材料运输服务",
     suggestions: [
       { th: "ขอใบเสนอราคา", en: "Request Quote", zh: "请求报价" },
-      { th: "เปรียบเทีย���ค่าบริการ", en: "Compare Rates", zh: "比较费用" },
+      { th: "เปรียบเทียข่าบริการ", en: "Compare Rates", zh: "比较费用" },
       { th: "ติดต่อผู้ให้บริการ", en: "Contact Provider", zh: "联系服务商" },
       { th: "ดูรายการ", en: "View List", zh: "查看列表" }
     ]
@@ -114,8 +114,8 @@ services = [
   }
 ]
 
-services.each do |s|
-  Service.find_or_create_by!(key: s[:key]) do |service|
+communicate_services.each do |s|
+  CommunicateService.find_or_create_by!(key: s[:key]) do |service|
     service.name_th = s[:name_th]
     service.name_en = s[:name_en]
     service.name_zh = s[:name_zh]
@@ -123,8 +123,138 @@ services.each do |s|
     service.greeting_message = s[:greeting_message_th]
     service.suggestions = s[:suggestions]
     service.is_active = true
-    puts "Created: #{s[:name_th]}"
+    puts "Created CommunicateService: #{s[:name_th]}"
   end
 end
 
-puts "✅ Services seeded: #{Service.count}"
+puts "✅ Communicate Services seeded: #{CommunicateService.count}"
+
+# Calculator Services (Tabs) Seed
+calculator_services = [
+  {
+    slug: "construction",
+    name_th: "งานก่อสร้าง",
+    name_en: "Construction",
+    icon: "🏗️",
+    sort_order: 1,
+    input_fields: [
+      { key: "width", label_th: "กว้าง (เมตร)", label_en: "Width (m)", type: "number" },
+      { key: "length", label_th: "ยาว (เมตร)", label_en: "Length (m)", type: "number" },
+      { key: "thickness", label_th: "สูง/หนา (เมตร)", label_en: "Height/Thickness (m)", type: "number" },
+      { key: "work_type", label_th: "ประเภทงาน", label_en: "Work Type", type: "select" },
+      { key: "concrete_grade", label_th: "เกรดคอนกรีต", label_en: "Concrete Grade", type: "select" }
+    ],
+    presets: [
+      { slug: "floor", name_th: "เทพื้น", name_en: "Pour Floor" },
+      { slug: "plaster", name_th: "ฉาบผนัง", name_en: "Plaster Wall" },
+      { slug: "tile", name_th: "ปูกระเบื้อง", name_en: "Lay Tile" },
+      { slug: "beam", name_th: "เทคาน", name_en: "Pour Beam" }
+    ]
+  },
+  {
+    slug: "electrical",
+    name_th: "ช่างไฟฟ้า",
+    name_en: "Electrical",
+    icon: "⚡",
+    sort_order: 2,
+    input_fields: [
+      { key: "amp", label_th: "ขนาดมิเตอร์ (แอมป์)", label_en: "Meter Size (Amp)", type: "select" },
+      { key: "point_count", label_th: "จำนวนจุด", label_en: "Number of Points", type: "number" },
+      { key: "wire_type", label_th: "ประเภทสายไฟ", label_en: "Wire Type", type: "select" },
+      { key: "distance", label_th: "ระยะทาง (เมตร)", label_en: "Distance (m)", type: "number" }
+    ],
+    presets: [
+      { slug: "new", name_th: "ติดตั้งใหม่", name_en: "New Installation" },
+      { slug: "repair", name_th: "ซ่อมแซม", name_en: "Repair" },
+      { slug: "add", name_th: "เพิ่มจุด", name_en: "Add Points" }
+    ]
+  },
+  {
+    slug: "plumbing",
+    name_th: "ช่างประปา",
+    name_en: "Plumbing",
+    icon: "🚿",
+    sort_order: 3,
+    input_fields: [
+      { key: "pipe_type", label_th: "ประเภทท่อ", label_en: "Pipe Type", type: "select" },
+      { key: "point_count", label_th: "จำนวนจุด", label_en: "Number of Points", type: "number" },
+      { key: "distance", label_th: "ระยะทาง (เมตร)", label_en: "Distance (m)", type: "number" },
+      { key: "floor_level", label_th: "ชั้น", label_en: "Floor Level", type: "number" }
+    ],
+    presets: [
+      { slug: "new", name_th: "ติดตั้งใหม่", name_en: "New Installation" },
+      { slug: "repair", name_th: "ซ่อมแซม", name_en: "Repair" },
+      { slug: "modify", name_th: "ดัดแปลง", name_en: "Modify" }
+    ]
+  },
+  {
+    slug: "solar",
+    name_th: "โซล่า",
+    name_en: "Solar",
+    icon: "☀️",
+    sort_order: 4,
+    input_fields: [
+      { key: "kw", label_th: "กำลังการผลิต (kW)", label_en: "Capacity (kW)", type: "number" },
+      { key: "inverter_type", label_th: "ประเภทอินเวอร์เตอร์", label_en: "Inverter Type", type: "select" },
+      { key: "panel_count", label_th: "จำนวนแผง", label_en: "Number of Panels", type: "number" },
+      { key: "roof_type", label_th: "ประเภทหลังคา", label_en: "Roof Type", type: "select" }
+    ],
+    presets: [
+      { slug: "new", name_th: "ติดตั้งใหม่", name_en: "New Installation" },
+      { slug: "upgrade", name_th: "เพิ่มกำลัง", name_en: "Capacity Upgrade" },
+      { slug: "inspect", name_th: "ตรวจเช็ค", name_en: "Inspection" }
+    ]
+  },
+  {
+    slug: "cctv",
+    name_th: "CCTV",
+    name_en: "CCTV",
+    icon: "📹",
+    sort_order: 5,
+    input_fields: [
+      { key: "cameras", label_th: "จำนวนกล้อง", label_en: "Number of Cameras", type: "number" },
+      { key: "resolution", label_th: "ความละเอียด", label_en: "Resolution", type: "select" },
+      { key: "dvr_channel", label_th: "ช่อง DVR", label_en: "DVR Channels", type: "select" },
+      { key: "cable_length", label_th: "ความยาวสาย (เมตร)", label_en: "Cable Length (m)", type: "number" }
+    ],
+    presets: [
+      { slug: "new", name_th: "ติดตั้งใหม่", name_en: "New Installation" },
+      { slug: "upgrade", name_th: "อัพเกรด", name_en: "Upgrade" },
+      { slug: "add", name_th: "เพิ่มกล้อง", name_en: "Add Camera" }
+    ]
+  },
+  {
+    slug: "autodoor",
+    name_th: "ประตูอัตโนมัติ",
+    name_en: "Auto Door",
+    icon: "🚪",
+    sort_order: 6,
+    input_fields: [
+      { key: "door_type", label_th: "ประเภทประตู", label_en: "Door Type", type: "select" },
+      { key: "width", label_th: "ความกว้าง (เมตร)", label_en: "Width (m)", type: "number" },
+      { key: "height", label_th: "ความสูง (เมตร)", label_en: "Height (m)", type: "number" },
+      { key: "motor_type", label_th: "ประเภทมอเตอร์", label_en: "Motor Type", type: "select" },
+      { key: "control_type", label_th: "ประเภทควบคุม", label_en: "Control Type", type: "select" }
+    ],
+    presets: [
+      { slug: "new", name_th: "ติดตั้งใหม่", name_en: "New Installation" },
+      { slug: "repair", name_th: "ซ่อมแซม", name_en: "Repair" },
+      { slug: "upgrade", name_th: "ปรับปรุง", name_en: "Upgrade" }
+    ]
+  }
+]
+
+calculator_services.each do |cs|
+  CalculatorService.find_or_create_by!(slug: cs[:slug]) do |s|
+    s.name_th = cs[:name_th]
+    s.name_en = cs[:name_en]
+    s.icon = cs[:icon]
+    s.sort_order = cs[:sort_order]
+    s.input_fields = cs[:input_fields]
+    s.presets = cs[:presets]
+    s.active = true
+    puts "Created CalculatorService: #{cs[:name_th]}"
+  end
+end
+
+puts "✅ Calculator Services seeded: #{CalculatorService.count}"

@@ -10,7 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_14_041922) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_21_000001) do
+  create_table "calculator_services", force: :cascade do |t|
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.string "icon", default: "🔧"
+    t.json "input_fields", default: []
+    t.json "materials", default: []
+    t.string "name_en"
+    t.string "name_th", null: false
+    t.json "presets", default: []
+    t.string "slug", null: false
+    t.integer "sort_order", default: 0
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_calculator_services_on_slug", unique: true
+  end
+
   create_table "cart_items", force: :cascade do |t|
     t.integer "cart_id", null: false
     t.datetime "created_at", null: false
@@ -44,6 +59,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_14_041922) do
     t.index ["session_key"], name: "index_chat_sessions_on_session_key"
     t.index ["status"], name: "index_chat_sessions_on_status"
     t.index ["user_id"], name: "index_chat_sessions_on_user_id"
+  end
+
+  create_table "communicate_services", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.text "greeting_message"
+    t.string "icon"
+    t.boolean "is_active", default: true
+    t.string "key"
+    t.string "name"
+    t.string "name_en"
+    t.string "name_th"
+    t.string "name_zh"
+    t.decimal "price", precision: 5, scale: 2
+    t.json "suggestions"
+    t.datetime "updated_at", null: false
+    t.index ["is_active"], name: "index_communicate_services_on_is_active"
+    t.index ["key"], name: "index_communicate_services_on_key", unique: true
   end
 
   create_table "contractors", force: :cascade do |t|
@@ -173,6 +206,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_14_041922) do
 
   create_table "service_types", force: :cascade do |t|
     t.boolean "active", default: true
+    t.integer "calculator_service_id"
     t.datetime "created_at", null: false
     t.string "formula", null: false
     t.string "icon", default: "🔧"
@@ -183,28 +217,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_14_041922) do
     t.string "name_en"
     t.string "name_th", null: false
     t.string "name_zh"
+    t.json "presets", default: []
     t.string "slug", null: false
     t.integer "sort_order", default: 0
     t.datetime "updated_at", null: false
+    t.index ["calculator_service_id"], name: "index_service_types_on_calculator_service_id"
     t.index ["slug"], name: "index_service_types_on_slug", unique: true
-  end
-
-  create_table "services", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.text "description"
-    t.text "greeting_message"
-    t.string "icon"
-    t.boolean "is_active", default: true
-    t.string "key"
-    t.string "name"
-    t.string "name_en"
-    t.string "name_th"
-    t.string "name_zh"
-    t.decimal "price", precision: 5, scale: 2
-    t.json "suggestions"
-    t.datetime "updated_at", null: false
-    t.index ["is_active"], name: "index_services_on_is_active"
-    t.index ["key"], name: "index_services_on_key", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -239,18 +257,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_14_041922) do
   end
 
   add_foreign_key "cart_items", "carts"
-  add_foreign_key "chat_sessions", "services"
+  add_foreign_key "chat_sessions", "communicate_services", column: "service_id"
   add_foreign_key "chat_sessions", "users"
   add_foreign_key "messages", "chat_sessions"
   add_foreign_key "messages", "users"
   add_foreign_key "models", "carts"
   add_foreign_key "models", "products"
   add_foreign_key "orderables", "carts"
-  add_foreign_key "orderables", "services"
-  add_foreign_key "providers", "services"
+  add_foreign_key "orderables", "communicate_services", column: "service_id"
+  add_foreign_key "providers", "communicate_services", column: "service_id"
   add_foreign_key "providers", "users"
   add_foreign_key "quote_materials", "quotes"
   add_foreign_key "quotes", "contractors"
   add_foreign_key "quotes", "service_types"
   add_foreign_key "quotes", "users"
+  add_foreign_key "service_types", "calculator_services"
 end

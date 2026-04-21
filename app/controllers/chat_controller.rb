@@ -9,7 +9,7 @@ class ChatController < ApplicationController
   end
 
   def contractors
-    contractor_service = Service.find_by(key: "contractor")
+    contractor_service = CommunicateService.find_by(key: "contractor")
     if contractor_service
       @contractors = Provider.active.where(service_id: contractor_service.id).order("rating DESC, jobs_completed DESC")
     else
@@ -18,7 +18,7 @@ class ChatController < ApplicationController
   end
 
   def transport
-    transport_service = Service.find_by(key: "transport")
+    transport_service = CommunicateService.find_by(key: "transport")
     if transport_service
       @contractors = Provider.active.where(service_id: transport_service.id).order("rating DESC, jobs_completed DESC")
     else
@@ -27,7 +27,7 @@ class ChatController < ApplicationController
   end
 
   def rental
-    rental_service = Service.find_by(key: "rental")
+    rental_service = CommunicateService.find_by(key: "rental")
     if rental_service
       @contractors = Provider.active.where(service_id: rental_service.id).order("rating DESC, jobs_completed DESC")
     else
@@ -184,8 +184,8 @@ class ChatController < ApplicationController
   end
 
   def index
-    @service = Service.find_by(key: params[:service_id])
-    @service ||= Service.find_by(key: "calculator")
+    @service = CommunicateService.find_by(key: params[:service_id])
+    @service ||= CommunicateService.find_by(key: "calculator")
 
     if @service.key == "calculator"
       redirect_to "/calculator" and return
@@ -216,7 +216,7 @@ class ChatController < ApplicationController
   end
 
   def create_message
-    @service = Service.find_by(key: params[:service_key] || params[:service_id])
+    @service = CommunicateService.find_by(key: params[:service_key] || params[:service_id])
     return render(json: { error: "Service not found" }, status: 404) unless @service
 
     # Get or create session
@@ -248,7 +248,7 @@ class ChatController < ApplicationController
 
   def calculate
     # Direct calculation endpoint for calculator service
-    service = Service.find_by(key: "calculator")
+    service = CommunicateService.find_by(key: "calculator")
     return render(json: { error: "Calculator not found" }, status: 404) unless service
 
     result = case params[:shape]

@@ -1,6 +1,15 @@
 <% content_for :title, "คำนวณราคา" %>
 
-<div class="calc-container">
+<%
+  # Get active category from params or first category
+  active_cat = @active_category
+  current_service = @calculator_services.find { |s| s.slug == active_cat }
+  current_service ||= @calculator_services.first
+  input_fields = current_service&.input_fields || []
+  presets = current_service&.presets || []
+%>
+
+<div class="calc-container" data-controller="calculator" data-calculator-category-value="<%= active_cat %>">
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <div class="calc-layout">
@@ -11,106 +20,198 @@
         <p class="panel-subtitle">เลือกประเภทงานและกรอกข้อมูล</p>
       </div>
 
-      <!-- Tabs -->
+      <!-- Tabs - Dynamic from Database -->
       <div class="service-tabs">
-        <button class="tab-btn active" data-tab="construction">
-          <span class="tab-icon">🏗️</span>
-          <span class="tab-text">งานก่อสร้าง</span>
-        </button>
-        <button class="tab-btn" data-tab="electrical">
-          <span class="tab-icon">⚡</span>
-          <span class="tab-text">ช่างไฟฟ้า</span>
-        </button>
-        <button class="tab-btn" data-tab="plumbing">
-          <span class="tab-icon">🚿</span>
-          <span class="tab-text">ช่างประปา</span>
-        </button>
-        <button class="tab-btn" data-tab="solar">
-          <span class="tab-icon">☀️</span>
-          <span class="tab-text">โซล่า</span>
-        </button>
-        <button class="tab-btn" data-tab="cctv">
-          <span class="tab-icon">📹</span>
-          <span class="tab-text">CCTV</span>
-        </button>
-        <button class="tab-btn" data-tab="autodoor">
-          <span class="tab-icon">🚪</span>
-          <span class="tab-text">ประตูอัตโนมัติ</span>
-        </button>
+        <% @calculator_services.each do |svc| %>
+          <button class="tab-btn <%= svc.slug == active_cat ? 'active' : '' %>"
+                  data-tab="<%= svc.slug %>"
+                  data-action="click->calculator#switchTab">
+            <span class="tab-icon"><%= svc.icon %></span>
+            <span class="tab-text"><%= svc.name_th %></span>
+          </button>
+        <% end %>
       </div>
 
-      <!-- Preset Buttons -->
-      <div class="preset-section" id="construction-presets">
+      <!-- Preset Buttons - Dynamic from Database -->
+      <div class="preset-section" id="<%= active_cat %>-presets">
         <label class="preset-label">เลือกแบบสำเร็จรูป</label>
         <div class="preset-buttons">
-          <button class="preset-btn active" data-preset="floor">เทพื้น</button>
-          <button class="preset-btn" data-preset="plaster">ฉาบผนัง</button>
-          <button class="preset-btn" data-preset="tile">ปูกระเบื้อง</button>
-          <button class="preset-btn" data-preset="beam">เทคาน</button>
+          <% presets.each_with_index do |preset, idx| %>
+            <% preset_slug = preset["slug"] || preset[:slug] %>
+            <button class="preset-btn <%= idx == 0 ? 'active' : '' %>"
+                    data-preset="<%= preset_slug %>"
+                    data-action="click->calculator#selectPreset">
+              <%= preset["name_th"] || preset[:name_th] %>
+            </button>
+          <% end %>
         </div>
       </div>
 
-      <!-- Input Fields -->
+      <!-- Input Fields - Dynamic from Database -->
       <div class="input-section">
-        <div class="input-row">
-          <div class="input-group">
-            <label class="input-label">กว้าง (เมตร)</label>
-            <input type="number" id="width" class="calc-input" placeholder="0.00" step="0.01" min="0" value="5">
-          </div>
-          <div class="input-group">
-            <label class="input-label">ยาว (เมตร)</label>
-            <input type="number" id="length" class="calc-input" placeholder="0.00" step="0.01" min="0" value="6">
-          </div>
-          <div class="input-group">
-            <label class="input-label">สูง/หนา (เมตร)</label>
-            <input type="number" id="height" class="calc-input" placeholder="0.00" step="0.01" min="0" value="0.15">
-          </div>
-        </div>
+        <%
+          # Group input fields into rows (3 items per row for numbers)
+          # Handle both string and symbol types from JSON
+          number_fields = input_fields.select { |f| f["type"] == "number" || f[:type] == "number" }
+          select_fields = input_fields.select { |f| f["type"] == "select" || f[:type] == :select }
+        %>
 
-        <div class="select-row">
-          <div class="select-group">
-            <label class="input-label">ประเภทงาน</label>
-            <select id="work-type" class="calc-select">
-              <option value="floor">เทพื้น</option>
-              <option value="plaster">ฉาบผนัง</option>
-              <option value="tile">ปูกระเบื้อง</option>
-              <option value="beam">เทคาน</option>
-              <option value="column">เสาคอนกรีต</option>
-            </select>
-          </div>
-          <div class="select-group">
-            <label class="input-label">เกรดคอนกรีต</label>
-            <select id="concrete-grade" class="calc-select">
-              <option value="180">180 KSC</option>
-              <option value="210">210 KSC</option>
-              <option value="240" selected>240 KSC</option>
-              <option value="280">280 KSC</option>
-              <option value="320">320 KSC</option>
-            </select>
-          </div>
-        </div>
+<% if number_fields.any? %>
+           <div class="input-row">
+             <% number_fields.each do |field| %>
+               <% field_key = field["key"] || field[:key] %>
+               <div class="input-group">
+                 <label class="input-label"><%= field["label_th"] || field[:label_th] %></label>
+                 <input type="number"
+                        id="<%= field_key %>"
+                        class="calc-input"
+                        placeholder="0.00"
+                        step="0.01"
+                        min="0"
+                        value="<%= field_key == 'thickness' ? '0.15' : '0' %>"
+                        data-calculator-target="<%= field_key %>"
+                        data-action="input->calculator#calculate"
+                        autocomplete="off">
+               </div>
+             <% end %>
+           </div>
+         <% end %>
+
+<% if select_fields.any? %>
+           <div class="select-row">
+             <% select_fields.each do |field| %>
+               <% field_key = field["key"] || field[:key] %>
+               <div class="select-group">
+                 <label class="input-label"><%= field["label_th"] || field[:label_th] %></label>
+                 <select id="<%= field_key %>" class="calc-select" data-action="change->calculator#calculate">
+                   <% if field_key == "concrete_grade" %>
+                     <option value="180">180 KSC</option>
+                     <option value="210">210 KSC</option>
+                     <option value="240" selected>240 KSC</option>
+                     <option value="280">280 KSC</option>
+                     <option value="320">320 KSC</option>
+                   <% elsif field_key == "wire_type" %>
+                     <option value="standard">สายมาตรฐาน</option>
+                     <option value="pure">ทองแดงแท้</option>
+                   <% elsif field_key == "pipe_type" %>
+                     <option value="pvc">PVC</option>
+                     <option value="pp">PP-R</option>
+                     <option value="pe">PE</option>
+                   <% elsif field_key == "inverter_type" %>
+                     <option value="on-grid">On-Grid</option>
+                     <option value="off-grid">Off-Grid</option>
+                     <option value="hybrid">Hybrid</option>
+                   <% elsif field_key == "resolution" %>
+                     <option value="1080p">1080p</option>
+                     <option value="2k">2K</option>
+                     <option value="4k">4K</option>
+                   <% elsif field_key == "door_type" %>
+                     <option value="sliding">บานเลื่อน</option>
+                     <option value="swing">บานสวิง</option>
+                     <option value="fold">บานพับ</option>
+                   <% else %>
+                     <option value="1">ตัวเลือก 1</option>
+                     <option value="2">ตัวเลือก 2</option>
+                   <% end %>
+                 </select>
+               </div>
+             <% end %>
+           </div>
+        <% end %>
       </div>
 
-      <!-- Materials Table -->
+      <!-- Materials Table - Dynamic based on category -->
       <div class="materials-section">
         <h3 class="section-title">วัสดุที่ต้องใช้</h3>
         <div class="materials-table">
-          <div class="material-row">
-            <span class="material-name">คอนกรีต</span>
-            <span class="material-value" id="material-concrete">4.50 คิว</span>
-          </div>
-          <div class="material-row">
-            <span class="material-name">ไว์เมช</span>
-            <span class="material-value" id="material-mesh">30.00 ตร.ม.</span>
-          </div>
-          <div class="material-row">
-            <span class="material-name">เหล็กเสริม</span>
-            <span class="material-value" id="material-rebar">-</span>
-          </div>
-          <div class="material-row">
-            <span class="material-name">แผ่นพื้น</span>
-            <span class="material-value" id="material-slab">-</span>
-          </div>
+          <% if active_cat == "construction" %>
+            <div class="material-row">
+              <span class="material-name">คอนกรีต</span>
+              <span class="material-value" data-calculator-target="concrete">-</span>
+            </div>
+            <div class="material-row">
+              <span class="material-name">ไว์เมช</span>
+              <span class="material-value" data-calculator-target="mesh">-</span>
+            </div>
+            <div class="material-row">
+              <span class="material-name">เหล็กเสริม</span>
+              <span class="material-value" id="material-rebar">-</span>
+            </div>
+            <div class="material-row">
+              <span class="material-name">แผ่นพื้น</span>
+              <span class="material-value" id="material-slab">-</span>
+            </div>
+          <% elsif active_cat == "electrical" %>
+            <div class="material-row">
+              <span class="material-name">สายไฟ</span>
+              <span class="material-value" id="material-wire">-</span>
+            </div>
+            <div class="material-row">
+              <span class="material-name">กล่องไฟ</span>
+              <span class="material-value" id="material-box">-</span>
+            </div>
+            <div class="material-row">
+              <span class="material-name">เบรกเกอร์</span>
+              <span class="material-value" id="material-breaker">-</span>
+            </div>
+          <% elsif active_cat == "plumbing" %>
+            <div class="material-row">
+              <span class="material-name">ท่อ PVC</span>
+              <span class="material-value" id="material-pipe">-</span>
+            </div>
+            <div class="material-row">
+              <span class="material-name">ข้อต่อ</span>
+              <span class="material-value" id="material-fitting">-</span>
+            </div>
+            <div class="material-row">
+              <span class="material-name">วาล์ว</span>
+              <span class="material-value" id="material-valve">-</span>
+            </div>
+          <% elsif active_cat == "solar" %>
+            <div class="material-row">
+              <span class="material-name">แผงโซลาร์</span>
+              <span class="material-value" id="material-panel">-</span>
+            </div>
+            <div class="material-row">
+              <span class="material-name">อินเวอร์เตอร์</span>
+              <span class="material-value" id="material-inverter">-</span>
+            </div>
+            <div class="material-row">
+              <span class="material-name">สายไฟ DC</span>
+              <span class="material-value" id="material-dcwire">-</span>
+            </div>
+          <% elsif active_cat == "cctv" %>
+            <div class="material-row">
+              <span class="material-name">กล้อง</span>
+              <span class="material-value" id="material-camera">-</span>
+            </div>
+            <div class="material-row">
+              <span class="material-name">DVR</span>
+              <span class="material-value" id="material-dvr">-</span>
+            </div>
+            <div class="material-row">
+              <span class="material-name">สาย</span>
+              <span class="material-value" id="material-cable">-</span>
+            </div>
+          <% elsif active_cat == "autodoor" %>
+            <div class="material-row">
+              <span class="material-name">มอเตอร์</span>
+              <span class="material-value" id="material-motor">-</span>
+            </div>
+            <div class="material-row">
+              <span class="material-name">ราง</span>
+              <span class="material-value" id="material-rail">-</span>
+            </div>
+            <div class="material-row">
+              <span class="material-name">รีโมท</span>
+              <span class="material-value" id="material-remote">-</span>
+            </div>
+          <% else %>
+            <div class="material-row">
+              <span class="material-name">วัสดุ</span>
+              <span class="material-value">-</span>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>
@@ -124,41 +225,41 @@
 
         <div class="result-total">
           <span class="total-label">ราคารวม</span>
-          <span class="total-value" id="total-price">฿14,600</span>
+          <span class="total-value" data-calculator-target="totalPrice">฿0</span>
         </div>
 
         <div class="price-range">
           <span class="range-label">ช่วงราคา:</span>
-          <span class="range-value" id="price-range">฿13,100 - ฿16,100</span>
+          <span class="range-value" data-calculator-target="priceRange">-</span>
         </div>
 
         <div class="price-breakdown">
           <div class="breakdown-item">
             <span class="breakdown-label">ค่าวัสดุ</span>
-            <span class="breakdown-value" id="material-cost">฿6,600</span>
+            <span class="breakdown-value" data-calculator-target="materialCost">฿0</span>
           </div>
           <div class="breakdown-item">
             <span class="breakdown-label">ค่าแรง</span>
-            <span class="breakdown-value" id="labor-cost">฿6,000</span>
+            <span class="breakdown-value" data-calculator-target="laborCost">฿0</span>
           </div>
           <div class="breakdown-item">
             <span class="breakdown-label">ค่าขนส่ง</span>
-            <span class="breakdown-value" id="transport-cost">฿1,500</span>
+            <span class="breakdown-value" data-calculator-target="transportCost">฿0</span>
           </div>
         </div>
 
         <div class="result-stats">
           <div class="stat-item">
             <span class="stat-label">พื้นที่</span>
-            <span class="stat-value" id="area-display">30.00 ตร.ม.</span>
+            <span class="stat-value" data-calculator-target="area">-</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">ปริมาตร</span>
-            <span class="stat-value" id="volume-display">4.50 ลบ.ม.</span>
+            <span class="stat-value" data-calculator-target="vol">-</span>
           </div>
           <div class="stat-item highlight">
             <span class="stat-label">ราคา/ตร.ม.</span>
-            <span class="stat-value" id="price-per-sqm">฿486.67</span>
+            <span class="stat-value" data-calculator-target="pricePerSqm">฿0</span>
           </div>
         </div>
 
@@ -211,7 +312,6 @@
     }
   }
 
-  /* Input Panel */
   .input-panel {
     background: var(--card, var(--bg-secondary));
     border-radius: 16px;
@@ -235,7 +335,6 @@
     color: var(--text-secondary);
   }
 
-  /* Tabs */
   .service-tabs {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -283,7 +382,6 @@
     font-weight: 500;
   }
 
-  /* Presets */
   .preset-section {
     margin-bottom: 24px;
   }
@@ -325,7 +423,6 @@
     font-weight: 600;
   }
 
-  /* Input Section */
   .input-section {
     margin-bottom: 24px;
   }
@@ -417,7 +514,6 @@
     border-color: var(--accent);
   }
 
-  /* Materials Table */
   .materials-section {
     background: var(--bg);
     border-radius: 12px;
@@ -461,7 +557,6 @@
     color: var(--accent);
   }
 
-  /* Result Panel */
   .result-panel {
     position: relative;
   }
@@ -653,121 +748,149 @@
 </style>
 
 <script>
-  const widthInput = document.getElementById('width');
-  const lengthInput = document.getElementById('length');
-  const heightInput = document.getElementById('height');
-  const workType = document.getElementById('work-type');
-  const concreteGrade = document.getElementById('concrete-grade');
+  (function() {
+    const Application = window.Stimulus.Application
+    const Controller = window.Stimulus.Controller
 
-  const materialConcrete = document.getElementById('material-concrete');
-  const materialMesh = document.getElementById('material-mesh');
-  const materialRebar = document.getElementById('material-rebar');
-  const materialSlab = document.getElementById('material-slab');
+    class CalculatorController extends Controller {
+      static targets = ["width", "length", "height", "thickness", "area", "volume", "vol", "mesh", "totalPrice", "materialCost", "laborCost", "transportCost", "pricePerSqm", "priceRange"]
 
-  const totalPrice = document.getElementById('total-price');
-  const priceRange = document.getElementById('price-range');
-  const materialCost = document.getElementById('material-cost');
-  const laborCost = document.getElementById('labor-cost');
-  const transportCost = document.getElementById('transport-cost');
-  const areaDisplay = document.getElementById('area-display');
-  const volumeDisplay = document.getElementById('volume-display');
-  const pricePerSqm = document.getElementById('price-per-sqm');
-
-  const concretePrices = {
-    180: 2800,
-    210: 3200,
-    240: 3600,
-    280: 4000,
-    320: 4500
-  };
-
-  const presetConfigs = {
-    floor: { width: 5, length: 6, height: 0.15, thickness: 0.15 },
-    plaster: { width: 4, length: 5, height: 0.02, thickness: 0.02 },
-    tile: { width: 4, length: 4, height: 0.01, thickness: 0.01 },
-    beam: { width: 5, length: 0.3, height: 0.4, thickness: 0.4 }
-  };
-
-  function calculate() {
-    const w = parseFloat(widthInput.value) || 0;
-    const l = parseFloat(lengthInput.value) || 0;
-    const h = parseFloat(heightInput.value) || 0;
-    const grade = parseInt(concreteGrade.value) || 240;
-
-    const area = w * l;
-    const volume = w * l * h;
-    const concretePrice = concretePrices[grade] || 3600;
-
-    const concreteAmount = volume;
-    const meshAmount = area;
-    const rebarAmount = workType.value === 'beam' ? area * 15 : '-';
-    const slabAmount = workType.value === 'plaster' ? area * 1.1 : '-';
-
-    materialConcrete.textContent = concreteAmount.toFixed(2) + ' คิว';
-    materialMesh.textContent = meshAmount.toFixed(2) + ' ตร.ม.';
-    materialRebar.textContent = rebarAmount;
-    materialSlab.textContent = slabAmount;
-
-    const concreteCost = volume * concretePrice;
-    const meshCost = area * 30;
-    const matCost = concreteCost + meshCost + (workType.value === 'beam' ? area * 200 : 0);
-    const labCost = area * 400;
-    const transCost = volume < 10 ? 1500 : 0;
-    const total = matCost + labCost + transCost;
-
-    const minPrice = total * 0.9;
-    const maxPrice = total * 1.1;
-
-    totalPrice.textContent = '฿' + total.toLocaleString('th-TH', { maximumFractionDigits: 0 });
-    priceRange.textContent = '฿' + minPrice.toLocaleString('th-TH', { maximumFractionDigits: 0 }) + ' - ฿' + maxPrice.toLocaleString('th-TH', { maximumFractionDigits: 0 });
-    materialCost.textContent = '฿' + matCost.toLocaleString('th-TH', { maximumFractionDigits: 0 });
-    laborCost.textContent = '฿' + labCost.toLocaleString('th-TH', { maximumFractionDigits: 0 });
-    transportCost.textContent = '฿' + transCost.toLocaleString('th-TH', { maximumFractionDigits: 0 });
-    areaDisplay.textContent = area.toFixed(2) + ' ตร.ม.';
-    volumeDisplay.textContent = volume.toFixed(2) + ' ลบ.ม.';
-    pricePerSqm.textContent = '฿' + (area > 0 ? (total / area).toFixed(2) : 0);
-  }
-
-  [widthInput, lengthInput, heightInput, concreteGrade].forEach(el => {
-    el.addEventListener('input', calculate);
-    el.addEventListener('change', calculate);
-  });
-
-  workType.addEventListener('change', calculate);
-
-  document.querySelectorAll('.preset-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-
-      const preset = presetConfigs[this.dataset.preset];
-      if (preset) {
-        widthInput.value = preset.width;
-        lengthInput.value = preset.length;
-        heightInput.value = preset.height;
-        calculate();
+      static values = {
+        category: String
       }
-    });
-  });
 
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-    });
-  });
+      connect() {
+        console.log("✅ Dynamic Calculator connected! Category:", this.categoryValue)
+        this.calculate()
+      }
 
-  document.getElementById('send-line').addEventListener('click', function() {
-    const message = encodeURIComponent('สวัสดีครับ ต้องการให้ช่างประเมินราคา\n' +
-      'พื้นที่: ' + areaDisplay.textContent + '\n' +
-      'ปริมาตร: ' + volumeDisplay.textContent + '\n' +
-      'ราคาประมาณ: ' + totalPrice.textContent);
-    window.open('https://line.me/ti/p/~siamcosmo?text=' + message, '_blank');
-  });
+      switchTab(event) {
+        const category = event.currentTarget.dataset.tab
+        const url = new URL(window.location.href)
+        url.searchParams.set('category', category)
+        window.location.href = url.toString()
+      }
 
-  document.getElementById('save-pdf').addEventListener('click', function() {
-    alert('กำลังเตรียมสร้าง PDF...');
-  });
+      selectPreset(event) {
+        const preset = event.currentTarget.dataset.preset
+        console.log("Selected preset:", preset)
+        document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'))
+        event.currentTarget.classList.add('active')
+      }
 
-  calculate();
+      calculate() {
+        const inputs = this.collectInputs()
+        const category = this.categoryValue || 'construction'
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+        const url = '/calculator/calculate?category=' + category
+
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken
+          },
+          body: JSON.stringify(inputs)
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            console.error("Calculation error:", data.error)
+            return
+          }
+          this.updateUI(data)
+        })
+        .catch(err => {
+          console.error("API Error:", err)
+        })
+      }
+
+      collectInputs() {
+        const inputs = {}
+        const inputElements = document.querySelectorAll('.calc-input, .calc-select')
+        inputElements.forEach(el => {
+          inputs[el.id] = el.value
+        })
+        return inputs
+      }
+
+      updateUI(data) {
+        const total = data.total || 0
+        const materialTotal = data.material_total || 0
+        const laborTotal = data.labor_total || 0
+        const transport = data.transport || 0
+        const area = data.area || 0
+        const volume = data.volume || 0
+        const pricePerSqm = data.price_per_sqm || 0
+        const priceRange = data.price_range || '-'
+
+        if (this.hasTotalPriceTarget) this.totalPriceTarget.textContent = '฿' + Math.round(total).toLocaleString()
+        if (this.hasMaterialCostTarget) this.materialCostTarget.textContent = '฿' + Math.round(materialTotal).toLocaleString()
+        if (this.hasLaborCostTarget) this.laborCostTarget.textContent = '฿' + Math.round(laborTotal).toLocaleString()
+        if (this.hasTransportCostTarget) this.transportCostTarget.textContent = '฿' + transport
+        if (this.hasAreaTarget) this.areaTarget.textContent = area > 0 ? area.toFixed(2) + ' ตร.ม.' : '-'
+        if (this.hasVolTarget) this.volTarget.textContent = volume > 0 ? volume.toFixed(2) + ' ลบ.ม.' : '-'
+        if (this.hasPricePerSqmTarget) this.pricePerSqmTarget.textContent = pricePerSqm > 0 ? '฿' + pricePerSqm.toFixed(2) : '฿0'
+        if (this.hasPriceRangeTarget) this.priceRangeTarget.textContent = total > 0 ? priceRange : '-'
+
+        this.updateMaterials(data.materials || [], data.category)
+
+        console.log("📐 Calculated:", data)
+      }
+
+      updateMaterials(materials, category) {
+        const materialMap = this.getMaterialIds(category)
+
+        materials.forEach((mat, index) => {
+          const targetId = Object.keys(materialMap)[index]
+          if (targetId) {
+            const el = document.getElementById(targetId)
+            if (el) {
+              el.textContent = mat.quantity + ' ' + mat.unit
+            }
+          }
+        })
+      }
+
+      getMaterialIds(category) {
+        const map = {
+          construction: {
+            'material-rebar': 'เหล็กเสริม',
+            'material-slab': 'แผ่นพื้น'
+          },
+          electrical: {
+            'material-wire': 'สายไฟ',
+            'material-box': 'กล่องไฟ',
+            'material-breaker': 'เบรกเกอร์'
+          },
+          plumbing: {
+            'material-pipe': 'ท่อ PVC',
+            'material-fitting': 'ข้อต่อ',
+            'material-valve': 'วาล์ว'
+          },
+          solar: {
+            'material-panel': 'แผงโซลาร์',
+            'material-inverter': 'อินเวอร์เตอร์',
+            'material-dcwire': 'สายไฟ DC'
+          },
+          cctv: {
+            'material-camera': 'กล้อง',
+            'material-dvr': 'DVR',
+            'material-cable': 'สาย'
+          },
+          autodoor: {
+            'material-motor': 'มอเตอร์',
+            'material-rail': 'ราง',
+            'material-remote': 'รีโมท'
+          }
+        }
+        return map[category] || {}
+      }
+    }
+
+    const app = Application.start()
+    app.register("calculator", CalculatorController)
+    console.log("✅ Calculator registered!")
+  })()
 </script>

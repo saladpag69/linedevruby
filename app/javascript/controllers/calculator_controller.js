@@ -1,112 +1,76 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["form", "width", "length", "thickness", "height", "depth", "preview", "formula", "area", "volume", "labor", "submitBtn"]
-  static values = { serviceType: String, laborRate: Number }
+  static targets = [
+    "width",
+
+    "length",
+    "height",
+    "concret",
+    "area",
+    "volume",
+    "mesh",
+    "totalPrice",
+    "materialCost",
+    "laborCost",
+    "transportCost",
+    "pricePerSqm",
+    "priceRange",
+  ];
 
   connect() {
-    this.prices = window.siamCosmoPrices || []
+    console.log("✅ Stimulus Calculator connected!");
+    this.calculate();
   }
 
   calculate() {
-    const width = parseFloat(this.widthTarget?.value) || 0
-    const length = parseFloat(this.lengthTarget?.value) || 0
-    const thickness = parseFloat(this.thicknessTarget?.value) || 0.10
-    const height = parseFloat(this.heightTarget?.value) || 0
-    const depth = parseFloat(this.depthTarget?.value) || 0
+    const w = parseFloat(this.widthTarget?.value) || 0;
+    const l = parseFloat(this.lengthTarget?.value) || 0;
+    const h = parseFloat(this.heightTarget?.value) || 0.15;
 
-    if (width > 0 && length > 0) {
-      const area = width * length
-      const volume = this.calculateVolume(area, thickness, height, depth)
+    const area = w * l;
+    const volume = area * h;
+    const laborRate = 150;
+    const meshPrice = 30;
+    const transportFee = 1500;
 
-      this.updatePreview(area, volume)
-      this.submitBtnTarget.disabled = false
-    } else {
-      this.formulaTarget.textContent = "กรุณาใส่ขนาดพื้นที่"
-      this.areaTarget.textContent = "- ตร.ม."
-      this.volumeTarget.textContent = "- ลบ.ม."
-      this.laborTarget.textContent = "฿0"
-      this.submitBtnTarget.disabled = true
-    }
-  }
+    const laborTotal = area * laborRate;
+    const meshTotal = area * meshPrice;
+    const transport = volume >= 5 ? transportFee : 0;
+    const total = laborTotal + meshTotal + transport;
+    const pricePerSqm = area > 0 ? total / area : 0;
 
-  calculateVolume(area, thickness, height, depth) {
-    const serviceType = this.element.dataset.serviceType || ""
+    if (this.hasAreaTarget)
+      this.areaTarget.textContent = area > 0 ? area.toFixed(2) + " ตร.ม." : "-";
+    if (this.hasVolumeTarget)
+      this.volumeTarget.textContent =
+        volume > 0 ? volume.toFixed(2) + " ลบ.ม." : "-";
+    
+    if (this.hasMeshTarget)
+      this.meshTarget.textContent = area > 0 ? area.toFixed(2) + " ตร.ม." : "-";
+    if (this.hasLaborCostTarget)
+      this.laborCostTarget.textContent =
+        "฿" + Math.round(laborTotal).toLocaleString();
+    if (this.hasMaterialCostTarget)
+      this.materialCostTarget.textContent =
+        "฿" + Math.round(meshTotal).toLocaleString();
+    if (this.hasTransportCostTarget)
+      this.transportCostTarget.textContent = "฿" + transport;
+    if (this.hasTotalPriceTarget)
+      this.totalPriceTarget.textContent =
+        "฿" + Math.round(total).toLocaleString();
+    if (this.hasPricePerSqmTarget)
+      this.pricePerSqmTarget.textContent =
+        area > 0 ? "฿" + pricePerSqm.toFixed(2) : "฿0";
+    if (this.hasPriceRangeTarget)
+      this.priceRangeTarget.textContent =
+        total > 0
+          ? "฿" +
+            Math.round(total * 0.9).toLocaleString() +
+            " - ฿" +
+            Math.round(total * 1.1).toLocaleString()
+          : "-";
 
-    switch (serviceType) {
-      case "concrete_floor":
-        return area * thickness
-      case "brick_wall":
-        return area * thickness
-      case "paint_wall":
-        return area
-      case "tile_floor":
-        return area
-      case "plumbing":
-        return height || 0
-      default:
-        return area * Math.max(thickness, depth, height || 0)
-    }
-  }
-
-  updatePreview(area, volume) {
-    const serviceType = this.element.dataset.serviceType || ""
-    const laborRate = parseFloat(this.element.dataset.laborRate) || 150
-
-    let formulaText = ""
-    let areaText = `${area.toFixed(2)} ตร.ม.`
-    let volumeText = `${volume.toFixed(2)} ลบ.ม.`
-    let laborTotal = 0
-
-    switch (serviceType) {
-      case "concrete_floor":
-        formulaText = `ปริมาตร = ${area.toFixed(2)} × ${parseFloat(this.thicknessTarget?.value || 0.10).toFixed(2)}`
-        laborTotal = area * laborRate
-        break
-      case "brick_wall":
-        formulaText = `ปริมาตร = ${area.toFixed(2)} × ${parseFloat(this.thicknessTarget?.value || 0.10).toFixed(2)}`
-        laborTotal = area * laborRate
-        break
-      case "paint_wall":
-        formulaText = `พื้นที่ = ${area.toFixed(2)} (กว้าง × ยาว × สูง)`
-        volumeText = "-"
-        laborTotal = area * laborRate
-        break
-      case "tile_floor":
-        formulaText = `พื้นที่ = ${area.toFixed(2)} (กว้าง × ยาว)`
-        volumeText = "-"
-        laborTotal = area * laborRate
-        break
-      default:
-        formulaText = `พื้นที่ = ${area.toFixed(2)} × ...`
-        laborTotal = area * laborRate
-    }
-
-    this.formulaTarget.textContent = formulaText
-    this.areaTarget.textContent = areaText
-    this.volumeTarget.textContent = volumeText
-    this.laborTarget.textContent = `฿${Math.round(laborTotal).toLocaleString()}`
-  }
-
-  async previewMaterials() {
-    const formData = new FormData(this.formTarget)
-    const params = new URLSearchParams(formData)
-
-    try {
-      const response = await fetch(`/calculator/preview?${params}`, {
-        method: "GET",
-        headers: {
-          "Accept": "application/json"
-        }
-      })
-
-      if (response.ok) {
-        return await response.json()
-      }
-    } catch (error) {
-      console.error("Preview error:", error)
-    }
-
-    return null
+    console.log("📐 Calculated:", { area, volume, total });
   }
 }

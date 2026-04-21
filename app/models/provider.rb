@@ -1,5 +1,5 @@
 class Provider < ApplicationRecord
-  belongs_to :service
+  belongs_to :service, class_name: "CommunicateService", foreign_key: "service_id"
   belongs_to :user, optional: true
 
   validates :company_name, presence: true

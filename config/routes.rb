@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  # resources :calculator do
+  #   collection do
+  #     get :quick
+  #     get :calculate
+  #   end
+  # end
   # Devise authentication
   devise_for :users
 
@@ -41,7 +47,8 @@ Rails.application.routes.draw do
   get "/calculator/preview" => "calculator#preview", as: :calculator_preview
   get "/calculator/pdf/:id" => "calculator#pdf", as: :pdf_calculator
   post "/calculator/send_line/:id" => "calculator#send_line", as: :send_line_calculator
-
+  get "calculator/calculate", to: "calculator#calculate", defaults: { format: :json }
+  post "calculator/calculate", to: "calculator#calculate"
   # LINE Bot Webhook
   post "/line_bot/callback" => "line_bot#callback"
 

@@ -1,9 +1,40 @@
 class CalculatorController < ApplicationController
   before_action :set_locale
   layout "siamcosmo"
+  skip_before_action :verify_authenticity_token, only: [:calculate]
 
   def quick
     @current_step = 1
+    @calculator_services = CalculatorService.active.sorted
+    @active_category = params[:category] || @calculator_services.first&.slug || "construction"
+
+    @service_types = ServiceType.active.sorted
+    @construction_types = ServiceType.active.where(slug: [ "concrete_floor", "brick_wall", "tile_floor", "paint_wall" ])
+
+    @calc_configs = {
+      concrete_grades: { 180 => 2800, 210 => 3200, 240 => 3600, 280 => 4000, 320 => 4500 },
+      concrete_labor: 400,
+      mesh_price: 30,
+      transport_fee: 1500,
+      transport_threshold: 10
+    }
+  end
+
+  def calculate
+    category = params[:category] || "construction"
+    inputs = params.permit!.to_h.symbolize_keys
+    inputs.delete(:controller)
+    inputs.delete(:action)
+    inputs.delete(:category)
+
+    calculator = QuoteCalculatorService.new(category, inputs)
+    result = calculator.calculate
+
+    if result[:error]
+      render json: { error: result[:error] }, status: :unprocessable_entity
+    else
+      render json: result
+    end
   end
 
   def step1

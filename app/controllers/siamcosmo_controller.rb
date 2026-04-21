@@ -4,7 +4,7 @@ class SiamcosmoController < ApplicationController
 
   def index
     begin
-      @services = Service.active.order(:id)
+      @services = CommunicateService.active.order(:id)
       Rails.logger.info "Services loaded: #{@services.count}"
     rescue StandardError => e
       Rails.logger.error "Service error: #{e.message}"
@@ -17,7 +17,7 @@ class SiamcosmoController < ApplicationController
   alias_method :landing, :index
 
   def show
-    @service = Service.find_by(key: params[:id])
+    @service = CommunicateService.find_by(key: params[:id])
     redirect_to root_path unless @service
   end
 

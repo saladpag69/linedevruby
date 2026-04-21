@@ -322,7 +322,7 @@ body {
       <button class="job-btn" data-job="ceiling">🎯 ฝ้าเพดาน</button>
       <button class="job-btn" data-job="roofing">🏠 มุงหลังคา</button>
     </div>
-    
+
     <div class="roof-input" id="roofing-input">
       <div class="input-row">
         <div class="input-group">
@@ -425,7 +425,7 @@ function calculateMaterials() {
   const l = parseFloat(document.getElementById('mat-length').value) || 0;
   const t = parseFloat(document.getElementById('mat-thickness').value) || 0.1;
   const ridge = parseFloat(document.getElementById('roof-ridge').value) || 0;
-  
+
   const area = w * l;
   const volume = w * l * t;
 
@@ -501,12 +501,12 @@ document.querySelectorAll('.job-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.job-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    
+
     document.getElementById('roofing-input').classList.toggle('show', btn.dataset.job === 'roofing');
-    
+
     document.getElementById('materials-result').style.display = 'none';
     document.getElementById('materials-empty').style.display = 'none';
-    
+
     calculateMaterials();
   });
 });
@@ -526,7 +526,7 @@ function orderLine() {
   const l = parseFloat(document.getElementById('mat-length').value) || 0;
   const t = parseFloat(document.getElementById('mat-thickness').value) || 0;
   const total = document.getElementById('total-price').textContent;
-  
+
   const activeJob = document.querySelector('.job-btn.active');
   const jobNames = {
     concrete: 'เทพื้นคอนกรีต',
@@ -535,9 +535,9 @@ function orderLine() {
     roofing: 'มุงหลังคา'
   };
   const jobName = activeJob ? jobNames[activeJob.dataset.job] : '';
-  
+
   const message = `สวัสดีครับ สั่งซื้อวัสดุก่อสร้าง%0A%0Aประเภทงาน: ${jobName}%0Aขนาด: ${w}m × ${l}m × ${t}m%0Aยอดรวม: ${total}%0A%0Aกรุณาติดต่อกลับครับ`;
-  
+
   window.open(`https://line.me/R/ti/p/@siamcosmo?text=${message}`, '_blank');
 }
 

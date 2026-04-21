@@ -1,4 +1,6 @@
 class ServiceType < ApplicationRecord
+  belongs_to :calculator_service, optional: true
+
   has_many :quotes, dependent: :restrict_with_error
 
   validates :slug, presence: true, uniqueness: true
@@ -18,6 +20,10 @@ class ServiceType < ApplicationRecord
 
   def material_definitions
     materials || []
+  end
+
+  def presets
+    read_attribute(:presets) || []
   end
 
   def calculate_values(user_inputs)

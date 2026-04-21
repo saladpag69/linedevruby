@@ -1,5 +1,7 @@
-class Service < ApplicationRecord
-  has_many :providers, dependent: :nullify
+class CommunicateService < ApplicationRecord
+  self.table_name = "communicate_services"
+
+  has_many :providers, class_name: "Provider", foreign_key: "service_id", dependent: :nullify
   has_many :chat_sessions, dependent: :nullify
 
   validates :key, presence: true, uniqueness: true

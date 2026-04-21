@@ -1,423 +1,434 @@
-<% content_for :title, t("landing.title") %>
+<% content_for :title, t("siamcosmo") %>
 
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     SECTION 4: SERVICES SHOWCASE - แสดงบริการที่มี
-     - Card-based design พร้อม icon
-     - Hover effects สำหรับ engagement
-     - Provider count แสดงความ popular
-═══════════════════════════════════════════════════════════════════════════ -->
-<section class="services-showcase" id="services">
-  <div class="hero-services-wrapper">
-    <div class="hero-services-cta">
-      <div class="cta-icon">🛠️</div>
-      <h3 class="cta-title">เลือกบริการที่คุณต้องการ</h3>
-      <p class="cta-desc">แตะที่ไอคอนด้านล่างเพื่อเริ่มต้น</p>
+<div class="landing-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-icon">🚀</span>
+        <span class="badge-text">Local Service</span>
+      </div>
+
+      <h1 class="hero-headline">
+        เรียกช่าง + สั่งของ<br>ถึงบ้าน จบในที่เดียว
+      </h1>
+
+      <p class="hero-subtitle">
+        ค้นหาช่างใกล้บ้าน สั่งวัสดุก่อสร้าง และคำนวณราคา<br>ได้ทันที ง่าย รวดเร็ว ทั้งในแอปเดียว
+      </p>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" class="search-input" placeholder="ค้นหาบริการ เช่น โซล่า, CCTV, ช่างไฟฟ้า...">
+          <button class="search-btn">ค้นหา</button>
+        </div>
+      </div>
+
+      <!-- Quick Categories -->
+      <div class="quick-categories">
+        <a href="/chat/solar" class="category-chip">
+          <span class="chip-icon">☀️</span>
+          <span>Solar Cell</span>
+        </a>
+        <a href="/chat/cctv" class="category-chip">
+          <span class="chip-icon">📹</span>
+          <span>CCTV</span>
+        </a>
+        <a href="/chat/autogate" class="category-chip">
+          <span class="chip-icon">🚪</span>
+          <span>Auto Gate</span>
+        </a>
+        <a href="/chat/construction" class="category-chip">
+          <span class="chip-icon">🏗️</span>
+          <span>วัสดุก่อสร้าง</span>
+        </a>
+        <a href="/chat/tools" class="category-chip">
+          <span class="chip-icon">🔧</span>
+          <span>เครื่องมือ</span>
+        </a>
+        <a href="/chat/ev" class="category-chip">
+          <span class="chip-icon">🛵</span>
+          <span>EV (Yadea)</span>
+        </a>
+      </div>
+
+      <!-- CTA Buttons -->
+      <div class="hero-cta">
+        <a href="/calculator" class="btn btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+            <line x1="8" y1="6" x2="16" y2="6"></line>
+            <line x1="8" y1="10" x2="16" y2="10"></line>
+            <line x1="8" y1="14" x2="12" y2="14"></line>
+            <line x1="8" y1="18" x2="12" y2="18"></line>
+          </svg>
+          คำนวณราคา
+        </a>
+        <!--<a href="https://line.me/ti/p/~siamcosmo" class="btn btn-success" target="_blank">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+          </svg>
+          เรียกช่างตอนนี้
+        </a>-->
+      </div>
+
+      <!-- Stats -->
+      <!--<div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-value">🆕</span>
+          <span class="stat-label">เปิดใหม่</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-value">🎉</span>
+          <span class="stat-label">กำลังเปิดตัว</span>
+        </div>-->
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-value">✨</span>
+          <span class="stat-label">รอติดตาม</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Services -->
+  <!--<section class="section services-section">
+    <div class="section-header">
+      <span class="section-tag">🔥 บริการยอดนิยม</span>
+      <h2 class="section-title">เลือกบริการที่คุณต้องการ</h2>
     </div>
 
-    <div class="services-slider-container hero-slider">
-      <div class="services-slider" id="servicesSlider">
-        <% @services.each_with_index do |service, index| %>
-          <a href="<%= index == 0 ? '/chat/provider' : "/chat/#{service.key}" %>" class="service-slide featured-slide">
-            <div class="slide-glow"></div>
-            <div class="service-icon"><%= service.icon %></div>
-            <div class="service-info">
-              <h3 class="service-name"><%= service.name(I18n.locale) %></h3>
-              <span class="service-providers">
-                <%= service.providers_count %> <%= t("landing.services.providers") %>
-              </span>
+    <div class="services-grid">
+      <% @services.each do |service| %>
+        <a href="/chat/<%= service.key %>" class="service-card">
+          <div class="service-icon"><%= service.icon %></div>
+          <div class="service-content">
+            <h3 class="service-name"><%= service.name(I18n.locale) %></h3>
+            <span class="service-providers"><%= service.providers_count %> ผู้ให้บริการ</span>
+          </div>
+          <div class="service-arrow">→</div>
+        </a>
+      <% end %>
+    </div>
+  </section>-->
+
+  <!-- Nearby Shops - Coming Soon -->
+  <%# Temporarily hidden until real shop data is available
+  <section class="section shops-section">
+    <div class="section-header">
+      <span class="section-tag">📍 ใกล้บ้านคุณ</span>
+      <h2 class="section-title">ร้านค้าใกล้คุณ</h2>
+    </div>
+
+    <div class="shops-scroll">
+      <div class="shop-card">
+        <div class="shop-header">
+          <div class="shop-logo">🏪</div>
+          <div class="shop-info">
+            <h3 class="shop-name">บ้านช่างพงษ์ศักดิ์</h3>
+            <div class="shop-rating">
+              <span class="stars">⭐⭐⭐⭐⭐</span>
+              <span class="rating-value">4.8</span>
+              <span class="reviews">(120 รีวิว)</span>
             </div>
-            <div class="slide-action">
-              <span>เริ่มเลย</span>
-              <span class="action-arrow">→</span>
+          </div>
+        </div>
+        <div class="shop-meta">
+          <span class="meta-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            1.2 กม.
+          </span>
+          <span class="meta-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            ราคาเริ่มต้น ฿500
+          </span>
+        </div>
+        <div class="shop-services">
+          <span class="service-tag">โซล่า</span>
+          <span class="service-tag">CCTV</span>
+          <span class="service-tag">ไฟฟ้า</span>
+        </div>
+        <div class="shop-actions">
+          <a href="/chat/provider" class="btn btn-outline btn-sm">ดูรายละเอียด</a>
+          <a href="https://line.me/ti/p/~siamcosmo" class="btn btn-success btn-sm" target="_blank">จองเลย</a>
+        </div>
+      </div>
+
+      <div class="shop-card">
+        <div class="shop-header">
+          <div class="shop-logo">🔧</div>
+          <div class="shop-info">
+            <h3 class="shop-name">ศูนย์วัสดุก่อสร้าง</h3>
+            <div class="shop-rating">
+              <span class="stars">⭐⭐⭐⭐</span>
+              <span class="rating-value">4.6</span>
+              <span class="reviews">(85 รีวิว)</span>
             </div>
-          </a>
-        <% end %>
-      </div>
-
-      <div class="slider-nav featured-nav">
-        <button class="slider-btn prev" onclick="slideServices(-1)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
-
-        <button class="slider-btn next" onclick="slideServices(1)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <div class="hero-services-footer">
-      <div class="trust-badges">
-        <div class="badge-item">
-          <span class="badge-icon">✓</span>
-          <span>ช่างมืออาชีพ</span>
+          </div>
         </div>
-        <div class="badge-item">
-          <span class="badge-icon">🛡️</span>
-          <span>รับประกันงาน</span>
+        <div class="shop-meta">
+          <span class="meta-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            2.5 กม.
+          </span>
+          <span class="meta-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            ราคาเริ่มต้น ฿200
+          </span>
         </div>
-        <div class="badge-item">
-          <span class="badge-icon">⚡</span>
-          <span>ตอบเร็ว</span>
+        <div class="shop-services">
+          <span class="service-tag">ปูน</span>
+          <span class="service-tag">เหล็ก</span>
+          <span class="service-tag">ไม้</span>
+        </div>
+        <div class="shop-actions">
+          <a href="/chat/provider" class="btn btn-outline btn-sm">ดูรายละเอียด</a>
+          <a href="https://line.me/ti/p/~siamcosmo" class="btn btn-success btn-sm" target="_blank">จองเลย</a>
         </div>
       </div>
     </div>
-  </div>
+  </section>
+  %>
 
-  <script nonce="<%= request.content_security_policy_nonce %>">
-  function slideServices(direction) {
-    const slider = document.getElementById('servicesSlider');
-    const slides = slider.querySelectorAll('.service-slide');
-    if (slides.length === 0) return;
-    const slideWidth = slides[0].offsetWidth + 16;
-    slider.scrollBy({ left: direction * slideWidth * 3, behavior: 'smooth' });
-  }
-  </script>
-</section>
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     SECTION 1: HERO - ดึงดูดความสนใจ สร้าง First Impression ที่ดี
-     - Headline: ข้อความหลักที่สื่อสาร Value Proposition
-     - Subheadline: อธิบายเพิ่มเติม
-     - CTA Button: นำไปสู่การกระทำ
-     - Badge: แสดงความน่าเชื่อถือ
-═══════════════════════════════════════════════════════════════════════════ -->
-<section class="hero">
-  <div class="hero-badge">
-    <span class="badge-icon">🚀</span>
-    <span class="badge-text"><%= t("landing.hero.badge") %></span>
-  </div>
-
-  <h1 class="hero-headline">
-    <%= t("landing.hero.headline") %>
-  </h1>
-
-  <p class="hero-subheadline">
-    <%= t("landing.hero.subheadline") %>
-  </p>
-
-  <div class="hero-actions">
-    <a href="https://lin.ee/PTfm8E1" class="btn btn-primary">
-      <span>💬</span>
-      <%= t("landing.hero.cta_primary") %>
-    </a>
-    <a href="#how-it-works" class="btn btn-secondary">
-      <%= t("landing.hero.cta_secondary") %>
-    </a>
-  </div>
-
-  <div class="hero-stats">
-    <div class="stat">
-      <span class="stat-value">10K+</span>
-      <span class="stat-label"><%= t("landing.hero.stat1") %></span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat">
-      <span class="stat-value">500+</span>
-      <span class="stat-label"><%= t("landing.hero.stat2") %></span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat">
-      <span class="stat-value">4.9</span>
-      <span class="stat-label"><%= t("landing.hero.stat3") %></span>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     SECTION 2: FEATURES - แสดงจุดเด่นของบริการ
-     - Icon + Title + Description สำหรับแต่ละ feature
-     - Grid layout ที่ responsive
-     - Animation สำหรับ interaction
-═══════════════════════════════════════════════════════════════════════════ -->
-<section class="features" id="features">
-  <div class="section-header">
-    <span class="section-tag"><%= t("landing.features.tag") %></span>
-    <h2 class="section-title"><%= t("landing.features.title") %></h2>
-    <p class="section-desc"><%= t("landing.features.desc") %></p>
-  </div>
-
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">⚡</div>
-      <h3 class="feature-title"><%= t("landing.features.f1.title") %></h3>
-      <p class="feature-desc"><%= t("landing.features.f1.desc") %></p>
+  <!-- How It Works -->
+  <section class="section how-section">
+    <div class="section-header">
+      <span class="section-tag">💡 วิธีการใช้งาน</span>
+      <h2 class="section-title">3 ขั้นตอนง่ายๆ</h2>
     </div>
 
-    <div class="feature-card">
-      <div class="feature-icon">🔒</div>
-      <h3 class="feature-title"><%= t("landing.features.f2.title") %></h3>
-      <p class="feature-desc"><%= t("landing.features.f2.desc") %></p>
-    </div>
+    <div class="steps-container">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <div class="step-icon">🔍</div>
+        <h3 class="step-title">เลือกบริการ</h3>
+        <p class="step-desc">ค้นหาช่างหรือสั่งวัสดุที่คุณต้องการ</p>
+      </div>
 
-    <div class="feature-card">
-      <div class="feature-icon">💰</div>
-      <h3 class="feature-title"><%= t("landing.features.f3.title") %></h3>
-      <p class="feature-desc"><%= t("landing.features.f3.desc") %></p>
-    </div>
+      <div class="step-connector"></div>
 
-    <div class="feature-card">
-      <div class="feature-icon">🎯</div>
-      <h3 class="feature-title"><%= t("landing.features.f4.title") %></h3>
-      <p class="feature-desc"><%= t("landing.features.f4.desc") %></p>
-    </div>
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <div class="step-icon">📐</div>
+        <h3 class="step-title">คำนวณราคา</h3>
+        <p class="step-desc">ใส่ขนาดและดูราคาประมาณการทันที</p>
+      </div>
 
-    <div class="feature-card">
-      <div class="feature-icon">💬</div>
-      <h3 class="feature-title"><%= t("landing.features.f5.title") %></h3>
-      <p class="feature-desc"><%= t("landing.features.f5.desc") %></p>
-    </div>
+      <div class="step-connector"></div>
 
-    <div class="feature-card">
-      <div class="feature-icon">📱</div>
-      <h3 class="feature-title"><%= t("landing.features.f6.title") %></h3>
-      <p class="feature-desc"><%= t("landing.features.f6.desc") %></p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     SECTION 3: HOW IT WORKS - อธิบายขั้นตอนการใช้งาน
-     - Step-by-step process ที่เข้าใจง่าย
-     - Visual connector ระหว่าง steps
-     - Clear numbering
-═══════════════════════════════════════════════════════════════════════════ -->
-<section class="how-it-works" id="how-it-works">
-  <div class="section-header">
-    <span class="section-tag"><%= t("landing.how_it_works.tag") %></span>
-    <h2 class="section-title"><%= t("landing.how_it_works.title") %></h2>
-    <p class="section-desc"><%= t("landing.how_it_works.desc") %></p>
-  </div>
-
-  <div class="steps">
-    <div class="step">
-      <div class="step-number">1</div>
-      <div class="step-content">
-        <h3 class="step-title"><%= t("landing.how_it_works.s1.title") %></h3>
-        <p class="step-desc"><%= t("landing.how_it_works.s1.desc") %></p>
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <div class="step-icon">✅</div>
+        <h3 class="step-title">ยืนยันจอง</h3>
+        <p class="step-desc">ติดต่อช่างและนัดหมายได้เลย</p>
       </div>
     </div>
+  </section>
 
-    <div class="step-connector"></div>
-
-    <div class="step">
-      <div class="step-number">2</div>
-      <div class="step-content">
-        <h3 class="step-title"><%= t("landing.how_it_works.s2.title") %></h3>
-        <p class="step-desc"><%= t("landing.how_it_works.s2.desc") %></p>
+  <!-- CTA Section -->
+  <!--<section class="section cta-section">
+    <div class="cta-card">
+      <h2 class="cta-title">พร้อมเริ่มต้นหรือยัง?</h2>
+      <p class="cta-desc">เรียกช่าง + สั่งของ ง่ายๆ ในคลิกเดียว</p>
+      <div class="cta-buttons">
+        <a href="/calculator" class="btn btn-primary btn-lg">
+          <span>🧮</span> คำนวณราคา
+        </a>
+        <a href="https://line.me/ti/p/~siamcosmo" class="btn btn-white btn-lg" target="_blank">
+          <span>💬</span> แชทกับเรา
+        </a>
       </div>
     </div>
-
-    <div class="step-connector"></div>
-
-    <div class="step">
-      <div class="step-number">3</div>
-      <div class="step-content">
-        <h3 class="step-title"><%= t("landing.how_it_works.s3.title") %></h3>
-        <p class="step-desc"><%= t("landing.how_it_works.s3.desc") %></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     SECTION 5: TESTIMONIALS - Social Proof
-     - User feedback ที่สร้างความน่าเชื่อถือ
-     - Star ratings
-     - Avatar + Name
-═══════════════════════════════════════════════════════════════════════════ -->
-<section class="testimonials" id="testimonials">
-  <div class="section-header">
-    <span class="section-tag"><%= t("landing.testimonials.tag") %></span>
-    <h2 class="section-title"><%= t("landing.testimonials.title") %></h2>
-    <p class="section-desc"><%= t("landing.testimonials.desc") %></p>
-  </div>
-
-  <div class="testimonials-scroll">
-    <div class="testimonial-card">
-      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-      <p class="testimonial-text"><%= t("landing.testimonials.t1.text") %></p>
-      <div class="testimonial-author">
-        <div class="author-avatar">👩</div>
-        <div class="author-info">
-          <span class="author-name"><%= t("landing.testimonials.t1.name") %></span>
-          <span class="author-role"><%= t("landing.testimonials.t1.role") %></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="testimonial-card">
-      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-      <p class="testimonial-text"><%= t("landing.testimonials.t2.text") %></p>
-      <div class="testimonial-author">
-        <div class="author-avatar">👨</div>
-        <div class="author-info">
-          <span class="author-name"><%= t("landing.testimonials.t2.name") %></span>
-          <span class="author-role"><%= t("landing.testimonials.t2.role") %></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="testimonial-card">
-      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-      <p class="testimonial-text"><%= t("landing.testimonials.t3.text") %></p>
-      <div class="testimonial-author">
-        <div class="author-avatar">👨‍💼</div>
-        <div class="author-info">
-          <span class="author-name"><%= t("landing.testimonials.t3.name") %></span>
-          <span class="author-role"><%= t("landing.testimonials.t3.role") %></span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     SECTION 6: CTA - Call To Action
-     - เรียกให้ผู้ใช้กระทำการ
-     - urgency/scarcity element
-     - Clear benefit statement
-═══════════════════════════════════════════════════════════════════════════ -->
-<!--<section class="cta-section">
-  <div class="cta-content">
-    <h2 class="cta-title"><%= t("landing.cta.title") %></h2>
-    <p class="cta-desc"><%= t("landing.cta.desc") %></p>
-    <a href="/chat" class="btn btn-cta">
-      <span>🚀</span>
-      <%= t("landing.cta.button") %>
-    </a>
-    <span class="cta-note"><%= t("landing.cta.note") %></span>
-  </div>
-</section>-->
-
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     SECTION 7: FOOTER - ข้อมูลติดต่อและ links
-     - Logo + Description
-     - Quick Links
-     - Contact Info
-     - Social Media
-     - Copyright
-═══════════════════════════════════════════════════════════════════════════ -->
-<!--<footer class="footer">
-  <div class="footer-content">
-    <div class="footer-brand">
-      <a href="/" class="footer-logo">Siam<span>Cosmo</span></a>
-      <p class="footer-desc"><%= t("landing.footer.desc") %></p>
-    </div>
-
-    <div class="footer-links">
-      <h4 class="footer-title"><%= t("landing.footer.quick_links") %></h4>
-      <a href="/" class="footer-link"><%= t("landing.footer.home") %></a>
-      <a href="#" class="footer-link"><%= t("landing.footer.services") %></a>
-      <a href="#" class="footer-link"><%= t("landing.footer.chat") %></a>
-      <a href="#" class="footer-link"><%= t("landing.footer.about") %></a>
-    </div>
-
-    <div class="footer-contact">
-      <h4 class="footer-title"><%= t("landing.footer.contact") %></h4>
-      <div class="contact-item">
-        <span>📧</span>
-        <span>contact@siamcosmo.com</span>
-      </div>
-      <div class="contact-item">
-        <span>📞</span>
-        <span>02-884-2453</span>
-      </div>
-      <div class="contact-item">
-        <span>📍</span>
-        <span><%= t("landing.footer.location") %></span>
-      </div>
-    </div>
-
-    <div class="footer-social">
-      <h4 class="footer-title"><%= t("landing.footer.follow_us") %></h4>
-      <div class="social-links">
-        <a href="#" class="social-link">📘</a>
-        <a href="#" class="social-link">🐦</a>
-        <a href="#" class="social-link">📸</a>
-        <a href="#" class="social-link">💼</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p>© 2026 SiamCosmo. <%= t("landing.footer.rights") %></p>
-  </div>
-</footer>-->
+  </section>-->
+</div>
 
 <style>
-  /* ═══════════════════════════════════════════════════════════════════════════
-     RESPONSIVE TYPOGRAPHY & BASE STYLES
-     Mobile-first approach: base styles สำหรับ mobile ก่อน
-  �═══════════════════════════════════════════════════════════════════════════ */
-  .landing-page {
-    --primary: #1A1814;
-    --accent: #C8A84B;
-    --accent-light: #E8C96B;
-    --bg: #FFFFFF;
-    --bg-secondary: #F8F7F5;
-    --bg-card: #FFFFFF;
-    --text: #1A1814;
-    --text-secondary: #6B6B6B;
-    --text-muted: #9CA3AF;
-    --border: #E5E5E3;
-    --success: #22C55E;
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-    --shadow: 0 4px 12px rgba(0,0,0,0.08);
-    --shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
-    --radius: 16px;
-    --radius-sm: 8px;
-    --radius-lg: 24px;
+  .landing-container {
+    --hero-bg: #0a1628;
+    --hero-overlay: linear-gradient(135deg, #0a1628 0%, #1a3a5c 50%, #0a1628 100%);
+    --card-bg: var(--bg-secondary);
+    --success: #22c55e;
+    --success-dark: #16a34a;
+
+    min-height: 100vh;
+    background: var(--bg);
   }
 
-  /* ═══════════════════════════════════════════════════════════════════════════
-     HERO SECTION STYLES
-  �═══════════════════════════════════════════════════════════════════════════ */
-  .hero {
-    padding: 48px 20px 64px;
+  /* Hero Section */
+  .hero-section {
+    position: relative;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px 60px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: var(--hero-overlay);
+    z-index: 0;
+  }
+
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
     text-align: center;
-    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg) 100%);
+    max-width: 600px;
   }
 
   .hero-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    padding: 6px 12px;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
     border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin-bottom: 20px;
-    box-shadow: var(--shadow-sm);
+    margin-bottom: 24px;
+    backdrop-filter: blur(10px);
   }
 
-  .hero-badge .badge-icon { font-size: 0.875rem; }
+  .badge-icon { font-size: 1.25rem; }
+  .badge-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #fff;
+  }
 
   .hero-headline {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 700;
+    color: #fff;
     line-height: 1.2;
-    margin-bottom: 16px;
-    color: var(--text);
+    margin-bottom: 20px;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
   }
 
-  .hero-headline span { color: var(--accent); }
-
-  .hero-subheadline {
-    font-size: 1rem;
-    color: var(--text-secondary);
-    max-width: 320px;
-    margin: 0 auto 24px;
-    line-height: 1.6;
-  }
-
-  .hero-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  .hero-subtitle {
+    font-size: 1.125rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.7;
     margin-bottom: 32px;
+  }
+
+  /* Search */
+  .search-container {
+    margin-bottom: 24px;
+  }
+
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 16px;
+    padding: 6px 6px 6px 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  }
+
+  .search-icon {
+    color: #6b7280;
+    flex-shrink: 0;
+  }
+
+  .search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 12px;
+    font-size: 1rem;
+    background: transparent;
+    color: #1f2937;
+  }
+
+  .search-input::placeholder {
+    color: #9ca3af;
+  }
+
+  .search-btn {
+    background: var(--accent);
+    color: var(--primary);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .search-btn:hover {
+    background: #e5c76b;
+    transform: scale(1.02);
+  }
+
+  /* Quick Categories */
+  .quick-categories {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+
+  .category-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    backdrop-filter: blur(10px);
+  }
+
+  .category-chip:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .chip-icon { font-size: 1.125rem; }
+
+  /* CTA Buttons */
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 40px;
   }
 
   .btn {
@@ -425,12 +436,12 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 14px 28px;
-    border-radius: var(--radius);
+    padding: 14px 24px;
+    border-radius: 12px;
     font-size: 1rem;
     font-weight: 600;
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: all 0.2s;
     cursor: pointer;
     border: none;
   }
@@ -438,100 +449,109 @@
   .btn-primary {
     background: var(--accent);
     color: var(--primary);
-    box-shadow: 0 4px 12px rgba(200, 168, 75, 0.3);
   }
 
   .btn-primary:hover {
-    background: var(--accent-light);
+    background: #e5c76b;
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(200, 168, 75, 0.4);
+    box-shadow: 0 4px 16px rgba(200, 168, 75, 0.4);
   }
 
-  .btn-secondary {
-    background: var(--bg-card);
-    color: var(--text);
-    border: 1px solid var(--border);
+  .btn-success {
+    background: var(--success);
+    color: #fff;
   }
 
-  .btn-secondary:hover {
-    background: var(--bg-secondary);
-    border-color: var(--text-secondary);
+  .btn-success:hover {
+    background: var(--success-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.4);
   }
 
   .btn-outline {
     background: transparent;
-    color: var(--accent);
-    border: 2px solid var(--accent);
+    border: 2px solid var(--border);
+    color: var(--text);
   }
 
   .btn-outline:hover {
-    background: var(--accent);
-    color: var(--primary);
+    border-color: var(--accent);
+    color: var(--accent);
   }
 
-  .btn-cta {
-    background: linear-gradient(135deg, var(--accent), var(--accent-light));
-    color: var(--primary);
-    font-size: 1.125rem;
+  .btn-white {
+    background: #fff;
+    color: var(--hero-bg);
+  }
+
+  .btn-white:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+  }
+
+  .btn-sm {
+    padding: 8px 16px;
+    font-size: 0.875rem;
+  }
+
+  .btn-lg {
     padding: 16px 32px;
-    box-shadow: 0 6px 20px rgba(200, 168, 75, 0.4);
+    font-size: 1.125rem;
   }
 
-  .btn-cta:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 28px rgba(200, 168, 75, 0.5);
-  }
-
+  /* Stats */
   .hero-stats {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 16px;
-    padding: 16px;
-    background: var(--bg-card);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border);
+    gap: 24px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
   }
 
-  .stat { text-align: center; }
+  .stat-item {
+    text-align: center;
+  }
 
   .stat-value {
     display: block;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--accent);
   }
 
   .stat-label {
     font-size: 0.75rem;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.7);
   }
 
   .stat-divider {
     width: 1px;
-    height: 32px;
-    background: var(--border);
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
   }
 
-  /* ═══════════════════════════════════════════════════════════════════════════
-     SECTION HEADER STYLES (Shared)
-  �═══════════════════════════════════════════════════════════════════════════ */
+  /* Sections */
+  .section {
+    padding: 60px 20px;
+  }
+
   .section-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 32px;
   }
 
   .section-tag {
     display: inline-block;
-    background: var(--accent);
-    color: var(--primary);
-    padding: 4px 12px;
+    background: rgba(200, 168, 75, 0.1);
+    color: var(--accent);
+    padding: 6px 16px;
     border-radius: 50px;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
     margin-bottom: 12px;
   }
 
@@ -539,105 +559,241 @@
     font-size: 1.75rem;
     font-weight: 700;
     color: var(--text);
-    margin-bottom: 12px;
   }
 
-  .section-desc {
-    font-size: 1rem;
-    color: var(--text-secondary);
-    max-width: 480px;
-    margin: 0 auto;
-    line-height: 1.6;
-  }
-
-  /* ═══════════════════════════════════════════════════════════════════════════
-     FEATURES SECTION STYLES
-  �═══════════════════════════════════════════════════════════════════════════ */
-  .features {
-    padding: 64px 20px;
+  /* Services Grid */
+  .services-section {
     background: var(--bg);
   }
 
-  .features-grid {
+  .services-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
-  }
-
-  .feature-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px 20px;
-    text-align: center;
-    transition: all 0.2s ease;
-  }
-
-  .feature-card:hover {
-    border-color: var(--accent);
-    box-shadow: var(--shadow);
-    transform: translateY(-4px);
-  }
-
-  .feature-icon {
-    font-size: 2.5rem;
-    margin-bottom: 16px;
-  }
-
-  .feature-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 8px;
-  }
-
-  .feature-desc {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    line-height: 1.5;
-  }
-
-  /* ═══════════════════════════════════════════════════════════════════════════
-     HOW IT WORKS SECTION STYLES
-  �═══════════════════════════════════════════════════════════════════════════ */
-  .how-it-works {
-    padding: 64px 20px;
-    background: var(--bg-secondary);
-  }
-
-  .steps {
-    max-width: 400px;
+    max-width: 600px;
     margin: 0 auto;
   }
 
-  .step {
-    display: flex;
-    gap: 20px;
-    padding: 20px 0;
+  @media (min-width: 600px) {
+    .services-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
-  .step-number {
-    flex-shrink: 0;
+  @media (min-width: 900px) {
+    .services-grid {
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 900px;
+    }
+  }
+
+  .service-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: var(--card, var(--bg-secondary));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s;
+  }
+
+  .service-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .service-icon {
+    font-size: 2rem;
     width: 48px;
     height: 48px;
-    background: var(--accent);
-    color: var(--primary);
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
-    font-weight: 700;
-    box-shadow: 0 4px 12px rgba(200, 168, 75, 0.3);
+    background: var(--accent);
+    border-radius: 12px;
+    flex-shrink: 0;
   }
 
-  .step-content { flex: 1; }
+  .service-content { flex: 1; min-width: 0; }
+
+  .service-name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .service-providers {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .service-arrow {
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+  }
+
+  /* Shops */
+  .shops-section {
+    background: var(--bg-secondary);
+  }
+
+  .shops-scroll {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 16px;
+    margin: 0 -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .shops-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .shop-card {
+    flex-shrink: 0;
+    width: 300px;
+    background: var(--card, var(--bg));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    scroll-snap-align: start;
+  }
+
+  .shop-header {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .shop-logo {
+    width: 48px;
+    height: 48px;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .shop-info { flex: 1; }
+
+  .shop-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .shop-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8125rem;
+  }
+
+  .stars { letter-spacing: -2px; }
+  .rating-value { font-weight: 600; color: var(--text); }
+  .reviews { color: var(--text-secondary); }
+
+  .shop-meta {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+  }
+
+  .shop-services {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .service-tag {
+    padding: 4px 10px;
+    background: var(--bg-secondary);
+    border-radius: 50px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .shop-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .shop-actions .btn {
+    flex: 1;
+  }
+
+  /* How It Works */
+  .how-section {
+    background: var(--bg);
+  }
+
+  .steps-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .steps-container {
+      flex-direction: row;
+      max-width: 900px;
+      gap: 16px;
+    }
+  }
+
+  .step-card {
+    text-align: center;
+    padding: 24px 16px;
+  }
+
+  .step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    color: var(--primary);
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.875rem;
+    margin-bottom: 16px;
+  }
+
+  .step-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+  }
 
   .step-title {
     font-size: 1.125rem;
     font-weight: 600;
     color: var(--text);
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
 
   .step-desc {
@@ -648,639 +804,96 @@
 
   .step-connector {
     width: 2px;
-    height: 24px;
-    background: var(--border);
-    margin-left: 23px;
-  }
-
-  /* ═══════════════════════════════════════════════════════════════════════════
-     SERVICES SECTION STYLES
-  �═══════════════════════════════════════════════════════════════════════════ */
-  .services-showcase {
-    padding: 64px 20px;
-    background: var(--bg);
-  }
-
-  .services-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .service-card {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    text-decoration: none;
-    color: var(--text);
-    transition: all 0.2s ease;
-  }
-
-  .service-card:hover {
-    border-color: var(--accent);
-    box-shadow: var(--shadow);
-    transform: translateX(4px);
-  }
-
-  .service-icon {
-    font-size: 2rem;
-    width: 56px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-secondary);
-    border-radius: var(--radius-sm);
-  }
-
-  .service-info { flex: 1; }
-
-  .service-name {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-
-  .service-providers {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-  }
-
-  .providers-icon { font-size: 0.875rem; }
-
-  .service-arrow {
-    font-size: 1.25rem;
-    color: var(--text-muted);
-    transition: all 0.2s ease;
-  }
-
-  .service-card:hover .service-arrow {
-    color: var(--accent);
-    transform: translateX(4px);
-  }
-
-  .services-more {
-    text-align: center;
-    margin-top: 24px;
-  }
-
-  /* ═══════════════════════════════════════════════════════════════════════════
-     TESTIMONIALS SECTION STYLES
-  �═══════════════════════════════════════════════════════════════════════════ */
-  .testimonials {
-    padding: 64px 20px;
-    background: var(--bg-secondary);
-  }
-
-  .testimonials-scroll {
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 16px;
-    margin: 0 -20px;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  .testimonials-scroll::-webkit-scrollbar {
-    display: none;
-  }
-
-  .testimonial-card {
-    flex-shrink: 0;
-    width: 280px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    scroll-snap-align: start;
-  }
-
-  .testimonial-stars {
-    font-size: 1rem;
-    margin-bottom: 12px;
-    letter-spacing: 2px;
-  }
-
-  .testimonial-text {
-    font-size: 0.875rem;
-    color: var(--text);
-    line-height: 1.6;
-    margin-bottom: 16px;
-  }
-
-  .testimonial-author {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .author-avatar {
-    width: 40px;
     height: 40px;
-    background: var(--bg-secondary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
+    background: var(--border);
   }
 
-  .author-info {
-    display: flex;
-    flex-direction: column;
+  @media (min-width: 768px) {
+    .step-connector {
+      width: 60px;
+      height: 2px;
+      flex-shrink: 0;
+    }
   }
 
-  .author-name {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text);
-  }
-
-  .author-role {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-  }
-
-  /* ═══════════════════════════════════════════════════════════════════════════
-     CTA SECTION STYLES
-  �═══════════════════════════════════════════════════════════════════════════ */
+  /* CTA */
   .cta-section {
-    padding: 64px 20px;
-    background: linear-gradient(135deg, var(--primary) 0%, #2D2A26 100%);
-    text-align: center;
+    padding: 60px 20px 100px;
+    background: var(--bg-secondary);
   }
 
-  .cta-content { max-width: 400px; margin: 0 auto; }
+  .cta-card {
+    text-align: center;
+    padding: 48px 24px;
+    background: linear-gradient(135deg, #0a1628 0%, #1a3a5c 100%);
+    border-radius: 24px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
 
   .cta-title {
     font-size: 1.75rem;
     font-weight: 700;
-    color: white;
+    color: #fff;
     margin-bottom: 12px;
   }
 
   .cta-desc {
     font-size: 1rem;
-    color: rgba(255,255,255,0.8);
-    margin-bottom: 24px;
-    line-height: 1.6;
-  }
-
-  .cta-note {
-    display: block;
-    margin-top: 12px;
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.6);
-  }
-
-  /* ═══════════════════════════════════════════════════════════════════════════
-     FOOTER SECTION STYLES
-  ════════════════════════════════════════════════════════════════════════════ */
-  .footer {
-    background: var(--bg);
-    border-top: 1px solid var(--border);
-    padding: 48px 20px 24px;
-  }
-
-  .footer-content {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 32px;
+    color: rgba(255, 255, 255, 0.8);
     margin-bottom: 32px;
   }
 
-  .footer-logo {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text);
-    text-decoration: none;
-    display: inline-block;
-    margin-bottom: 12px;
-  }
-
-  .footer-logo span { color: var(--accent); }
-
-  .footer-desc {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    line-height: 1.6;
-  }
-
-  .footer-title {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 12px;
-  }
-
-  .footer-link {
-    display: block;
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    text-decoration: none;
-    padding: 6px 0;
-    transition: color 0.2s;
-  }
-
-  .footer-link:hover { color: var(--accent); }
-
-  .contact-item {
+  .cta-buttons {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    padding: 4px 0;
-  }
-
-  .social-links {
-    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 12px;
   }
 
-  .social-link {
-    width: 40px;
-    height: 40px;
-    background: var(--bg-secondary);
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    font-size: 1.125rem;
-    transition: all 0.2s;
-  }
-
-  .social-link:hover {
-    background: var(--accent);
-    transform: translateY(-2px);
-  }
-
-  .footer-bottom {
-    text-align: center;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
-  }
-
-  .footer-bottom p {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-  }
-
-  /* ═══════════════════════════════════════════════════════════════════════════
-     TABLET STYLES (481px - 768px)
-  ════════════════════════════════════════════════════════════════════════════ */
-  @media (min-width: 481px) {
-    .hero-headline { font-size: 2.5rem; }
-
-    .hero-actions { flex-direction: row; justify-content: center; }
-
-    .hero-stats { max-width: 400px; margin: 0 auto; }
-
-    .features-grid { grid-template-columns: repeat(2, 1fr); }
-
-    .services-grid { max-width: 500px; margin: 0 auto; }
-
-    .testimonial-card { width: 320px; }
-
-    .footer-content { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  /* ═══════════════════════════════════════════════════════════════════════════
-     DESKTOP STYLES (769px+)
-  ════════════════════════════════════════════════════════════════════════════ */
-  @media (min-width: 769px) {
-    .hero {
-      padding: 80px 40px 100px;
+  /* Responsive */
+  @media (min-width: 768px) {
+    .hero-section {
+      padding: 100px 40px 80px;
     }
 
-    .hero-headline { font-size: 3rem; }
+    .hero-headline {
+      font-size: 3.5rem;
+    }
 
-    .hero-subheadline { max-width: 560px; font-size: 1.125rem; }
+    .hero-subtitle {
+      font-size: 1.25rem;
+    }
 
-    .hero-stats { max-width: 500px; }
-
-    .section-title { font-size: 2.25rem; }
-
-    .features, .how-it-works, .services-showcase, .testimonials {
+    .section {
       padding: 80px 40px;
     }
 
-    .features-grid {
-      grid-template-columns: repeat(3, 1fr);
-      max-width: 900px;
-      margin: 0 auto;
+    .section-title {
+      font-size: 2.25rem;
     }
 
-    .steps {
-      max-width: 700px;
-      display: flex;
-      align-items: flex-start;
-      gap: 24px;
+    .cta-card {
+      padding: 64px 48px;
     }
 
-    .step { flex-direction: column; text-align: center; padding: 0; }
-    .step-connector { display: none; }
-
-    .services-grid {
-      max-width: 900px;
-    }
-  }
-
-  /* Services Slider */
-  .services-slider-container { position: relative; padding: 0 8px; }
-  .services-slider { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; padding: 4px 0; }
-  .services-slider::-webkit-scrollbar { display: none; }
-  .services-slider { -ms-overflow-style: none; scrollbar-width: none; }
-
-  .service-slide { flex: 0 0 calc(100% - 16px); min-width: 280px; scroll-snap-align: start; display: flex; align-items: center; gap: 16px; padding: 16px; background: var(--bg-secondary); border-radius: 12px; text-decoration: none; color: var(--text); transition: all 0.2s; border: 1px solid transparent; }
-  @media (min-width: 481px) { .service-slide { flex: 0 0 calc(50% - 8px); } }
-  @media (min-width: 769px) { .service-slide { flex: 0 0 calc(33.333% - 8px); } }
-
-  .service-slide:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-color: var(--accent); }
-  .service-slide .service-icon { font-size: 1.75rem; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: var(--accent); border-radius: 8px; }
-  .service-slide .service-info { flex: 1; }
-  .service-slide .service-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 2px; }
-  .service-slide .service-providers { font-size: 0.75rem; color: var(--text-secondary); }
-  .service-slide .service-arrow { font-size: 1.25rem; color: var(--text-secondary); }
-
-  .slider-nav { display: none; }
-  @media (min-width: 769px) {
-    .slider-nav { display: flex; justify-content: space-between; position: absolute; top: 50%; left: -20px; right: -20px; transform: translateY(-50%); pointer-events: none; }
-    .slider-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-size: 16px; cursor: pointer; pointer-events: auto; display: flex; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .slider-btn:hover { background: var(--accent); color: var(--primary); }
-  }
-
-  /* ═══════════════════════════════════════════════════════════════════════════
-     HERO SERVICES SECTION - Full Screen Hero
-  ═══════════════════════════════════════════════════════════════════════════ */
-  .services-showcase {
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .services-showcase::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent), #0F6E56, var(--accent));
-  }
-
-  .services-showcase::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 120px;
-    background: linear-gradient(to top, var(--bg-secondary), transparent);
-    pointer-events: none;
-  }
-
-  .hero-services-wrapper {
-    padding: 24px 16px 48px;
-    max-width: 1400px;
-    width: 100%;
-    margin: auto 0;
-  }
-
-  .hero-services-cta {
-    text-align: center;
-    margin-bottom: 32px;
-  }
-
-  .hero-services-cta .cta-icon {
-    font-size: 3rem;
-    margin-bottom: 12px;
-    display: inline-block;
-    animation: bounce 2s infinite;
-  }
-
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-  }
-
-  .hero-services-cta .cta-title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 8px;
-  }
-
-  .hero-services-cta .cta-desc {
-    font-size: 1rem;
-    color: var(--text-secondary);
-  }
-
-  .hero-slider {
-    margin-bottom: 32px;
-  }
-
-  .services-slider-container {
-    padding: 0 32px;
-  }
-
-  .featured-slide {
-    position: relative;
-    background: var(--bg) !important;
-    border: 2px solid var(--border) !important;
-    overflow: hidden;
-    min-height: 140px;
-  }
-
-  .featured-slide::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(200, 168, 75, 0.1) 0%, transparent 50%);
-    pointer-events: none;
-  }
-
-  .slide-glow {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(200, 168, 75, 0.15) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .featured-slide:hover .slide-glow {
-    opacity: 1;
-  }
-
-  .featured-slide:hover {
-    border-color: var(--accent) !important;
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(200, 168, 75, 0.25);
-  }
-
-  .featured-slide .service-icon {
-    font-size: 2.25rem;
-    width: 64px !important;
-    height: 64px !important;
-    background: linear-gradient(135deg, var(--accent), #E5C76B) !important;
-    color: var(--primary);
-  }
-
-  .featured-slide .service-info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .featured-slide .service-name {
-    font-size: 1.1rem !important;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .featured-slide .service-providers {
-    font-size: 0.875rem !important;
-    color: var(--text-secondary);
-  }
-
-  .slide-action {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #0F6E56;
-    opacity: 0;
-    transform: translateX(-8px);
-    transition: all 0.3s;
-    white-space: nowrap;
-  }
-
-  .featured-slide:hover .slide-action {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  .action-arrow {
-    transition: transform 0.2s;
-  }
-
-  .featured-slide:hover .action-arrow {
-    transform: translateX(4px);
-  }
-
-  .featured-nav .slider-btn {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--primary);
-    width: 48px;
-    height: 48px;
-  }
-
-  .featured-nav .slider-btn:hover {
-    background: #0F6E56;
-    border-color: #0F6E56;
-    color: white;
-  }
-
-  .hero-services-footer {
-    text-align: center;
-  }
-
-  .trust-badges {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-
-  .badge-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: var(--bg);
-    border-radius: 24px;
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    border: 1px solid var(--border);
-  }
-
-  .badge-item .badge-icon {
-    font-size: 1rem;
-  }
-
-  @media (min-width: 769px) {
-    .hero-services-wrapper {
-      padding: 32px 60px 64px;
-    }
-
-    .hero-services-cta {
-      margin-bottom: 40px;
-    }
-
-    .hero-services-cta .cta-title {
-      font-size: 2.5rem;
-    }
-
-    .hero-services-cta .cta-icon {
-      font-size: 4rem;
-    }
-
-    .hero-services-cta .cta-desc {
-      font-size: 1.125rem;
-    }
-
-    .services-slider-container {
-      padding: 0 48px;
-    }
-
-    .featured-slide {
-      min-height: 120px;
-    }
-
-    .featured-slide .service-icon {
-      font-size: 2.5rem;
-    }
-
-    .featured-slide .service-name {
-      font-size: 1.25rem !important;
-    }
-
-    .slide-action {
-      font-size: 0.9rem;
-    }
-
-    .trust-badges {
-      gap: 24px;
-    }
-
-    .badge-item {
-      padding: 12px 24px;
-      font-size: 1rem;
+    .cta-title {
+      font-size: 2.25rem;
     }
   }
 </style>
+
+<script nonce="<%= request.content_security_policy_nonce %>">
+  document.querySelector('.search-btn').addEventListener('click', function() {
+    const query = document.querySelector('.search-input').value;
+    if (query.trim()) {
+      window.location.href = '/chat?search=' + encodeURIComponent(query);
+    }
+  });
+
+  document.querySelector('.search-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      document.querySelector('.search-btn').click();
+    }
+  });
+</script>
