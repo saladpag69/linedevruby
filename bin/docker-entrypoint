@@ -17,4 +17,4 @@ bundle exec rails db:prepare RAILS_ENV=production
 
 echo "=== Database prepared successfully ==="
 
-exec "${@}"
+exec "${@:-bin/rails server}"
