@@ -10,13 +10,20 @@ class ConstructionFormulas
 
   def self.calculate_concrete_floor(width:, length:, thickness: 0.10, concrete_grade: 240)
     area = width * length
-    concrete_volume = (area * thickness).round(2)
+    concrete_volume = (area * thickness * 1.05).round(2)
     mesh_area = (area * 1.05).round(2)
     sand_volume = (area * 0.05).round(2)
     sand_half_truck = (sand_volume / 0.4).ceil
 
-    concrete_price = concrete_grade == 240 ? 1850 : concrete_grade == 280 ? 1950 : 2050
-    mesh_price = 90
+    concrete_price = case concrete_grade
+    when 180 then 1900
+    when 210 then 2000
+    when 240 then 2300
+    when 280 then 2500
+    when 320 then 2700
+    else 2200
+    end
+    mesh_price = 45
     sand_price = 350
 
     [

@@ -10,10 +10,10 @@ class ConstructionFormulasTest < Minitest::Test
   def test_calculate_concrete_floor_calculates_correct_concrete_volume
     result = ConstructionFormulas.calculate_concrete_floor(width: 10, length: 10, thickness: 0.10, concrete_grade: 240)
     concrete = result.find { |m| m[:name].include?("คอนกรีตผสมเสร็จ") }
-    assert_in_delta 10.0, concrete[:quantity]
+    assert_in_delta 10.5, concrete[:quantity]
     assert_equal "ลบ.ม.", concrete[:unit]
-    assert_equal 1850, concrete[:price]
-    assert_in_delta 18500, concrete[:subtotal]
+    assert_equal 2300, concrete[:price]
+    assert_in_delta 24150, concrete[:subtotal]
   end
 
   def test_calculate_concrete_floor_calculates_mesh_area_with_5_percent_waste
