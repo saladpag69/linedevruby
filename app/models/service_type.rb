@@ -26,6 +26,11 @@ class ServiceType < ApplicationRecord
     read_attribute(:presets) || []
   end
 
+  def preset_materials(preset_slug)
+    preset = presets.find { |p| p["slug"] == preset_slug }
+    preset&.dig("materials") || []
+  end
+
   def calculate_values(user_inputs)
     width = user_inputs[:width].to_f
     length = user_inputs[:length].to_f

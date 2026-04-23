@@ -49,50 +49,113 @@ class QuoteCalculatorService
   end
 
   def calculate_construction
-    width = @inputs[:width].to_f
-    length = @inputs[:length].to_f
-    thickness = @inputs[:thickness].to_f
-    concrete_grade = @inputs[:concrete_grade].to_i
+    preset = @inputs[:preset] || "concrete_floor"
 
-    area = width * length
-    volume = area * thickness
-    concrete_volume = volume
+    materials = case preset
+    when "concrete_floor"
+      ConstructionFormulas.calculate_concrete_floor(
+        width: @inputs[:width].to_f,
+        length: @inputs[:length].to_f,
+        thickness: @inputs[:thickness].to_f,
+        concrete_grade: @inputs[:concrete_grade].to_i
+      )
 
-    concrete_price = case concrete_grade
-    when 180 then 2800
-    when 210 then 3200
-    when 240 then 3600
-    when 280 then 4000
-    when 320 then 4500
-    else 3600
+    when "tile"
+      ConstructionFormulas.calculate_tile(
+        area: calculate_area,
+        tile_w: @inputs[:tile_w].to_i,
+        tile_l: @inputs[:tile_l].to_i,
+        surface: @inputs[:surface] || "floor"
+      )
+
+    when "plaster"
+      ConstructionFormulas.calculate_aac_wall(
+        wall_area: calculate_area,
+        block_thick: 7.5
+      )
+
+    when "beam"
+      ConstructionFormulas.calculate_concrete_floor(
+        width: @inputs[:width].to_f,
+        length: @inputs[:length].to_f,
+        thickness: @inputs[:thickness].to_f,
+        concrete_grade: @inputs[:concrete_grade].to_i
+      )
+
+    when "aac_wall"
+      ConstructionFormulas.calculate_aac_wall(
+        wall_area: calculate_area,
+        block_thick: @inputs[:block_thick].to_i
+      )
+
+    when "drywall"
+      ConstructionFormulas.calculate_lightweight_wall(
+        wall_area: calculate_area,
+        wall_height: @inputs[:wall_height].to_f,
+        board_type: @inputs[:board_type] || "gypsum"
+      )
+
+    when "gypsum_ceiling"
+      ConstructionFormulas.calculate_gypsum_ceiling(
+        area: calculate_area,
+        perimeter: @inputs[:perimeter].to_f
+      )
+
+    when "tbar_ceiling"
+      ConstructionFormulas.calculate_tbar_ceiling(
+        area: calculate_area,
+        perimeter: @inputs[:perimeter].to_f
+      )
+
+    when "metal_roof"
+      ConstructionFormulas.calculate_metal_roof(
+        roof_width: @inputs[:width].to_f,
+        rafter_length: @inputs[:length].to_f,
+        overhang: @inputs[:overhang].to_f,
+        sheet_type: @inputs[:sheet_type] || "0.47"
+      )
+
+    when "paint"
+      ConstructionFormulas.calculate_paint(
+        area: calculate_area,
+        coats: @inputs[:coats].to_i,
+        surface: @inputs[:paint_surface] || "interior"
+      )
+
+    when "rebar"
+      ConstructionFormulas.calculate_slab_rebar(
+        area: calculate_area,
+        main_bar_mm: @inputs[:rebar_mm].to_i,
+        spacing: @inputs[:rebar_spacing].to_f
+      )
+
+    else
+      ConstructionFormulas.calculate_concrete_floor(
+        width: @inputs[:width].to_f,
+        length: @inputs[:length].to_f,
+        thickness: @inputs[:thickness].to_f,
+        concrete_grade: @inputs[:concrete_grade].to_i
+      )
     end
 
-    concrete_total = concrete_volume * concrete_price
-    mesh_total = area * 30
-    labor_total = area * 400
-    transport = volume >= 5 ? 1500 : 0
-
-    material_total = concrete_total + mesh_total
-    total = material_total + labor_total + transport
-    price_per_sqm = area > 0 ? total / area : 0
+    result = ConstructionFormulas.calculate_total(materials)
 
     {
       category: "construction",
+      preset: preset,
       inputs: @inputs,
-      area: area,
-      volume: volume,
-      area_display: "%.2f ตร.ม." % area,
-      volume_display: "%.2f ลบ.ม." % volume,
-      materials: [
-        { name: "คอนกรีต #{concrete_grade} KSC", quantity: concrete_volume.round(2), unit: "ลบ.ม.", price: concrete_price, subtotal: concrete_total },
-        { name: "ไว์เมช", quantity: area.round(2), unit: "ตร.ม.", price: 30, subtotal: mesh_total }
-      ],
-      material_total: material_total,
-      labor_total: labor_total,
-      transport: transport,
-      total: total,
-      price_per_sqm: price_per_sqm,
-      price_range: "฿#{(total * 0.9).round.to_i} - ฿#{(total * 1.1).round.to_i}"
+      area: calculate_area,
+      volume: calculate_volume,
+      area_display: "%.2f ตร.ม." % calculate_area,
+      volume_display: "%.2f ลบ.ม." % calculate_volume,
+      materials: result[:materials],
+      material_total: result[:material_total],
+      material_only_total: result[:material_only_total],
+      labor_total: result[:labor_total],
+      transport: 0,
+      total: result[:total],
+      price_per_sqm: calculate_area > 0 ? result[:total] / calculate_area : 0,
+      price_range: "฿#{(result[:total] * 0.9).round.to_i} - ฿#{(result[:total] * 1.1).round.to_i}"
     }
   end
 
@@ -385,6 +448,19 @@ class QuoteCalculatorService
 
   private
 
+  def calculate_area
+    width = @inputs[:width].to_f
+    length = @inputs[:length].to_f
+    width * length
+  end
+
+  def calculate_volume
+    width = @inputs[:width].to_f
+    length = @inputs[:length].to_f
+    thickness = @inputs[:thickness].to_f
+    width * length * thickness
+  end
+
   def calculate_base_values
     width = @inputs[:width].to_f
     length = @inputs[:length].to_f
@@ -435,6 +511,29 @@ class QuoteCalculatorService
     end
   end
 
+  def calculate_materials_for_preset(preset_slug, area, volume)
+    configs = @service_type.preset_materials(preset_slug)
+    return [] if configs.empty?
+
+    configs.map do |config|
+      slug = config["product_slug"]
+      qty_formula = config["qty_formula"]
+      unit = config["unit"] || "ชิ้น"
+
+      qty = eval_formula(qty_formula, { area: area, volume: volume }).ceil
+      price = find_price(slug)
+
+      {
+        slug: slug,
+        name: find_product_name(slug),
+        quantity: qty,
+        unit: unit,
+        price: price,
+        subtotal: qty * price
+      }
+    end
+  end
+
   def calculate_labor(area)
     area * @service_type.labor_rate_per_sqm.to_f
   end
@@ -471,6 +570,8 @@ class QuoteCalculatorService
     return "กระเบื้อง 30x30" if slug == "tile_30x30"
     return "อิฐมวลเบา" if slug == "cement_block"
     return "เหล็กเส้น 12 มม." if slug == "rebar"
+    return "ไวร์เมช" if slug == "wiremesh"
+    return "คอนกรีตผสมเสร็จ" if slug == "mixconcrete"
     slug.humanize
   end
 

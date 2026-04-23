@@ -48,10 +48,8 @@
       </div>
 
       <!-- Input Fields - Dynamic from Database -->
-      <div class="input-section">
+      <div class="input-section" id="input-fields-container">
         <%
-          # Group input fields into rows (3 items per row for numbers)
-          # Handle both string and symbol types from JSON
           number_fields = input_fields.select { |f| f["type"] == "number" || f[:type] == "number" }
           select_fields = input_fields.select { |f| f["type"] == "select" || f[:type] == :select }
         %>
@@ -60,7 +58,7 @@
            <div class="input-row">
              <% number_fields.each do |field| %>
                <% field_key = field["key"] || field[:key] %>
-               <div class="input-group">
+               <div class="input-group" id="input-group-<%= field_key %>">
                  <label class="input-label"><%= field["label_th"] || field[:label_th] %></label>
                  <input type="number"
                         id="<%= field_key %>"
@@ -120,98 +118,42 @@
         <% end %>
       </div>
 
-      <!-- Materials Table - Dynamic based on category -->
+      <!-- Hidden Input Fields for ConstructionFormulas Presets -->
+      <div id="preset-fields" style="display: none;">
+        <input type="number" id="tile_w" class="calc-input" placeholder="60" value="60">
+        <input type="number" id="tile_l" class="calc-input" placeholder="60" value="60">
+        <input type="number" id="block_thick" class="calc-input" placeholder="10" value="10">
+        <input type="number" id="wall_height" class="calc-input" placeholder="3" value="3">
+        <input type="number" id="perimeter" class="calc-input" placeholder="0" value="30">
+        <input type="number" id="roof_width" class="calc-input" placeholder="0" value="0">
+        <input type="number" id="rafter_length" class="calc-input" placeholder="0" value="0">
+        <input type="number" id="overhang" class="calc-input" placeholder="0.3" value="0.3">
+        <input type="number" id="coats" class="calc-input" placeholder="2" value="2">
+        <input type="number" id="rebar_mm" class="calc-input" placeholder="12" value="12">
+        <input type="number" id="rebar_spacing" class="calc-input" placeholder="0.2" value="0.2">
+      </div>
+
+      <!-- Select Fields for ConstructionFormulas Presets -->
+      <div id="preset-selects" style="display: none;">
+        <select id="sheet_type" class="calc-select">
+          <option value="0.35">0.35 มม.</option>
+          <option value="0.47" selected>0.47 มม.</option>
+        </select>
+        <select id="paint_surface" class="calc-select">
+          <option value="interior" selected>ภายใน</option>
+          <option value="exterior">ภายนอก</option>
+        </select>
+        <select id="board_type" class="calc-select">
+          <option value="gypsum" selected>ยิปซัม</option>
+          <option value="smartboard">สมาร์ทบอร์ด</option>
+        </select>
+      </div>
+
+      <!-- Materials Table - Dynamic based on API response -->
       <div class="materials-section">
         <h3 class="section-title">วัสดุที่ต้องใช้</h3>
-        <div class="materials-table">
-          <% if active_cat == "construction" %>
-            <div class="material-row">
-              <span class="material-name">คอนกรีต</span>
-              <span class="material-value" data-calculator-target="concrete">-</span>
-            </div>
-            <div class="material-row">
-              <span class="material-name">ไว์เมช</span>
-              <span class="material-value" data-calculator-target="mesh">-</span>
-            </div>
-            <div class="material-row">
-              <span class="material-name">เหล็กเสริม</span>
-              <span class="material-value" id="material-rebar">-</span>
-            </div>
-            <div class="material-row">
-              <span class="material-name">แผ่นพื้น</span>
-              <span class="material-value" id="material-slab">-</span>
-            </div>
-          <% elsif active_cat == "electrical" %>
-            <div class="material-row">
-              <span class="material-name">สายไฟ</span>
-              <span class="material-value" id="material-wire">-</span>
-            </div>
-            <div class="material-row">
-              <span class="material-name">กล่องไฟ</span>
-              <span class="material-value" id="material-box">-</span>
-            </div>
-            <div class="material-row">
-              <span class="material-name">เบรกเกอร์</span>
-              <span class="material-value" id="material-breaker">-</span>
-            </div>
-          <% elsif active_cat == "plumbing" %>
-            <div class="material-row">
-              <span class="material-name">ท่อ PVC</span>
-              <span class="material-value" id="material-pipe">-</span>
-            </div>
-            <div class="material-row">
-              <span class="material-name">ข้อต่อ</span>
-              <span class="material-value" id="material-fitting">-</span>
-            </div>
-            <div class="material-row">
-              <span class="material-name">วาล์ว</span>
-              <span class="material-value" id="material-valve">-</span>
-            </div>
-          <% elsif active_cat == "solar" %>
-            <div class="material-row">
-              <span class="material-name">แผงโซลาร์</span>
-              <span class="material-value" id="material-panel">-</span>
-            </div>
-            <div class="material-row">
-              <span class="material-name">อินเวอร์เตอร์</span>
-              <span class="material-value" id="material-inverter">-</span>
-            </div>
-            <div class="material-row">
-              <span class="material-name">สายไฟ DC</span>
-              <span class="material-value" id="material-dcwire">-</span>
-            </div>
-          <% elsif active_cat == "cctv" %>
-            <div class="material-row">
-              <span class="material-name">กล้อง</span>
-              <span class="material-value" id="material-camera">-</span>
-            </div>
-            <div class="material-row">
-              <span class="material-name">DVR</span>
-              <span class="material-value" id="material-dvr">-</span>
-            </div>
-            <div class="material-row">
-              <span class="material-name">สาย</span>
-              <span class="material-value" id="material-cable">-</span>
-            </div>
-          <% elsif active_cat == "autodoor" %>
-            <div class="material-row">
-              <span class="material-name">มอเตอร์</span>
-              <span class="material-value" id="material-motor">-</span>
-            </div>
-            <div class="material-row">
-              <span class="material-name">ราง</span>
-              <span class="material-value" id="material-rail">-</span>
-            </div>
-            <div class="material-row">
-              <span class="material-name">รีโมท</span>
-              <span class="material-value" id="material-remote">-</span>
-            </div>
-          <% else %>
-            <div class="material-row">
-              <span class="material-name">วัสดุ</span>
-              <span class="material-value">-</span>
-            </div>
-          <% end %>
+        <div class="materials-table" id="materials-container">
+          <!-- JavaScript จะสร้าง HTML ที่นี่ -->
         </div>
       </div>
     </div>
@@ -759,6 +701,8 @@
         category: String
       }
 
+      selectedPreset = null
+
       connect() {
         console.log("✅ Dynamic Calculator connected! Category:", this.categoryValue)
         this.calculate()
@@ -772,15 +716,51 @@
       }
 
       selectPreset(event) {
-        const preset = event.currentTarget.dataset.preset
-        console.log("Selected preset:", preset)
+        this.selectedPreset = event.currentTarget.dataset.preset
+        console.log("Selected preset:", this.selectedPreset)
         document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'))
         event.currentTarget.classList.add('active')
+        this.updateInputFields(this.selectedPreset)
+        this.calculate()
+      }
+
+      updateInputFields(preset) {
+        const presetFields = this.getPresetFields(preset)
+        const allInputs = document.querySelectorAll('#input-fields-container .input-group, #input-fields-container .select-group')
+
+        allInputs.forEach(group => {
+          const input = group.querySelector('input, select')
+          if (input) {
+            const fieldId = input.id
+            const shouldShow = presetFields.includes(fieldId)
+            group.style.display = shouldShow ? '' : 'none'
+          }
+        })
+      }
+
+      getPresetFields(preset) {
+        const fieldsMap = {
+          'concrete_floor': ['width', 'length', 'thickness', 'concrete_grade'],
+          'tile': ['width', 'length', 'tile_w', 'tile_l'],
+          'aac_wall': ['width', 'length', 'block_thick'],
+          'beam': ['width', 'length', 'thickness', 'concrete_grade'],
+          'drywall': ['width', 'length', 'wall_height'],
+          'gypsum_ceiling': ['width', 'length', 'perimeter'],
+          'tbar_ceiling': ['width', 'length', 'perimeter'],
+          'metal_roof': ['width', 'length', 'overhang', 'sheet_type'],
+          'paint': ['width', 'length', 'coats', 'paint_surface'],
+          'rebar': ['width', 'length', 'rebar_mm', 'rebar_spacing']
+        }
+        return fieldsMap[preset] || fieldsMap['concrete_floor']
       }
 
       calculate() {
         const inputs = this.collectInputs()
         const category = this.categoryValue || 'construction'
+
+        if (this.selectedPreset) {
+          inputs.preset = this.selectedPreset
+        }
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
         const url = '/calculator/calculate?category=' + category
@@ -834,58 +814,26 @@
         if (this.hasPricePerSqmTarget) this.pricePerSqmTarget.textContent = pricePerSqm > 0 ? '฿' + pricePerSqm.toFixed(2) : '฿0'
         if (this.hasPriceRangeTarget) this.priceRangeTarget.textContent = total > 0 ? priceRange : '-'
 
-        this.updateMaterials(data.materials || [], data.category)
+        this.renderMaterials(data.materials || [])
 
         console.log("📐 Calculated:", data)
       }
 
-      updateMaterials(materials, category) {
-        const materialMap = this.getMaterialIds(category)
+      renderMaterials(materials) {
+        const container = document.getElementById('materials-container')
+        if (!container) return
 
-        materials.forEach((mat, index) => {
-          const targetId = Object.keys(materialMap)[index]
-          if (targetId) {
-            const el = document.getElementById(targetId)
-            if (el) {
-              el.textContent = mat.quantity + ' ' + mat.unit
-            }
-          }
-        })
-      }
-
-      getMaterialIds(category) {
-        const map = {
-          construction: {
-            'material-rebar': 'เหล็กเสริม',
-            'material-slab': 'แผ่นพื้น'
-          },
-          electrical: {
-            'material-wire': 'สายไฟ',
-            'material-box': 'กล่องไฟ',
-            'material-breaker': 'เบรกเกอร์'
-          },
-          plumbing: {
-            'material-pipe': 'ท่อ PVC',
-            'material-fitting': 'ข้อต่อ',
-            'material-valve': 'วาล์ว'
-          },
-          solar: {
-            'material-panel': 'แผงโซลาร์',
-            'material-inverter': 'อินเวอร์เตอร์',
-            'material-dcwire': 'สายไฟ DC'
-          },
-          cctv: {
-            'material-camera': 'กล้อง',
-            'material-dvr': 'DVR',
-            'material-cable': 'สาย'
-          },
-          autodoor: {
-            'material-motor': 'มอเตอร์',
-            'material-rail': 'ราง',
-            'material-remote': 'รีโมท'
-          }
+        if (!materials || materials.length === 0) {
+          container.innerHTML = '<div class="material-row"><span class="material-name">-</span><span class="material-value">-</span></div>'
+          return
         }
-        return map[category] || {}
+
+        container.innerHTML = materials.map(mat => `
+          <div class="material-row">
+            <span class="material-name">${mat.name || '-'}</span>
+            <span class="material-value">${mat.quantity || 0} ${mat.unit || ''}</span>
+          </div>
+        `).join('')
       }
     }
 

@@ -61,7 +61,7 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # API - Baansiam Prices
-  namespace :api do
+namespace :api do
     get "prices" => "prices#index"
   end
 end
