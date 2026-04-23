@@ -2,12 +2,16 @@
 
 one:
   orderable: MyString
-  product: one
-  cart: one
+  product_id: 1
+  cart_id: 1
   quantity: 1
+  created_at: 2026-01-01 00:00:00
+  updated_at: 2026-01-01 00:00:00
 
 two:
   orderable: MyString
-  product: two
-  cart: two
+  product_id: 2
+  cart_id: 2
   quantity: 1
+  created_at: 2026-01-01 00:00:00
+  updated_at: 2026-01-01 00:00:00
