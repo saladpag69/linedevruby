@@ -7,8 +7,8 @@ image: zayam/siamcosmo
 # Deploy to these servers.
 servers:
   web:
-    - siamcosmo.com
-ssh:
+    - 157.245.206.95
+# ssh:
   user: root
   keys: ["~/.ssh/id_ed25519"]
   # job:
@@ -23,13 +23,13 @@ ssh:
 #
 # Don't use this when deploying to multiple web servers (then you have to terminate SSL at your load balancer).
 #
-proxy:
-  ssl: true
-  host: siamcosmo.com
-  healthcheck:
-    path: /up
-    interval: 2
-    timeout: 5
+# proxy:
+#   ssl: true
+#   host: siamcosmo.com
+#   healthcheck:
+#     path: /up
+#     interval: 2
+#     timeout: 5
 
 # Give slow boots (first deploy, migrations, asset warmups) more time.
 deploy_timeout: 120
