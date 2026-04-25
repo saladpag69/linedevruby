@@ -84,6 +84,7 @@ Rails.application.configure do
   config.hosts = [
     "localhost",
     "127.0.0.1",
+    "157.245.206.95",
     "siamcosmo.com",
     /.*\.siamcosmo\.com/, # permit www or other subdomains
     "siamcosmo.uk",
