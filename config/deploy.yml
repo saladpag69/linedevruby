@@ -25,7 +25,7 @@ ssh:
 # Don't use this when deploying to multiple web servers (then you have to terminate SSL at your load balancer).
 #
 proxy:
-  ssl: true
+  ssl: false
   host: 157.245.206.95
   app_port: 80
   response_timeout: 60
