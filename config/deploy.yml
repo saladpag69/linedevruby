@@ -27,10 +27,16 @@ ssh:
 proxy:
   ssl: true
   host: 157.245.206.95
-#   healthcheck:
-#     path: /up
-#     interval: 2
-#     timeout: 5
+  app_port: 80
+  response_timeout: 60
+  forward_headers: true
+  buffering:
+    requests: true
+    responses: true
+  healthcheck:
+    path: /up
+    interval: 2
+    timeout: 5
 
 # Give slow boots (first deploy, migrations, asset warmups) more time.
 deploy_timeout: 300
@@ -96,7 +102,7 @@ asset_path: /rails/public/assets
 # Configure the image builder.
 builder:
   arch: amd64
-  remote: ssh://root@157.245.206.95
+  # remote: ssh://root@157.245.206.95
 
   # # Build image via remote server (useful for faster amd64 builds on arm64 computers)
   # remote: ssh://root@159.89.202.72
