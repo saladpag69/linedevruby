@@ -27,16 +27,7 @@ ssh:
 proxy:
   ssl: false
   host: 157.245.206.95
-  app_port: 80
-  response_timeout: 60
-  forward_headers: true
-  buffering:
-    requests: true
-    responses: true
-  healthcheck:
-    path: /up
-    interval: 2
-    timeout: 5
+  
 
 # Give slow boots (first deploy, migrations, asset warmups) more time.
 deploy_timeout: 300
