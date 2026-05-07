@@ -48,8 +48,7 @@ env:
   secret:
     - RAILS_MASTER_KEY
   clear:
-    # DATABASE_URL ต้องตั้งค่าจาก external PostgreSQL service (Supabase, Railway, หรือ DigitalOcean)
-    # ตัวอย่าง: postgresql://user:password@host:5432/dbname
+    DATABASE_URL: "postgresql://postgres:eMDSWZcoCkolvnAYNFdzDuQMWARgPnzZ@postgres.railway.internal:5432/railway"
     PORT: 80
     SOLID_QUEUE_IN_PUMA: false
 

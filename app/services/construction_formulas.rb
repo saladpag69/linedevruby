@@ -10,8 +10,8 @@ class ConstructionFormulas
 
   def self.calculate_concrete_floor(width:, length:, thickness: 0.10, concrete_grade: 240)
     area = width * length
-    concrete_volume = (area * thickness * 1.05).round(2)
-    mesh_area = (area * 1.05).round(2)
+    concrete_volume = (area * thickness * 1.00).round(2)
+    mesh_area = (area * 1.00).round(2)
     sand_volume = (area * 0.05).round(2)
     sand_half_truck = (sand_volume / 0.4).ceil
 
