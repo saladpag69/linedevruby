@@ -3,9 +3,7 @@ class Contractor < ApplicationRecord
 
   validates :name, presence: true
 
-  scope :available, -> { วววสมwhere(available: true) }
-  scope :mock, -> { where(is_mock: true) }
-  scope :real, -> { where(is_mock: false) }
+  scope :available, -> { where(available: true) }
   scope :for_service, ->(slug) { where("service_type_slugs LIKE ?", "%#{slug}%") }
 
   def rating_stars
