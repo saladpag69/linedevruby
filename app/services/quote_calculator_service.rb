@@ -119,7 +119,8 @@ class QuoteCalculatorService
       ConstructionFormulas.calculate_paint(
         area: calculate_area,
         coats: @inputs[:coats].to_i,
-        surface: @inputs[:paint_surface] || "interior"
+        surface: @inputs[:paint_surface] || "interior",
+        condition: @inputs[:paint_condition] || "normal"
       )
 
     when "rebar"

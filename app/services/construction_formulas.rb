@@ -203,16 +203,28 @@ class ConstructionFormulas
     ]
   end
 
-  def self.calculate_paint(area:, coats: 2, surface: "interior")
-    coverage = 10.0
-    primer_lt = (area / coverage).ceil
-    topcoat_lt = (area * coats / coverage).ceil
+  def self.calculate_paint(area:, coats: 2, surface: "interior", condition: "normal")
+    
+    base_coverage = case condition
+    when "new" then 13.0
+    when "old" then 9.0
+    when "rough" then 7.5
+    else 10.0
+    end
+  
+    primer_coverage = base_coverage
+    topcoat_coverage = surface == "exterior" ? 10.0 : 11.0
+  
+    primer_lt = (area / primer_coverage)
+    topcoat_lt = (area * coats / topcoat_coverage)
+  
     primer_gal5 = (primer_lt / 18.9).ceil
     topcoat_gal5 = (topcoat_lt / 18.9).ceil
+  
     putty_kg = (area * 0.3).ceil
-
+  
     topcoat_price = surface == "exterior" ? 1850 : 1650
-
+  
     [
       { name: "รองพื้นปูนเก่า (Sealer Primer)", quantity: primer_gal5, unit: "ถัง 5 แกล.", price: 950, subtotal: primer_gal5 * 950 },
       { name: "สีทาบ้าน#{surface == "exterior" ? "ภายนอก" : "ภายใน"} (#{coats} รอบ)", quantity: topcoat_gal5, unit: "ถัง 5 แกล.", price: topcoat_price, subtotal: topcoat_gal5 * topcoat_price },
