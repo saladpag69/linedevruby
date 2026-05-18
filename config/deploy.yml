@@ -48,7 +48,7 @@ env:
   secret:
     - RAILS_MASTER_KEY
   clear:
-    DATABASE_URL: "postgresql://postgres:eMDSWZcoCkolvnAYNFdzDuQMWARgPnzZ@postgres.railway.internal:5432/railway"
+    DATABASE_URL: "sqlite3:/rails/storage/production.sqlite3"
     PORT: 80
     SOLID_QUEUE_IN_PUMA: false
 
